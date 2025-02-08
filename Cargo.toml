@@ -8,7 +8,16 @@ edition = "2024"
 [[bin]]
 name = "bspgen"
 
+
+[features]
+default = ["full"]
+full = ["parse", "generate", "format"]
+parse = []
+generate = []
+format = ["dep:duct"]
+
 [dependencies]
+duct = { version = "0.13.7", optional = true }
 iter_tools = "0.24.0"
 
 [dev-dependencies]
