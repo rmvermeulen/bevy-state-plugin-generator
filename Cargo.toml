@@ -1,0 +1,12 @@
+[package]
+name = "cgen"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+iter_tools = "0.24.0"
+
+[dev-dependencies]
+insta = "1.42.1"
+rstest = "0.24.0"
+speculoos = "0.11.0"
