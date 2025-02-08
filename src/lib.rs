@@ -1,7 +1,7 @@
 #![feature(coverage_attribute)]
 use std::{fs, io, path::Path};
 
-use generate::generate_states_plugin;
+use generate::{PluginConfig, generate_states_plugin};
 use parse::parse_state_config;
 
 pub(crate) mod generate;
@@ -10,17 +10,19 @@ pub(crate) mod parse;
 
 #[cfg_attr(coverage_nightly, coverage(off))]
 pub fn on_build_generate_plugin(
-    src: impl AsRef<Path> + std::fmt::Display,
+    src: impl AsRef<Path>,
     dst: impl AsRef<Path>,
+    plugin_config: Option<PluginConfig>,
 ) -> io::Result<()> {
-    println!("cargo:rerun-if-changed={src}");
+    let src_display = src.as_ref().to_string_lossy();
+    println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&src)?;
-    let config = parse_state_config(&source);
-    let plugin_source = generate_states_plugin(config);
+    let state_config = parse_state_config(&source);
+    let plugin_source = generate_states_plugin(state_config, plugin_config.unwrap_or_default());
 
     let source_insert: String = source
         .lines()
-        .fold(format!("// src: {src}\n"), |lines, line| {
+        .fold(format!("// src: {src_display}\n"), |lines, line| {
             format!("{lines}// {line}\n")
         });
 

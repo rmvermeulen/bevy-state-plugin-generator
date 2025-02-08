@@ -21,6 +21,8 @@ duct = { version = "0.13.7", optional = true }
 iter_tools = "0.24.0"
 
 [dev-dependencies]
+async-std = { version = "1.13.0", features = ["attributes"] }
 insta = "1.42.1"
 rstest = "0.24.0"
 speculoos = "0.11.0"
+tempfile = "3.2.0"
