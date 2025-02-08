@@ -1,3 +1,5 @@
+#![feature(coverage_attribute)]
+
 use std::{env, path::PathBuf};
 
 use bevy_state_plugin_generator::on_build_generate_plugin;
