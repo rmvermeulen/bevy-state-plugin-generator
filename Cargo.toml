@@ -1,6 +1,6 @@
 [package]
-name = "bevy-state-plugin-generator"
-version = "0.1.0"
+name = "bevy_state_plugin_generator"
+version = "0.15.0"
 edition = "2024"
 
 [lib]
