@@ -1,7 +1,12 @@
 [package]
-name = "cgen"
+name = "bevy-state-plugin-generator"
 version = "0.1.0"
 edition = "2024"
+
+[lib]
+
+[[bin]]
+name = "bspgen"
 
 [dependencies]
 iter_tools = "0.24.0"
