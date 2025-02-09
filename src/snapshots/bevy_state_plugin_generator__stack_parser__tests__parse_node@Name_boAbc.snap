@@ -1,0 +1,17 @@
+---
+source: src/stack_parser.rs
+expression: parse_node(input)
+---
+Ok(
+    (
+        "",
+        Enum(
+            "Name",
+            [
+                Singleton(
+                    "A",
+                ),
+            ],
+        ),
+    ),
+)

@@ -21,6 +21,7 @@ format = ["dep:duct"]
 [dependencies]
 duct = { version = "0.13.7", optional = true }
 iter_tools = "0.24.0"
+nom = "8.0.0"
 
 [dev-dependencies]
 async-std = { version = "1.13.0", features = ["attributes"] }

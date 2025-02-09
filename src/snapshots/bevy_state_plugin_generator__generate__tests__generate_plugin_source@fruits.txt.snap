@@ -1,0 +1,66 @@
+---
+source: src/generate.rs
+expression: "match generate_plugin_source(source, plugin_config)\n{ Ok(plugin_source) => plugin_source, Err(message) => message, }"
+---
+#![allow(missing_docs)]
+use bevy::prelude::AppExtStates;
+
+pub mod states {
+    use bevy::prelude::States;
+    #[derive(States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    pub enum GameState {
+        #[default]
+        Loading,
+        Ready,
+    }
+
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Loading)]
+    pub struct GameStateLoading;
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Ready)]
+    pub enum GameStateReady {
+        #[default]
+        Menu,
+        Game,
+    }
+
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Ready = Ready::Menu)]
+    pub enum ReadyMenu {
+        #[default]
+        Main,
+        Options,
+    }
+
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Menu = Menu::Main)]
+    pub struct MenuMain;
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Menu = Menu::Options)]
+    pub struct MenuOptions;
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Ready = Ready::Game)]
+    pub enum ReadyGame {
+        #[default]
+        Playing,
+        Paused,
+        GameOver,
+    }
+
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Game = Game::Playing)]
+    pub struct GamePlaying;
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Game = Game::Paused)]
+    pub struct GamePaused;
+    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Game = Game::GameOver)]
+    pub struct GameGameOver;
+}
+pub struct GeneratedStatesPlugin;
+impl bevy::app::Plugin for GeneratedStatesPlugin {
+    fn build(&self, app: &mut bevy::app::App) {
+        app.init_state::<states::GameState>();
+    }
+}

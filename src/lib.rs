@@ -3,12 +3,12 @@
 use std::{fs, io, path::Path};
 
 pub use generate::PluginConfig;
-use generate::generate_states_plugin;
-use parse::parse_state_config;
+use generate::generate_full_source;
+use stack_parser::parse_config;
 
 pub(crate) mod generate;
 pub(crate) mod model;
-pub(crate) mod parse;
+pub(crate) mod stack_parser;
 
 #[doc = include_str!("../Readme.md")]
 #[cfg_attr(coverage_nightly, coverage(off))]
@@ -20,14 +20,9 @@ pub fn on_build_generate_plugin(
     let src_display = src.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&src)?;
-    let state_config = parse_state_config(&source);
-    let plugin_source = generate_states_plugin(state_config, plugin_config);
-
-    let source_insert: String = source
-        .lines()
-        .fold(format!("// src: {src_display}\n"), |lines, line| {
-            format!("{lines}// {line}\n")
-        });
-
-    fs::write(dst, [source_insert, plugin_source].join("\n"))
+    let source = match generate_full_source(src_display, source, plugin_config) {
+        Ok(source) => source,
+        Err(message) => message,
+    };
+    fs::write(dst, source)
 }

@@ -19,18 +19,16 @@ fn main() {
 }
 
 #[cfg(test)]
-#[test]
-fn the_test() {
-    use std::io::Write;
-
+mod tests {
+    use bevy_state_plugin_generator::on_build_generate_plugin;
+    use rstest::rstest;
     use tempfile::NamedTempFile;
 
-    let mut input_file = NamedTempFile::new().expect("Failed to create temporary file");
-    input_file
-        .write_all("FooBar".as_bytes())
-        .expect("Failed to write to temporary file");
-
-    let output_file = NamedTempFile::new().expect("Failed to create temporary file");
-    on_build_generate_plugin(input_file.path(), output_file.path(), Default::default())
-        .expect("Failed to generate plugin(s)");
+    #[rstest]
+    fn the_test() {
+        let input_file = NamedTempFile::new().expect("Failed to create temporary file");
+        let output_file = NamedTempFile::new().expect("Failed to create temporary file");
+        on_build_generate_plugin(input_file.path(), output_file.path(), Default::default())
+            .expect("Failed to generate plugin(s)");
+    }
 }
