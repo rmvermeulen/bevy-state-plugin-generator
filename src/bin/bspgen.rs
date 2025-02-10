@@ -9,7 +9,11 @@ fn main() {
     env::args()
         .skip(1)
         .try_for_each(|path| {
-            on_build_generate_plugin(&path, PathBuf::from(&path).with_extension("rs"), None)
+            on_build_generate_plugin(
+                &path,
+                PathBuf::from(&path).with_extension("rs"),
+                Default::default(),
+            )
         })
         .expect("Failed to generate plugin(s)");
 }
@@ -27,6 +31,6 @@ fn the_test() {
         .expect("Failed to write to temporary file");
 
     let output_file = NamedTempFile::new().expect("Failed to create temporary file");
-    on_build_generate_plugin(input_file.path(), output_file.path(), None)
+    on_build_generate_plugin(input_file.path(), output_file.path(), Default::default())
         .expect("Failed to generate plugin(s)");
 }
