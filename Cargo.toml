@@ -1,7 +1,9 @@
 [package]
 name = "bevy_state_plugin_generator"
-version = "0.15.0"
+version = "1.0.0-rc"
 edition = "2024"
+license = "MIT"
+description = "A build-dependency that generates a Bevy State Plugin from a simple state definition."
 
 [lib]
 
