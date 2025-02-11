@@ -13,12 +13,11 @@ fn generate_all_type_definitions(
     scheme: NamingScheme,
 ) -> String {
     const DERIVES: &str = "Hash, Default, Debug, Clone, PartialEq, Eq";
+    let typename = parent
+        .clone()
+        .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
+        .unwrap_or_else(|| root_node.name().to_string());
     let root_typedef = {
-        let typename = parent
-            .clone()
-            .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
-            .unwrap_or_else(|| root_node.name().to_string());
-
         let derives = parent
             .map(|source_state| {
                 let source = source_state.display_name();
@@ -44,19 +43,17 @@ fn generate_all_type_definitions(
     match root_node {
         Node::Singleton(_) => root_typedef,
         Node::Enum(_, variants) | Node::List(_, variants) => {
-            let parent_name = root_node.name().to_string();
+            let root_name = root_node.name().to_string();
             let variants = variants
                 .iter()
                 .map(|child_node| {
-                    let name = match scheme {
-                        NamingScheme::Full => format!("{}{}", parent_name, child_node.name()),
-                        NamingScheme::Shortened => child_node.name().to_string(),
-                    };
-                    let variant = child_node.name().to_string();
                     generate_all_type_definitions(
                         Some(SourceState {
-                            name: parent_name.clone(),
-                            variant,
+                            name: match scheme {
+                                NamingScheme::Shortened => root_name.clone(),
+                                NamingScheme::Full => typename.clone(),
+                            },
+                            variant: child_node.name().to_string(),
                         }),
                         child_node,
                         scheme,

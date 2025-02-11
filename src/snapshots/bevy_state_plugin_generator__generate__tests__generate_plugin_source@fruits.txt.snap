@@ -26,22 +26,22 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Ready = Ready::Menu)]
-    pub enum ReadyMenu {
+    #[source(GameStateReady = GameStateReady::Menu)]
+    pub enum GameStateReadyMenu {
         #[default]
         Main,
         Options,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Menu = Menu::Main)]
-    pub struct MenuMain;
+    #[source(GameStateReadyMenu = GameStateReadyMenu::Main)]
+    pub struct GameStateReadyMenuMain;
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Menu = Menu::Options)]
-    pub struct MenuOptions;
+    #[source(GameStateReadyMenu = GameStateReadyMenu::Options)]
+    pub struct GameStateReadyMenuOptions;
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Ready = Ready::Game)]
-    pub enum ReadyGame {
+    #[source(GameStateReady = GameStateReady::Game)]
+    pub enum GameStateReadyGame {
         #[default]
         Playing,
         Paused,
@@ -49,14 +49,14 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Playing)]
-    pub struct GamePlaying;
+    #[source(GameStateReadyGame = GameStateReadyGame::Playing)]
+    pub struct GameStateReadyGamePlaying;
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Paused)]
-    pub struct GamePaused;
+    #[source(GameStateReadyGame = GameStateReadyGame::Paused)]
+    pub struct GameStateReadyGamePaused;
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::GameOver)]
-    pub struct GameGameOver;
+    #[source(GameStateReadyGame = GameStateReadyGame::GameOver)]
+    pub struct GameStateReadyGameGameOver;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
