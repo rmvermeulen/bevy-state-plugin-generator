@@ -63,6 +63,10 @@ pub(crate) fn generate_states_plugin(states: Rc<StateConfig>, config: PluginConf
         state_name,
         states_module_name,
     } = config;
+    let header = r#"
+        #![allow(missing_docs)]
+        use bevy::prelude::AppExtStates;
+    "#;
     let plugin = {
         let struct_decl = format!("pub struct {plugin_name};");
         let impl_block = format!("impl bevy::app::Plugin for {plugin_name}");
@@ -70,13 +74,11 @@ pub(crate) fn generate_states_plugin(states: Rc<StateConfig>, config: PluginConf
         let build_fn = format!("fn build(&self, app: &mut bevy::app::App) {{ {init} }}");
         format!("{struct_decl}\n{impl_block} {{ {build_fn} }}")
     };
-    let states_module = {
-        format!(
-            "pub mod {states_module_name} {{ use bevy::prelude::States; {type_definitions} }}",
-            type_definitions = generate_all_type_definitions(&states),
-        )
-    };
-    let source = states_module + &plugin;
+    let states_module = format!(
+        "pub mod {states_module_name} {{ use bevy::prelude::States; {type_definitions} }}",
+        type_definitions = generate_all_type_definitions(&states),
+    );
+    let source = [header, &states_module, &plugin].join("\n");
     format_source(&source)
 }
 
@@ -133,6 +135,9 @@ mod tests {
             ]),
         ]);
         assert_snapshot!(generate_states_plugin(Rc::new(states), Default::default()), @r"
+        #![allow(missing_docs)]
+        use bevy::prelude::AppExtStates;
+
         pub mod states {
             use bevy::prelude::States;
             #[derive(States, Hash, Default, Debug, Clone, PartialEq, Eq)]
