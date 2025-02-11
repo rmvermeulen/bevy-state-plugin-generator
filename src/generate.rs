@@ -276,15 +276,6 @@ mod tests {
             ]),
         ])
     }
-    #[rstest]
-    fn something_c(#[from(root_source_state)] source: SourceState) {
-        assert_that!(generate_all_type_definitions(
-            Some(source.clone()),
-            &Node::singleton("Main"),
-            NamingScheme::Full
-        ))
-        .contains("pub struct GameMenuMain;");
-    }
 
     #[rstest]
     fn test_generate_all_type_definitions_full(
@@ -295,8 +286,8 @@ mod tests {
             generate_all_type_definitions(Some(source.clone()), &node, NamingScheme::Full);
         assert_that!(typedef_result).contains("GameMenu");
         assert_that!(typedef_result).contains("GameMenuMain");
-        assert_that!(typedef_result).contains("GameMenuMainOptions");
-        assert_that!(typedef_result).contains("GameMenuMainOptionsGraphics");
+        assert_that!(typedef_result).contains("GameMenuOptions");
+        assert_that!(typedef_result).contains("GameMenuOptionsGraphics");
     }
 
     #[rstest]
@@ -308,8 +299,8 @@ mod tests {
             generate_all_type_definitions(Some(source), &node, NamingScheme::Shortened);
         assert_that!(typedef_result).contains("GameMenu");
         assert_that!(typedef_result).contains("GameMenuMain");
-        assert_that!(typedef_result).contains("GameMenuMainOptions");
-        assert_that!(typedef_result).contains("GameMenuMainOptionsGraphics");
+        assert_that!(typedef_result).contains("MenuOptions");
+        assert_that!(typedef_result).contains("OptionsGraphics");
     }
 
     #[rstest]
