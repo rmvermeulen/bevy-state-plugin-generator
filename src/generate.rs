@@ -104,7 +104,7 @@ pub(crate) fn generate_states_plugin(states: Rc<StateConfig>, config: PluginConf
         format!("{struct_decl}\n{impl_block} {{ {build_fn} }}")
     };
     let states_module = format!(
-        "pub mod {states_module_name} {{ {type_definitions} }}",
+        "pub mod {states_module_name} {{ use bevy::prelude::StateSet; {type_definitions} }}",
         type_definitions = generate_all_type_definitions(None, &states),
     );
     let source = [header, &states_module, &plugin].join("\n");
