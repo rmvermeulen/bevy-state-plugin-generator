@@ -6,65 +6,43 @@ Ok(
     (
         "",
         List(
-            Orphan {
-                name: "Name",
-            },
+            "Name",
             [
                 Enum(
-                    Orphan {
-                        name: "A",
-                    },
+                    "A",
                     [
                         Singleton(
-                            Orphan {
-                                name: "B",
-                            },
+                            "B",
                         ),
                         List(
-                            Orphan {
-                                name: "C",
-                            },
+                            "C",
                             [
                                 Singleton(
-                                    Orphan {
-                                        name: "D",
-                                    },
+                                    "D",
                                 ),
                                 Enum(
-                                    Orphan {
-                                        name: "E",
-                                    },
+                                    "E",
                                     [
                                         Singleton(
-                                            Orphan {
-                                                name: "F",
-                                            },
+                                            "F",
                                         ),
                                         Singleton(
-                                            Orphan {
-                                                name: "G",
-                                            },
+                                            "G",
                                         ),
                                     ],
                                 ),
                             ],
                         ),
                         Singleton(
-                            Orphan {
-                                name: "H",
-                            },
+                            "H",
                         ),
                     ],
                 ),
                 Singleton(
-                    Orphan {
-                        name: "I",
-                    },
+                    "I",
                 ),
                 Singleton(
-                    Orphan {
-                        name: "J",
-                    },
+                    "J",
                 ),
             ],
         ),

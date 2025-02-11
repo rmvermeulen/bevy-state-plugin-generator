@@ -6,9 +6,7 @@ Ok(
     (
         "",
         Singleton(
-            Orphan {
-                name: "Name",
-            },
+            "Name",
         ),
     ),
 )

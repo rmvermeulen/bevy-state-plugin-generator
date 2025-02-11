@@ -1,16 +1,19 @@
 use std::rc::Rc;
 
-use iter_tools::Itertools;
 use nom::{
     IResult, Parser, branch::alt, bytes::complete::*, character::complete::*,
     combinator::recognize, multi::many0, sequence::*,
 };
 
 use crate::{
-    nodes::{Node, NodeData},
-    tokens::{Comment, Identifier, Token},
+    nodes::Node,
+    tokens::{Identifier, Token},
 };
 
+#[cfg(test)]
+use crate::tokens::Comment;
+
+#[cfg(test)]
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     delimited(
         pair(tag("//"), space0),
@@ -99,30 +102,7 @@ pub fn parse_states_file(input: &str, root_state_name: &str) -> Result<Rc<Node>,
                 Node::enumeration(root_state_name, nodes)
             }
         })
-        .map(|root| get_connected_tree(&root))
         .map(Rc::new)
-}
-
-fn get_connected_tree(node: &Node) -> Node {
-    match node {
-        Node::Enum(data, children) => Node::Enum(
-            data.clone(),
-            children
-                .iter()
-                .map(|child| get_connected_tree(child))
-                .map(Rc::new)
-                .collect_vec(),
-        ),
-        Node::List(data, children) => Node::List(
-            data.clone(),
-            children
-                .iter()
-                .map(|child| get_connected_tree(child))
-                .map(Rc::new)
-                .collect_vec(),
-        ),
-        Node::Singleton(data) => Node::Singleton(data.clone()),
-    }
 }
 
 pub fn parse_node(input: &str) -> IResult<&str, Node> {
@@ -132,7 +112,7 @@ pub fn parse_node(input: &str) -> IResult<&str, Node> {
 pub fn parse_singleton(input: &str) -> IResult<&str, Node> {
     skip_to(identifier)
         .parse(input)
-        .map_result(NodeData::from)
+        .map_result(|s| s.to_string())
         .map_result(Node::Singleton)
 }
 
@@ -140,16 +120,16 @@ pub fn parse_enum(input: &str) -> IResult<&str, Node> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_enum, parse_elements_until(close_enum))).parse(input)?;
-    Ok((input, Node::Enum(name.into(), children)))
+    Ok((input, Node::Enum(name.to_string(), children)))
 }
 
 pub fn parse_list(input: &str) -> IResult<&str, Node> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
-    Ok((input, Node::List(name.into(), children)))
+    Ok((input, Node::List(name.to_string(), children)))
 }
-pub fn parse_elements_until<'a>(
+pub fn parse_elements_until(
     until: impl Fn(&str) -> IResult<&str, Token<'_>> + Copy,
 ) -> impl Fn(&str) -> IResult<&str, Vec<Rc<Node>>> {
     move |input: &str| {
@@ -228,9 +208,7 @@ mod tests {
         (
             "",
             Enum(
-                Orphan {
-                    name: "Name",
-                },
+                "Name",
                 [],
             ),
         )
@@ -239,9 +217,7 @@ mod tests {
         (
             "",
             Enum(
-                Orphan {
-                    name: "Name",
-                },
+                "Name",
                 [],
             ),
         )
@@ -338,27 +314,6 @@ mod tests {
                     code: Tag,
                 },
             ),
-        )
-        "#);
-    }
-
-    #[rstest]
-    fn test_get_connected_tree() {
-        let node = Node::enumeration("Root", [Node::singleton("A")]);
-        let tree = get_connected_tree(&node);
-        assert_debug_snapshot!(tree, @r#"
-        Enum(
-            Orphan {
-                name: "Root",
-            },
-            [
-                Singleton(
-                    Child {
-                        name: "A",
-                        parent: "Root",
-                    },
-                ),
-            ],
         )
         "#);
     }

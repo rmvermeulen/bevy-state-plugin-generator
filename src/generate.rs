@@ -8,8 +8,9 @@ use crate::nodes::Node;
 use crate::parser::parse_states_file;
 
 fn generate_type_definition(source_state: Option<SourceState>, node: &Node) -> String {
-    let derives = source_state
+    let (typename, derives) = source_state
         .map(|source_state| {
+            ( format!("{}{}", source_state.display_name(), node.name()),
             [
                 "#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]",
                 &format!(
@@ -18,13 +19,13 @@ fn generate_type_definition(source_state: Option<SourceState>, node: &Node) -> S
                     variant = source_state.display_variant()
                 ),
             ]
-            .join("\n")
+            .join("\n"))
         })
-        .unwrap_or(
+        .unwrap_or((
+            node.name().to_string(),
             "#[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]"
                 .to_owned(),
-        );
-    let typename = node.computed_name();
+        ));
 
     match node {
         Node::Singleton(_) | Node::List(_, _) => {
@@ -37,18 +38,17 @@ fn generate_type_definition(source_state: Option<SourceState>, node: &Node) -> S
     }
 }
 
-fn generate_all_type_definitions(parent: Option<SourceState>, states: &Node) -> String {
-    let own_type = generate_type_definition(parent, states);
-    match states {
+fn generate_all_type_definitions(parent: Option<SourceState>, root_node: &Node) -> String {
+    let own_type = generate_type_definition(parent, root_node);
+    match root_node {
         Node::Singleton(_) => own_type,
         Node::Enum(_, variants) | Node::List(_, variants) => {
-            let parent_name = states.computed_name();
             let variants = variants
                 .iter()
                 .map(|variant| {
                     generate_all_type_definitions(
                         Some(SourceState {
-                            name: parent_name.clone(),
+                            name: root_node.name().to_string().clone(),
                             variant: variant.name().to_string(),
                         }),
                         variant,
@@ -68,12 +68,6 @@ pub fn generate_debug_info(src_path: &str, source: &str) -> String {
 }
 
 pub(crate) fn generate_plugin_source(root_state: Rc<Node>, config: PluginConfig) -> String {
-    let parents = root_state
-        .children()
-        .into_iter()
-        .filter(|c| !c.data().is_orphan())
-        .collect_vec();
-    assert!(parents.is_empty(), "Root state is fucked up");
     let PluginConfig {
         plugin_name,
         state_name,
@@ -188,34 +182,34 @@ mod tests {
 
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(GameState = GameState::Loading)]
-        pub struct Loading;
+        pub struct GameStateLoading;
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(GameState = GameState::Ready)]
-        pub enum Ready { #[default] Menu, Game }
+        pub enum GameStateReady { #[default] Menu, Game }
 
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(Ready = Ready::Menu)]
-        pub enum Menu { #[default] Main, Options }
+        pub enum ReadyMenu { #[default] Main, Options }
 
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(Menu = Menu::Main)]
-        pub struct Main;
+        pub struct MenuMain;
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(Menu = Menu::Options)]
-        pub struct Options;
+        pub struct MenuOptions;
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(Ready = Ready::Game)]
-        pub enum Game { #[default] Playing, Paused, GameOver }
+        pub enum ReadyGame { #[default] Playing, Paused, GameOver }
 
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(Game = Game::Playing)]
-        pub struct Playing;
+        pub struct GamePlaying;
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(Game = Game::Paused)]
-        pub struct Paused;
+        pub struct GamePaused;
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(Game = Game::GameOver)]
-        pub struct GameOver; }
+        pub struct GameGameOver; }
         pub struct GeneratedStatesPlugin;
         impl bevy::app::Plugin for GeneratedStatesPlugin { fn build(&self, app: &mut bevy::app::App) { app.init_state::<states::GameState>(); } }
         ");

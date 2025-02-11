@@ -6,14 +6,10 @@ Ok(
     (
         "",
         Enum(
-            Orphan {
-                name: "Name",
-            },
+            "Name",
             [
                 Singleton(
-                    Orphan {
-                        name: "A",
-                    },
+                    "A",
                 ),
             ],
         ),
