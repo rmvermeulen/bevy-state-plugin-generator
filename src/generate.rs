@@ -2,9 +2,10 @@ use std::{io, rc::Rc};
 
 use iter_tools::Itertools;
 
+use crate::PluginConfig;
 use crate::model::SourceState;
 use crate::nodes::Node;
-use crate::{PluginConfig, parse_config};
+use crate::parser::parse_states_file;
 
 fn generate_type_definition(source_state: Option<SourceState>, node: &Node) -> String {
     let derives = source_state
@@ -30,7 +31,7 @@ fn generate_type_definition(source_state: Option<SourceState>, node: &Node) -> S
             format!("{derives}\npub struct {typename};")
         }
         Node::Enum(_, variants) => {
-            let variants = variants.iter().map(|variant| variant.own_name()).join(", ");
+            let variants = variants.iter().map(|variant| variant.name()).join(", ");
             format!("{derives}\npub enum {typename} {{ #[default] {variants} }}")
         }
     }
@@ -48,7 +49,7 @@ fn generate_all_type_definitions(parent: Option<SourceState>, states: &Node) -> 
                     generate_all_type_definitions(
                         Some(SourceState {
                             name: parent_name.clone(),
-                            variant: variant.own_name(),
+                            variant: variant.name().to_string(),
                         }),
                         variant,
                     )
@@ -59,20 +60,27 @@ fn generate_all_type_definitions(parent: Option<SourceState>, states: &Node) -> 
     }
 }
 
-pub fn generate_debug_info(src_path: &str, source: &str, states: &Vec<Rc<Node>>) -> String {
+pub fn generate_debug_info(src_path: &str, source: &str) -> String {
     format!(
-        "// src: {src_path}\n{lines}\n// {states:?}",
-        lines = source.lines().map(|line| format!("// {line}")).join("\n")
+        "// src: {src_path}\n{lines}",
+        lines = source.lines().map(|line| format!(" // {line}")).join("\n")
     )
 }
 
-pub(crate) fn generate_states_plugin(states: Rc<Node>, config: PluginConfig) -> String {
+pub(crate) fn generate_plugin_source(root_state: Rc<Node>, config: PluginConfig) -> String {
+    let parents = root_state
+        .children()
+        .into_iter()
+        .filter(|c| !c.data().is_orphan())
+        .collect_vec();
+    assert!(parents.is_empty(), "Root state is fucked up");
     let PluginConfig {
         plugin_name,
         state_name,
         states_module_name,
-        scheme,
+        scheme: _,
     } = config;
+
     let header = r#"
         #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
@@ -86,14 +94,17 @@ pub(crate) fn generate_states_plugin(states: Rc<Node>, config: PluginConfig) -> 
     };
     let states_module = format!(
         "pub mod {states_module_name} {{ use bevy::prelude::StateSet; {type_definitions} }}",
-        type_definitions = generate_all_type_definitions(None, &states),
+        type_definitions = generate_all_type_definitions(None, &root_state),
     );
     [header, &states_module, &plugin].join("\n")
 }
 
 #[cfg(feature = "format")]
 pub fn try_format_source(source: &str) -> io::Result<String> {
-    duct::cmd!("rustfmt").stdin_bytes(source).read()
+    duct::cmd!("rustfmt")
+        .stdin_bytes(source)
+        .stderr_to_stdout()
+        .read()
 }
 
 pub fn format_source<S: AsRef<str>>(source: S) -> String {
@@ -114,28 +125,13 @@ pub fn generate_full_source<P: AsRef<str> + std::fmt::Display, S: AsRef<str>>(
     plugin_config: PluginConfig,
 ) -> Result<String, String> {
     let source = source.as_ref();
-    let (_, state_config) = parse_config(source).map_err(|e| format!("{e:?}"))?;
-    let states = state_config.into_iter().map(Rc::new).collect_vec();
+    let root_node =
+        parse_states_file(source, plugin_config.state_name).map_err(|e| format!("{e:?}"))?;
 
-    let debug_info = generate_debug_info(src_path.as_ref(), source, &states);
-    let plugin_source = match generate_plugin_source(states, plugin_config) {
-        Ok(plugin_source) => plugin_source,
-        Err(message) => message,
-    };
-    Ok(format_source([debug_info, plugin_source].join("\n")))
-}
-
-pub fn generate_plugin_source(
-    states: Vec<Rc<Node>>,
-    plugin_config: PluginConfig,
-) -> Result<String, String> {
-    let state_config = Rc::new(if states.is_empty() {
-        Node::singleton(plugin_config.state_name)
-    } else {
-        Node::enumeration(plugin_config.state_name, states)
-    });
-
-    Ok(generate_states_plugin(state_config, plugin_config))
+    let debug_info = generate_debug_info(src_path.as_ref(), source);
+    let plugin_source = generate_plugin_source(root_node, plugin_config);
+    let source = [debug_info, plugin_source].join("\n");
+    Ok(format_source(source))
 }
 
 #[cfg(test)]
@@ -183,69 +179,45 @@ mod tests {
                 ]),
             ]),
         ]);
-        assert_snapshot!(generate_states_plugin(Rc::new(states), Default::default()), @r"
-        #![allow(missing_docs)]
-        use bevy::prelude::AppExtStates;
+        assert_snapshot!(generate_plugin_source(Rc::new(states), Default::default()), @r"
+                #![allow(missing_docs)]
+                use bevy::prelude::AppExtStates;
+            
+        pub mod states { use bevy::prelude::StateSet; #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        pub enum GameState { #[default] Loading, Ready }
 
-        pub mod states {
-            use bevy::prelude::StateSet;
-            #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            pub enum GameState {
-                #[default]
-                Loading,
-                Ready,
-            }
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameState = GameState::Loading)]
+        pub struct Loading;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameState = GameState::Ready)]
+        pub enum Ready { #[default] Menu, Game }
 
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(GameState = GameState::Loading)]
-            pub struct Loading;
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(GameState = GameState::Ready)]
-            pub enum Ready {
-                #[default]
-                Menu,
-                Game,
-            }
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Ready = Ready::Menu)]
+        pub enum Menu { #[default] Main, Options }
 
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(Ready = Ready::Menu)]
-            pub enum Menu {
-                #[default]
-                Main,
-                Options,
-            }
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Menu = Menu::Main)]
+        pub struct Main;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Menu = Menu::Options)]
+        pub struct Options;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Ready = Ready::Game)]
+        pub enum Game { #[default] Playing, Paused, GameOver }
 
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(Menu = Menu::Main)]
-            pub struct Main;
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(Menu = Menu::Options)]
-            pub struct Options;
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(Ready = Ready::Game)]
-            pub enum Game {
-                #[default]
-                Playing,
-                Paused,
-                GameOver,
-            }
-
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(Game = Game::Playing)]
-            pub struct Playing;
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(Game = Game::Paused)]
-            pub struct Paused;
-            #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-            #[source(Game = Game::GameOver)]
-            pub struct GameOver;
-        }
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Game = Game::Playing)]
+        pub struct Playing;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Game = Game::Paused)]
+        pub struct Paused;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Game = Game::GameOver)]
+        pub struct GameOver; }
         pub struct GeneratedStatesPlugin;
-        impl bevy::app::Plugin for GeneratedStatesPlugin {
-            fn build(&self, app: &mut bevy::app::App) {
-                app.init_state::<states::GameState>();
-            }
-        }
+        impl bevy::app::Plugin for GeneratedStatesPlugin { fn build(&self, app: &mut bevy::app::App) { app.init_state::<states::GameState>(); } }
         ");
     }
 
@@ -254,19 +226,17 @@ mod tests {
     #[case("fruits.txt", "Apple Orange { O1 O2 }")]
     fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
         set_snapshot_suffix!("{src_path}");
-        assert_snapshot!(generate_debug_info(src_path, source, &vec![]));
+        assert_snapshot!(generate_debug_info(src_path, source));
     }
 
-    fn test_generate_plugin_only(states: Vec<Rc<Node>>, plugin_config: PluginConfig) -> String {
-        generate_plugin_source(states, plugin_config)
-            .map(format_source)
-            .unwrap_or_else(identity)
+    fn test_plugin_formatted(root_node: Rc<Node>, plugin_config: PluginConfig) -> String {
+        format_source(generate_plugin_source(root_node, plugin_config))
     }
 
     #[rstest]
-    #[case("fruits.txt", vec![
-            Rc::new(Node::singleton("Loading")),
-            Rc::new(Node::enumeration("Ready", [
+    #[case("fruits.txt", Rc::new(Node::enumeration("GameState", [
+            Node::singleton("Loading"),
+            Node::enumeration("Ready", [
                 Node::enumeration("Menu", [
                     Node::singleton("Main"),
                     Node::singleton("Options"),
@@ -276,15 +246,15 @@ mod tests {
                     Node::singleton("Paused"),
                     Node::singleton("GameOver"),
                 ]),
-            ])),
-        ], PluginConfig::default())]
+            ]),
+        ])), PluginConfig::default())]
     fn test_generate_plugin_source(
         #[case] src_path: &str,
-        #[case] source: Vec<Rc<Node>>,
+        #[case] root_node: Rc<Node>,
         #[case] plugin_config: PluginConfig,
     ) {
         set_snapshot_suffix!("{src_path}");
-        assert_snapshot!(test_generate_plugin_only(source, plugin_config));
+        assert_snapshot!(test_plugin_formatted(root_node, plugin_config));
     }
 
     #[rstest]

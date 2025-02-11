@@ -1,32 +1,48 @@
-use std::{
-    any::{type_name, type_name_of_val},
-    rc::Rc,
-};
+use std::rc::Rc;
 
 use iter_tools::Itertools;
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct NodeData {
-    pub name: String,
-    pub parent: Option<Rc<Node>>,
+pub enum NodeData {
+    Orphan { name: String },
+    Child { name: String, parent: Rc<Node> },
 }
 
 impl NodeData {
+    pub fn is_orphan(&self) -> bool {
+        matches!(self, NodeData::Orphan { .. })
+    }
     pub fn new<S: ToString>(name: S, parent: Option<Rc<Node>>) -> Self {
-        NodeData {
-            name: name.to_string(),
-            parent,
+        let name = name.to_string();
+        match parent {
+            Some(parent) => NodeData::Child { name, parent },
+            None => NodeData::Orphan { name },
+        }
+    }
+    pub fn name(&self) -> &str {
+        match self {
+            NodeData::Orphan { name } => name,
+            NodeData::Child { name, .. } => name,
         }
     }
     pub fn computed_name(&self) -> String {
-        format!(
-            "{}{}",
-            self.parent
-                .as_ref()
-                .map(|parent| parent.computed_name())
-                .unwrap_or_default(),
-            self.name
-        )
+        match self {
+            NodeData::Orphan { name } => name.clone(),
+            NodeData::Child { name, parent } => {
+                format!("{}{}", parent.computed_name(), name)
+            }
+        }
+    }
+    pub fn try_set_parent(&mut self, parent: Rc<Node>) -> Result<(), String> {
+        if let NodeData::Orphan { name } = self {
+            *self = NodeData::Child {
+                name: name.clone(),
+                parent,
+            };
+            Ok(())
+        } else {
+            Err("Node already has a parent".to_string())
+        }
     }
 }
 
@@ -56,6 +72,7 @@ impl Node {
             variants.into_iter().map(Into::into).collect_vec(),
         )
     }
+    #[cfg(test)]
     pub fn list<N: Into<Rc<Node>>, V: IntoIterator<Item = N>, D: Into<NodeData>>(
         data: D,
         variants: V,
@@ -65,12 +82,24 @@ impl Node {
             variants.into_iter().map(Into::into).collect_vec(),
         )
     }
+    #[cfg(test)]
     pub fn list_empty<N: Into<NodeData>>(name: N) -> Self {
         Self::List(name.into(), Vec::new())
     }
-    pub fn own_name(&self) -> String {
+    pub fn children(&self) -> Vec<Rc<Node>> {
         match self {
-            Node::Singleton(data) | Node::Enum(data, _) | Node::List(data, _) => data.name.clone(),
+            Node::Enum(_, variants) | Node::List(_, variants) => variants.clone(),
+            _ => Default::default(),
+        }
+    }
+    pub fn data(&self) -> &NodeData {
+        match self {
+            Node::Singleton(data) | Node::Enum(data, _) | Node::List(data, _) => data,
+        }
+    }
+    pub fn name(&self) -> &str {
+        match self {
+            Node::Singleton(data) | Node::Enum(data, _) | Node::List(data, _) => data.name(),
         }
     }
     pub fn computed_name(&self) -> String {
@@ -80,25 +109,10 @@ impl Node {
             }
         }
     }
-    pub fn prepend_variant(&mut self, variant: Rc<Node>) {
-        let to_add = variant.clone();
+    pub fn try_set_parent(&mut self, parent: Rc<Node>) -> Result<(), String> {
         match self {
-            Node::Singleton(name) => {
-                *self = Node::Enum(name.clone(), vec![variant]);
-            }
-            Node::Enum(_, variants) => {
-                variants.insert(0, variant);
-            }
-            Node::List(_, variants) => {
-                variants.insert(0, variant);
-            }
+            Node::Singleton(data) => data.try_set_parent(parent),
+            Node::Enum(data, _) | Node::List(data, _) => data.try_set_parent(parent),
         }
-        println!(
-            "{}::{}: {:?} (after adding {:?})",
-            type_name::<Self>(),
-            type_name_of_val(&Self::prepend_variant),
-            self,
-            to_add
-        );
     }
 }

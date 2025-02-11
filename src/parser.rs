@@ -1,5 +1,6 @@
 use std::rc::Rc;
 
+use iter_tools::Itertools;
 use nom::{
     IResult, Parser, branch::alt, bytes::complete::*, character::complete::*,
     combinator::recognize, multi::many0, sequence::*,
@@ -9,6 +10,7 @@ use crate::{
     nodes::{Node, NodeData},
     tokens::{Comment, Identifier, Token},
 };
+
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     delimited(
         pair(tag("//"), space0),
@@ -78,13 +80,49 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
-pub fn parse_config(input: &str) -> IResult<&str, Vec<Node>> {
+fn parse_config(input: &str) -> IResult<&str, Vec<Node>> {
     many0(alt((
         parse_node,
         terminated(parse_node, separator),
         preceded(separator, parse_node),
     )))
     .parse(input)
+}
+
+pub fn parse_states_file(input: &str, root_state_name: &str) -> Result<Rc<Node>, String> {
+    parse_config(input)
+        .map_err(|e| format!("{:?}", e))
+        .map(|(_, nodes)| {
+            if nodes.is_empty() {
+                Node::singleton(root_state_name)
+            } else {
+                Node::enumeration(root_state_name, nodes)
+            }
+        })
+        .map(|root| get_connected_tree(&root))
+        .map(Rc::new)
+}
+
+fn get_connected_tree(node: &Node) -> Node {
+    match node {
+        Node::Enum(data, children) => Node::Enum(
+            data.clone(),
+            children
+                .iter()
+                .map(|child| get_connected_tree(child))
+                .map(Rc::new)
+                .collect_vec(),
+        ),
+        Node::List(data, children) => Node::List(
+            data.clone(),
+            children
+                .iter()
+                .map(|child| get_connected_tree(child))
+                .map(Rc::new)
+                .collect_vec(),
+        ),
+        Node::Singleton(data) => Node::Singleton(data.clone()),
+    }
 }
 
 pub fn parse_node(input: &str) -> IResult<&str, Node> {
@@ -190,9 +228,8 @@ mod tests {
         (
             "",
             Enum(
-                NodeData {
+                Orphan {
                     name: "Name",
-                    parent: None,
                 },
                 [],
             ),
@@ -202,9 +239,8 @@ mod tests {
         (
             "",
             Enum(
-                NodeData {
+                Orphan {
                     name: "Name",
-                    parent: None,
                 },
                 [],
             ),
@@ -302,6 +338,27 @@ mod tests {
                     code: Tag,
                 },
             ),
+        )
+        "#);
+    }
+
+    #[rstest]
+    fn test_get_connected_tree() {
+        let node = Node::enumeration("Root", [Node::singleton("A")]);
+        let tree = get_connected_tree(&node);
+        assert_debug_snapshot!(tree, @r#"
+        Enum(
+            Orphan {
+                name: "Root",
+            },
+            [
+                Singleton(
+                    Child {
+                        name: "A",
+                        parent: "Root",
+                    },
+                ),
+            ],
         )
         "#);
     }

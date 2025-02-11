@@ -1,9 +1,10 @@
 #![feature(coverage_attribute)]
+#![warn(missing_docs)]
+#![doc = include_str!("../Readme.md")]
 
 use std::{fs, io, path::Path};
 
 use generate::generate_full_source;
-use parser::parse_config;
 
 pub(crate) mod generate;
 pub(crate) mod model;
@@ -13,7 +14,13 @@ pub(crate) mod tokens;
 
 pub use model::{NamingScheme, PluginConfig};
 
-#[doc = include_str!("../Readme.md")]
+/// ```rust no_run
+/// use bevy_state_plugin_generator::*;
+/// fn main() {
+///   on_build_generate_plugin("src/states.txt", "src/generated_states.rs", PluginConfig::default())
+///     .expect("Failed to generate plugin!");
+/// }
+/// ```
 #[cfg_attr(coverage_nightly, coverage(off))]
 pub fn on_build_generate_plugin(
     src: impl AsRef<Path>,

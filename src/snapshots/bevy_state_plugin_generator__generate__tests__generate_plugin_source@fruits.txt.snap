@@ -1,11 +1,12 @@
 ---
 source: src/generate.rs
-expression: "match generate_plugin_source(source, plugin_config)\n{ Ok(plugin_source) => plugin_source, Err(message) => message, }"
+expression: "test_plugin_formatted(root_node, plugin_config)"
 ---
 #![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
 
 pub mod states {
+    use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum GameState {
         #[default]

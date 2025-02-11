@@ -1,0 +1,21 @@
+---
+source: src/parser.rs
+expression: parse_node(input)
+---
+Ok(
+    (
+        "",
+        Enum(
+            Orphan {
+                name: "Name",
+            },
+            [
+                Singleton(
+                    Orphan {
+                        name: "A",
+                    },
+                ),
+            ],
+        ),
+    ),
+)

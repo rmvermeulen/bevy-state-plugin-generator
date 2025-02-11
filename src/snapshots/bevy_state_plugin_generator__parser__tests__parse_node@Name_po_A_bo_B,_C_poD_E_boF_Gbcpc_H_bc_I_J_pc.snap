@@ -1,0 +1,72 @@
+---
+source: src/parser.rs
+expression: parse_node(input)
+---
+Ok(
+    (
+        "",
+        List(
+            Orphan {
+                name: "Name",
+            },
+            [
+                Enum(
+                    Orphan {
+                        name: "A",
+                    },
+                    [
+                        Singleton(
+                            Orphan {
+                                name: "B",
+                            },
+                        ),
+                        List(
+                            Orphan {
+                                name: "C",
+                            },
+                            [
+                                Singleton(
+                                    Orphan {
+                                        name: "D",
+                                    },
+                                ),
+                                Enum(
+                                    Orphan {
+                                        name: "E",
+                                    },
+                                    [
+                                        Singleton(
+                                            Orphan {
+                                                name: "F",
+                                            },
+                                        ),
+                                        Singleton(
+                                            Orphan {
+                                                name: "G",
+                                            },
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                        Singleton(
+                            Orphan {
+                                name: "H",
+                            },
+                        ),
+                    ],
+                ),
+                Singleton(
+                    Orphan {
+                        name: "I",
+                    },
+                ),
+                Singleton(
+                    Orphan {
+                        name: "J",
+                    },
+                ),
+            ],
+        ),
+    ),
+)

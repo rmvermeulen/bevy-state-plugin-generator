@@ -1,15 +1,15 @@
 ---
 source: src/generate.rs
-expression: "match generate_full_source(src_path, source, plugin_config)\n{ Ok(full_source) => full_source, Err(message) => message, }"
+expression: "generate_full_source(src_path, source, plugin_config).unwrap_or_else(identity)"
 ---
 // src: mixed-nested-states.txt
 // A { B [C[ } D { E F [ G H ] I }
-// [Single("A")]
 
 #![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
 
 pub mod states {
+    use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum GameState {
         #[default]
@@ -18,7 +18,7 @@ pub mod states {
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::A)]
-    pub struct GameStateA;
+    pub struct A;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {

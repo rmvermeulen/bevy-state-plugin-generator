@@ -6,9 +6,8 @@ Ok(
     (
         "",
         Singleton(
-            NodeData {
+            Orphan {
                 name: "Name",
-                parent: None,
             },
         ),
     ),

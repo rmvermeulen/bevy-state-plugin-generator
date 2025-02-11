@@ -1,7 +1,6 @@
 ---
 source: src/generate.rs
-expression: "generate_debug_info(src_path, source, &vec![])"
+expression: "generate_debug_info(src_path, source)"
 ---
 // src: root.txt
-// RootState
-// []
+ // RootState
