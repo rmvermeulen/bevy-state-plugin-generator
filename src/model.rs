@@ -1,85 +1,57 @@
-use std::{
-    any::{type_name, type_name_of_val},
-    rc::Rc,
-};
-
-use crate::stack_parser::{self, Node};
-
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) enum StateConfig {
-    Single(String),
-    Enum(String, Vec<Rc<StateConfig>>),
-    List(String, Vec<Rc<StateConfig>>),
+pub struct SourceState {
+    pub name: String,
+    pub variant: String,
 }
 
-impl StateConfig {
-    pub fn name(&self) -> &str {
-        match self {
-            StateConfig::Single(name) | StateConfig::Enum(name, _) | StateConfig::List(name, _) => {
-                name
-            }
-        }
+impl SourceState {
+    pub fn display_name(&self) -> String {
+        self.name.clone()
     }
-    pub fn single<S: ToString>(name: S) -> Self {
-        Self::Single(name.to_string())
-    }
-    pub fn list<S: ToString, C: Into<Rc<StateConfig>>, V: IntoIterator<Item = C>>(
-        name: S,
-        variants: V,
-    ) -> Self {
-        Self::List(
-            name.to_string(),
-            variants.into_iter().map(Into::into).collect(),
-        )
-    }
-    pub fn variants<S: ToString, C: Into<Rc<StateConfig>>, V: IntoIterator<Item = C>>(
-        name: S,
-        variants: V,
-    ) -> Self {
-        Self::Enum(
-            name.to_string(),
-            variants.into_iter().map(Into::into).collect(),
-        )
-    }
-    pub fn prepend_variant(&mut self, variant: Rc<StateConfig>) {
-        let to_add = variant.clone();
-        match self {
-            StateConfig::Single(name) => {
-                *self = StateConfig::Enum(name.to_string(), vec![variant]);
-            }
-            StateConfig::Enum(_, variants) => {
-                variants.insert(0, variant);
-            }
-            StateConfig::List(_, variants) => {
-                variants.insert(0, variant);
-            }
-        }
-        println!(
-            "{}::{}: {:?} (after adding {:?})",
-            type_name::<Self>(),
-            type_name_of_val(&Self::prepend_variant),
-            self,
-            to_add
-        );
+    pub fn display_variant(&self) -> String {
+        format!("{}::{}", self.name, self.variant)
     }
 }
 
-impl From<stack_parser::Node> for StateConfig {
-    fn from(node: Node) -> Self {
-        match node {
-            stack_parser::Node::Singleton(name) => StateConfig::single(name),
-            stack_parser::Node::Enum(name, children) => StateConfig::variants(
-                name,
-                children
-                    .into_iter()
-                    .map(|child| -> StateConfig { (*child).clone().into() }),
-            ),
-            stack_parser::Node::List(name, children) => StateConfig::list(
-                name,
-                children
-                    .into_iter()
-                    .map(|child| -> StateConfig { (*child).clone().into() }),
-            ),
+#[derive(Default, Debug, Clone, Copy)]
+pub enum NamingScheme {
+    #[default]
+    Full,
+    // TODO: implement this
+    Shortened,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct PluginConfig<'a> {
+    pub plugin_name: &'a str,
+    pub state_name: &'a str,
+    pub states_module_name: &'a str,
+    pub scheme: NamingScheme,
+}
+
+impl<'a> PluginConfig<'a> {
+    pub fn new(
+        plugin_name: &'a str,
+        state_name: &'a str,
+        states_module_name: &'a str,
+        scheme: NamingScheme,
+    ) -> PluginConfig<'a> {
+        PluginConfig {
+            plugin_name,
+            state_name,
+            states_module_name,
+            scheme,
+        }
+    }
+}
+
+impl Default for PluginConfig<'_> {
+    fn default() -> Self {
+        Self {
+            plugin_name: "GeneratedStatesPlugin",
+            state_name: "GameState",
+            states_module_name: "states",
+            scheme: Default::default(),
         }
     }
 }

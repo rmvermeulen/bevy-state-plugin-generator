@@ -2,13 +2,16 @@
 
 use std::{fs, io, path::Path};
 
-pub use generate::PluginConfig;
 use generate::generate_full_source;
-use stack_parser::parse_config;
+use parser::parse_config;
 
 pub(crate) mod generate;
 pub(crate) mod model;
-pub(crate) mod stack_parser;
+pub(crate) mod nodes;
+pub(crate) mod parser;
+pub(crate) mod tokens;
+
+pub use model::{NamingScheme, PluginConfig};
 
 #[doc = include_str!("../Readme.md")]
 #[cfg_attr(coverage_nightly, coverage(off))]

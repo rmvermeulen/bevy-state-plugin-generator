@@ -19,6 +19,12 @@ generate = []
 format = ["dep:duct"]
 
 [dependencies]
+derive_more = { version = "2.0.1", features = [
+    "deref",
+    "deref_mut",
+    "as_ref",
+    "from",
+] }
 duct = { version = "0.13.7", optional = true }
 iter_tools = "0.24.0"
 nom = "8.0.0"
@@ -36,4 +42,4 @@ default-features = false
 features = ["bevy_state"]
 
 [build-dependencies]
-bevy_state_plugin_generator = "1.0.0"
+bevy_state_plugin_generator = { version = "1.0.0", features = ["full"] }

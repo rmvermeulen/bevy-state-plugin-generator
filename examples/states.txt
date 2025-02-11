@@ -1,15 +1,15 @@
 Loading [ 
-    Config
-    Assets
+  Config
+  Assets
 ]
 Ready {
-    Menu
-    Game {
-        Playing [
-            Player { Alive Dead }
-            Environment { Normal Danger }
-        ]
-        Paused
-        Over
-    }
+  Menu
+  Game {
+    Playing [
+      Player { Alive Dead }
+      Environment { Normal Danger }
+    ]
+    Paused
+    Over
+  }
 }

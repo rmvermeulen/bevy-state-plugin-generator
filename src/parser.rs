@@ -5,29 +5,10 @@ use nom::{
     combinator::recognize, multi::many0, sequence::*,
 };
 
-#[derive(Debug, PartialEq)]
-pub enum Token<'a> {
-    Identifier(Identifier<'a>),
-    Comment(Comment<'a>),
-    Separator,
-    OpenEnum,
-    CloseEnum,
-    OpenList,
-    CloseList,
-}
-
-#[derive(Debug, PartialEq)]
-pub struct Identifier<'a>(&'a str);
-
-impl ToString for Identifier<'_> {
-    fn to_string(&self) -> String {
-        self.0.to_string()
-    }
-}
-
-#[derive(Debug, PartialEq)]
-pub struct Comment<'a>(&'a str);
-
+use crate::{
+    nodes::{Node, NodeData},
+    tokens::{Comment, Identifier, Token},
+};
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     delimited(
         pair(tag("//"), space0),
@@ -35,7 +16,7 @@ pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
         pair(space0, line_ending),
     )
     .parse(input)
-    .map(|(input, output)| (input, Comment(output.trim_end())))
+    .map_result(|c| c.trim_end().into())
 }
 
 pub fn identifier(input: &str) -> IResult<&str, Identifier<'_>> {
@@ -44,7 +25,7 @@ pub fn identifier(input: &str) -> IResult<&str, Identifier<'_>> {
         take_while(|c: char| c.is_alphanumeric() || c == '_'),
     ))
     .parse(input)
-    .map_result(Identifier)
+    .map_result(Identifier::from)
 }
 
 fn skip_to<P, T, O, E>(parser: P) -> impl Parser<T, Output = O, Error = E>
@@ -97,13 +78,6 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
-#[derive(Debug, PartialEq, Clone)]
-pub enum Node {
-    Singleton(String),
-    Enum(String, Vec<Rc<Node>>),
-    List(String, Vec<Rc<Node>>),
-}
-
 pub fn parse_config(input: &str) -> IResult<&str, Vec<Node>> {
     many0(alt((
         parse_node,
@@ -120,21 +94,22 @@ pub fn parse_node(input: &str) -> IResult<&str, Node> {
 pub fn parse_singleton(input: &str) -> IResult<&str, Node> {
     skip_to(identifier)
         .parse(input)
-        .map_result(|Identifier(name)| Node::Singleton(name.to_string()))
+        .map_result(NodeData::from)
+        .map_result(Node::Singleton)
 }
 
 pub fn parse_enum(input: &str) -> IResult<&str, Node> {
     let (input, name) = skip_to(identifier).parse(input)?;
-    let (input, elements) =
+    let (input, children) =
         skip_to(preceded(open_enum, parse_elements_until(close_enum))).parse(input)?;
-    Ok((input, Node::Enum(name.to_string(), elements)))
+    Ok((input, Node::Enum(name.into(), children)))
 }
 
 pub fn parse_list(input: &str) -> IResult<&str, Node> {
     let (input, name) = skip_to(identifier).parse(input)?;
-    let (input, elements) =
+    let (input, children) =
         skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
-    Ok((input, Node::List(name.to_string(), elements)))
+    Ok((input, Node::List(name.into(), children)))
 }
 pub fn parse_elements_until<'a>(
     until: impl Fn(&str) -> IResult<&str, Token<'_>> + Copy,
@@ -172,7 +147,7 @@ mod tests {
         assert_that!(identifier(input))
             .is_ok()
             .map(|(_, token)| token)
-            .is_equal_to(Identifier(token));
+            .is_equal_to(Identifier::from(token));
     }
 
     #[rstest]
@@ -184,7 +159,7 @@ mod tests {
         assert_that!(comment(input))
             .is_ok()
             .map(|(_, token)| token)
-            .is_equal_to(Comment(expected));
+            .is_equal_to(Comment::from(expected));
     }
 
     #[rstest]
@@ -202,9 +177,9 @@ mod tests {
     }
 
     #[rstest]
-    #[case("Name,", ",", Node::Singleton("Name".to_string()))]
-    #[case("  Name,", ",", Node::Singleton("Name".to_string()))]
-    #[case("First, Second", ", Second", Node::Singleton("First".to_string()))]
+    #[case("Name,", ",", Node::singleton("Name"))]
+    #[case("  Name,", ",", Node::singleton("Name"))]
+    #[case("First, Second", ", Second", Node::singleton("First"))]
     fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: Node) {
         assert_that!(parse_singleton(input).unwrap()).is_equal_to((rest, node));
     }
@@ -215,7 +190,10 @@ mod tests {
         (
             "",
             Enum(
-                "Name",
+                NodeData {
+                    name: "Name",
+                    parent: None,
+                },
                 [],
             ),
         )
@@ -224,7 +202,10 @@ mod tests {
         (
             "",
             Enum(
-                "Name",
+                NodeData {
+                    name: "Name",
+                    parent: None,
+                },
                 [],
             ),
         )
@@ -232,45 +213,41 @@ mod tests {
     }
 
     #[rstest]
-    #[case("Name {A}",  Node::Enum("Name".to_string(), vec![Rc::new(Node::Singleton("A".to_string()))]))]
-    #[case("Name { A}",  Node::Enum("Name".to_string(), vec![Rc::new(Node::Singleton("A".to_string()))]))]
-    #[case("Name {A }",  Node::Enum("Name".to_string(), vec![Rc::new(Node::Singleton("A".to_string()))]))]
-    #[case("Name { A }",  Node::Enum("Name".to_string(), vec![Rc::new(Node::Singleton("A".to_string()))]))]
+    #[case("Name {A}",  Node::enumeration("Name", [Node::singleton("A")]))]
+    #[case("Name { A}",  Node::enumeration("Name", [Node::singleton("A")]))]
+    #[case("Name {A }",  Node::enumeration("Name", [Node::singleton("A")]))]
+    #[case("Name { A }",  Node::enumeration("Name", [Node::singleton("A")]))]
     fn test_parse_enum_single(#[case] input: &str, #[case] node: Node) {
         assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
     }
 
     #[rstest]
-    #[case("Name {A,B}",  Node::Enum("Name".to_string(), vec![
-        Rc::new(Node::Singleton("A".to_string())),
-        Rc::new(Node::Singleton("B".to_string()))
+    #[case("Name {A,B}", Node::enumeration("Name", [
+        Node::singleton("A"),
+        Node::singleton("B")
     ]))]
-    #[case("Name { A B }",  Node::Enum("Name".to_string(), vec![
-        Rc::new(Node::Singleton("A".to_string())),
-        Rc::new(Node::Singleton("B".to_string()))
+    #[case("Name { A B }",  Node::enumeration("Name", [
+        Node::singleton("A"),
+        Node::singleton("B")
     ]))]
-    #[case("Name { A { B } }",  Node::Enum("Name".to_string(), vec![
-        Rc::new(Node::Enum("A".to_string(), vec![
-            Rc::new(Node::Singleton("B".to_string()))
-        ]))
+    #[case("Name { A { B } }",  Node::enumeration("Name", [
+        Node::enumeration("A", [Node::singleton("B")])
     ]))]
-    #[case("Name { A { B }, C }",  Node::Enum("Name".to_string(), vec![
-        Rc::new(Node::Enum("A".to_string(), vec![
-            Rc::new(Node::Singleton("B".to_string()))
-        ])),
-        Rc::new(Node::Singleton("C".to_string()))
+    #[case("Name { A { B }, C }",  Node::enumeration("Name", [
+        Node::enumeration("A", [Node::singleton("B")]),
+        Node::singleton("C")
     ]))]
     fn test_parse_enum_variants(#[case] input: &str, #[case] node: Node) {
         assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
     }
 
     #[rstest]
-    #[case("Name []",  Node::List("Name".to_string(), vec![]))]
-    #[case("Name[]",  Node::List("Name".to_string(), vec![]))]
-    #[case("Name[A]",  Node::List("Name".to_string(), vec![Rc::new(Node::Singleton("A".to_string()))]))]
-    #[case("Name[A,B]",  Node::List("Name".to_string(), vec![
-        Rc::new(Node::Singleton("A".to_string())),
-        Rc::new(Node::Singleton("B".to_string()))
+    #[case("Name []", Node::list_empty("Name"))]
+    #[case("Name[]", Node::list_empty("Name"))]
+    #[case("Name[A]",  Node::list("Name", [Node::singleton("A")]))]
+    #[case("Name[A,B]",  Node::list("Name", [
+        Node::singleton("A"),
+        Node::singleton("B"),
     ]))]
     fn test_parse_list(#[case] input: &str, #[case] node: Node) {
         assert_that!(parse_list(input).unwrap()).is_equal_to(("", node));

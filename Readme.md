@@ -32,6 +32,7 @@ fn main() {
     plugin_name: "GeneratedStatesPlugin",
     state_name: "GameState",
     states_module_name: "states",
+    scheme: NamingScheme::Full,
   };
   on_build_generate_plugin("src/states.txt", "src/generated_states.rs", config)
     .expect("Failed to generate plugin!");
