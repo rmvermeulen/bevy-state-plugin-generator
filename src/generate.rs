@@ -2,56 +2,61 @@ use std::{io, rc::Rc};
 
 use iter_tools::Itertools;
 
-use crate::PluginConfig;
 use crate::model::SourceState;
 use crate::nodes::Node;
 use crate::parser::parse_states_file;
+use crate::{NamingScheme, PluginConfig};
 
-fn generate_type_definition(source_state: Option<SourceState>, node: &Node) -> String {
-    let (typename, derives) = source_state
-        .map(|source_state| {
-            ( format!("{}{}", source_state.display_name(), node.name()),
-            [
-                "#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]",
-                &format!(
-                    "#[source({source} = {variant})]",
-                    source = source_state.display_name(),
-                    variant = source_state.display_variant()
-                ),
-            ]
-            .join("\n"))
-        })
-        .unwrap_or((
-            node.name().to_string(),
-            "#[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]"
-                .to_owned(),
-        ));
+fn generate_all_type_definitions(
+    parent: Option<SourceState>,
+    root_node: &Node,
+    scheme: NamingScheme,
+) -> String {
+    const DERIVES: &str = "Hash, Default, Debug, Clone, PartialEq, Eq";
+    let own_type = {
+        let typename = parent
+            .clone()
+            .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
+            .unwrap_or_else(|| root_node.name().to_string());
 
-    match node {
-        Node::Singleton(_) | Node::List(_, _) => {
-            format!("{derives}\npub struct {typename};")
+        let derives = parent
+            .map(|source_state| {
+                let source = source_state.display_name();
+                let variant = source_state.display_variant();
+                [
+                    format!("#[derive(bevy::prelude::SubStates, {DERIVES})]"),
+                    format!("#[source({source} = {variant})]"),
+                ]
+                .join("\n")
+            })
+            .unwrap_or(format!("#[derive(bevy::prelude::States, {DERIVES})]"));
+
+        match root_node {
+            Node::Singleton(_) | Node::List(_, _) => {
+                format!("{derives}\npub struct {typename};")
+            }
+            Node::Enum(_, variants) => {
+                let variants = variants.iter().map(|variant| variant.name()).join(", ");
+                format!("{derives}\npub enum {typename} {{ #[default] {variants} }}")
+            }
         }
-        Node::Enum(_, variants) => {
-            let variants = variants.iter().map(|variant| variant.name()).join(", ");
-            format!("{derives}\npub enum {typename} {{ #[default] {variants} }}")
-        }
-    }
-}
-
-fn generate_all_type_definitions(parent: Option<SourceState>, root_node: &Node) -> String {
-    let own_type = generate_type_definition(parent, root_node);
+    };
     match root_node {
         Node::Singleton(_) => own_type,
         Node::Enum(_, variants) | Node::List(_, variants) => {
+            let parent_name = root_node.name().to_string();
             let variants = variants
                 .iter()
-                .map(|variant| {
+                .map(|child_node| {
+                    let name = match scheme {
+                        NamingScheme::Full => format!("{}{}", parent_name, child_node.name()),
+                        NamingScheme::Shortened => child_node.name().to_string(),
+                    };
+                    let variant = child_node.name().to_string();
                     generate_all_type_definitions(
-                        Some(SourceState {
-                            name: root_node.name().to_string().clone(),
-                            variant: variant.name().to_string(),
-                        }),
-                        variant,
+                        Some(SourceState { name, variant }),
+                        child_node,
+                        scheme,
                     )
                 })
                 .join("\n");
@@ -63,7 +68,7 @@ fn generate_all_type_definitions(parent: Option<SourceState>, root_node: &Node) 
 pub fn generate_debug_info(src_path: &str, source: &str) -> String {
     format!(
         "// src: {src_path}\n{lines}",
-        lines = source.lines().map(|line| format!(" // {line}")).join("\n")
+        lines = source.lines().map(|line| format!("// {line}")).join("\n")
     )
 }
 
@@ -88,7 +93,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<Node>, config: PluginConfig)
     };
     let states_module = format!(
         "pub mod {states_module_name} {{ use bevy::prelude::StateSet; {type_definitions} }}",
-        type_definitions = generate_all_type_definitions(None, &root_state),
+        type_definitions = generate_all_type_definitions(None, &root_state, config.scheme),
     );
     [header, &states_module, &plugin].join("\n")
 }
@@ -134,7 +139,8 @@ mod tests {
 
     use super::*;
     use insta::assert_snapshot;
-    use rstest::rstest;
+    use rstest::{fixture, rstest};
+    use speculoos::prelude::*;
 
     use crate::{NamingScheme, PluginConfig};
 
@@ -173,46 +179,7 @@ mod tests {
                 ]),
             ]),
         ]);
-        assert_snapshot!(generate_plugin_source(Rc::new(states), Default::default()), @r"
-                #![allow(missing_docs)]
-                use bevy::prelude::AppExtStates;
-            
-        pub mod states { use bevy::prelude::StateSet; #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        pub enum GameState { #[default] Loading, Ready }
-
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameState = GameState::Loading)]
-        pub struct GameStateLoading;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameState = GameState::Ready)]
-        pub enum GameStateReady { #[default] Menu, Game }
-
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Ready = Ready::Menu)]
-        pub enum ReadyMenu { #[default] Main, Options }
-
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Menu = Menu::Main)]
-        pub struct MenuMain;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Menu = Menu::Options)]
-        pub struct MenuOptions;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Ready = Ready::Game)]
-        pub enum ReadyGame { #[default] Playing, Paused, GameOver }
-
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Game = Game::Playing)]
-        pub struct GamePlaying;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Game = Game::Paused)]
-        pub struct GamePaused;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Game = Game::GameOver)]
-        pub struct GameGameOver; }
-        pub struct GeneratedStatesPlugin;
-        impl bevy::app::Plugin for GeneratedStatesPlugin { fn build(&self, app: &mut bevy::app::App) { app.init_state::<states::GameState>(); } }
-        ");
+        assert_snapshot!(generate_plugin_source(Rc::new(states), Default::default()));
     }
 
     #[rstest]
@@ -285,5 +252,73 @@ mod tests {
             })
             .unwrap_or_else(identity)
         );
+    }
+
+    #[fixture]
+    fn root_source_state() -> SourceState {
+        SourceState {
+            name: "Game".to_string(),
+            variant: "Menu".to_string(),
+        }
+    }
+    #[fixture]
+    fn nested_node() -> Node {
+        Node::enumeration("Menu", [
+            Node::singleton("Main"),
+            Node::enumeration("Options", [
+                Node::singleton("Graphics"),
+                Node::singleton("Audio"),
+                Node::singleton("Gameplay"),
+            ]),
+            Node::enumeration("Continue", [
+                Node::singleton("Save"),
+                Node::singleton("Load"),
+            ]),
+        ])
+    }
+    #[rstest]
+    fn something_c(#[from(root_source_state)] source: SourceState) {
+        assert_that!(generate_all_type_definitions(
+            Some(source.clone()),
+            &Node::singleton("Main"),
+            NamingScheme::Full
+        ))
+        .contains("pub struct GameMenuMain;");
+    }
+
+    #[rstest]
+    fn test_generate_all_type_definitions_full(
+        #[from(root_source_state)] source: SourceState,
+        #[from(nested_node)] node: Node,
+    ) {
+        let typedef_result =
+            generate_all_type_definitions(Some(source.clone()), &node, NamingScheme::Full);
+        assert_that!(typedef_result).contains("GameMenu");
+        assert_that!(typedef_result).contains("GameMenuMain");
+        assert_that!(typedef_result).contains("GameMenuMainOptions");
+        assert_that!(typedef_result).contains("GameMenuMainOptionsGraphics");
+    }
+
+    #[rstest]
+    fn test_generate_all_type_definitions_shortened(
+        #[from(root_source_state)] source: SourceState,
+        #[from(nested_node)] node: Node,
+    ) {
+        let typedef_result =
+            generate_all_type_definitions(Some(source), &node, NamingScheme::Shortened);
+        assert_that!(typedef_result).contains("GameMenu");
+        assert_that!(typedef_result).contains("GameMenuMain");
+        assert_that!(typedef_result).contains("GameMenuMainOptions");
+        assert_that!(typedef_result).contains("GameMenuMainOptionsGraphics");
+    }
+
+    #[rstest]
+    fn snapshots(
+        #[values(NamingScheme::Full, NamingScheme::Shortened)] scheme: NamingScheme,
+        #[from(root_source_state)] source: SourceState,
+        #[from(nested_node)] node: Node,
+    ) {
+        set_snapshot_suffix!("{scheme:?}");
+        assert_snapshot!(generate_all_type_definitions(Some(source), &node, scheme));
     }
 }

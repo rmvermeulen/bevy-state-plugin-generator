@@ -1,0 +1,34 @@
+---
+source: src/generate.rs
+expression: "generate_all_type_definitions(Some(source), &node, scheme)"
+---
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Game = Game::Menu)]
+pub enum GameMenu { #[default] Main, Options, Continue }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Main = Main::Main)]
+pub struct MainMain;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Options = Options::Options)]
+pub enum OptionsOptions { #[default] Graphics, Audio, Gameplay }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Graphics = Graphics::Graphics)]
+pub struct GraphicsGraphics;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Audio = Audio::Audio)]
+pub struct AudioAudio;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Gameplay = Gameplay::Gameplay)]
+pub struct GameplayGameplay;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Continue = Continue::Continue)]
+pub enum ContinueContinue { #[default] Save, Load }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Save = Save::Save)]
+pub struct SaveSave;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Load = Load::Load)]
+pub struct LoadLoad;

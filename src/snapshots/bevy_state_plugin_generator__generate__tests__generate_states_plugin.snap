@@ -1,0 +1,42 @@
+---
+source: src/generate.rs
+expression: "generate_plugin_source(Rc::new(states), Default::default())"
+---
+        #![allow(missing_docs)]
+        use bevy::prelude::AppExtStates;
+    
+pub mod states { use bevy::prelude::StateSet; #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+pub enum GameState { #[default] Loading, Ready }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(GameStateLoading = GameStateLoading::Loading)]
+pub struct GameStateLoadingLoading;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(GameStateReady = GameStateReady::Ready)]
+pub enum GameStateReadyReady { #[default] Menu, Game }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(ReadyMenu = ReadyMenu::Menu)]
+pub enum ReadyMenuMenu { #[default] Main, Options }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(MenuMain = MenuMain::Main)]
+pub struct MenuMainMain;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(MenuOptions = MenuOptions::Options)]
+pub struct MenuOptionsOptions;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(ReadyGame = ReadyGame::Game)]
+pub enum ReadyGameGame { #[default] Playing, Paused, GameOver }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(GamePlaying = GamePlaying::Playing)]
+pub struct GamePlayingPlaying;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(GamePaused = GamePaused::Paused)]
+pub struct GamePausedPaused;
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(GameGameOver = GameGameOver::GameOver)]
+pub struct GameGameOverGameOver; }
+pub struct GeneratedStatesPlugin;
+impl bevy::app::Plugin for GeneratedStatesPlugin { fn build(&self, app: &mut bevy::app::App) { app.init_state::<states::GameState>(); } }

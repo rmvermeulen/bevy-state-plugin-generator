@@ -18,7 +18,6 @@ pub enum NamingScheme {
     /// Name includes the names of all ancestors
     #[default]
     Full,
-    // TODO: implement this
     /// Name includes only the name of the immediate parent
     Shortened,
 }
