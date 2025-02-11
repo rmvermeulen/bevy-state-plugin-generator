@@ -10,14 +10,13 @@ expression: "match generate_full_source(src_path, source, plugin_config)\n{ Ok(f
 use bevy::prelude::AppExtStates;
 
 pub mod states {
-    use bevy::prelude::States;
-    #[derive(States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum GameState {
         #[default]
         A,
     }
 
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::A)]
     pub struct GameStateA;
 }

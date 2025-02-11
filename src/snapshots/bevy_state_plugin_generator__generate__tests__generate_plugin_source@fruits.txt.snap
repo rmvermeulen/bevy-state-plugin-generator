@@ -6,18 +6,17 @@ expression: "match generate_plugin_source(source, plugin_config)\n{ Ok(plugin_so
 use bevy::prelude::AppExtStates;
 
 pub mod states {
-    use bevy::prelude::States;
-    #[derive(States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum GameState {
         #[default]
         Loading,
         Ready,
     }
 
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Loading)]
     pub struct GameStateLoading;
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Ready)]
     pub enum GameStateReady {
         #[default]
@@ -25,7 +24,7 @@ pub mod states {
         Game,
     }
 
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Ready = Ready::Menu)]
     pub enum ReadyMenu {
         #[default]
@@ -33,13 +32,13 @@ pub mod states {
         Options,
     }
 
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Menu = Menu::Main)]
     pub struct MenuMain;
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Menu = Menu::Options)]
     pub struct MenuOptions;
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Ready = Ready::Game)]
     pub enum ReadyGame {
         #[default]
@@ -48,13 +47,13 @@ pub mod states {
         GameOver,
     }
 
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Game = Game::Playing)]
     pub struct GamePlaying;
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Game = Game::Paused)]
     pub struct GamePaused;
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Game = Game::GameOver)]
     pub struct GameGameOver;
 }
