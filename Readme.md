@@ -6,13 +6,13 @@ in a `Plugin`.
 
 ## versions
 
-| bevy | this thing |
-|------| ----|
-| 0.15.2|1.0.0|
+| bevy   | this thing |
+| ------ | ---------- |
+| 0.15.2 | 1.0.0      |
 
 ## usage
 
-Create a `states.txt` or `state.js` in `src/`:
+Create a `states.txt` in `src/`:
 
 ```js
 // the root is implicit
@@ -36,7 +36,7 @@ fn main() {
   on_build_generate_plugin("src/states.txt", "src/generated_states.rs", config)
     .expect("Failed to generate plugin!");
 }
- ```
+```
 
 And it will generate something like the following:
 
