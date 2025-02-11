@@ -1,18 +1,28 @@
 ---
 source: src/generate.rs
-expression: "generate_full_source(src, source, plugin_config).unwrap_or_else(identity)"
+expression: "generate_full_source(src_path, source, PluginConfig\n{ scheme, ..Default::default() }).unwrap_or_else(identity)"
 ---
 // src: root.txt
- // RootState
+// RootState
 
-        #![allow(missing_docs)]
-        use bevy::prelude::AppExtStates;
-    
-pub mod states { use bevy::prelude::StateSet; #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-pub enum root.txt { #[default] RootState }
+#![allow(missing_docs)]
+use bevy::prelude::AppExtStates;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(root.txt = root.txt::RootState)]
-pub struct RootState; }
+pub mod states {
+    use bevy::prelude::StateSet;
+    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    pub enum GameState {
+        #[default]
+        RootState,
+    }
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::RootState)]
+    pub struct GameStateRootState;
+}
 pub struct GeneratedStatesPlugin;
-impl bevy::app::Plugin for GeneratedStatesPlugin { fn build(&self, app: &mut bevy::app::App) { app.init_state::<states::root.txt>(); } }
+impl bevy::app::Plugin for GeneratedStatesPlugin {
+    fn build(&self, app: &mut bevy::app::App) {
+        app.init_state::<states::GameState>();
+    }
+}

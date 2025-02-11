@@ -272,9 +272,18 @@ mod tests {
     #[rstest]
     #[case("root.txt", "RootState", NamingScheme::Full)]
     #[case("root.txt", "RootState", NamingScheme::Shortened)]
-    fn test_naming_scheme(#[case] src: &str, #[case] source: &str, #[case] scheme: NamingScheme) {
-        let plugin_config = PluginConfig::new("GeneratedStatesPlugin", src, "states", scheme);
-        set_snapshot_suffix!("{src}_{scheme:?}");
-        assert_snapshot!(generate_full_source(src, source, plugin_config).unwrap_or_else(identity));
+    fn test_naming_scheme(
+        #[case] src_path: &str,
+        #[case] source: &str,
+        #[case] scheme: NamingScheme,
+    ) {
+        set_snapshot_suffix!("{src_path}_{scheme:?}");
+        assert_snapshot!(
+            generate_full_source(src_path, source, PluginConfig {
+                scheme,
+                ..Default::default()
+            })
+            .unwrap_or_else(identity)
+        );
     }
 }

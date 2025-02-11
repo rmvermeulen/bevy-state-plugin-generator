@@ -29,22 +29,6 @@ pub struct PluginConfig<'a> {
     pub scheme: NamingScheme,
 }
 
-impl<'a> PluginConfig<'a> {
-    pub fn new(
-        plugin_name: &'a str,
-        state_name: &'a str,
-        states_module_name: &'a str,
-        scheme: NamingScheme,
-    ) -> PluginConfig<'a> {
-        PluginConfig {
-            plugin_name,
-            state_name,
-            states_module_name,
-            scheme,
-        }
-    }
-}
-
 impl Default for PluginConfig<'_> {
     fn default() -> Self {
         Self {
