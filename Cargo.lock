@@ -453,10 +453,21 @@ dependencies = [
 [[package]]
 name = "bevy_state_plugin_generator"
 version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b7e52f1e1fa493dbfcc6aa7037e8785c2bcd55798e5dfdc8a73852653d83707"
+dependencies = [
+ "duct",
+ "iter_tools",
+ "nom 8.0.0",
+]
+
+[[package]]
+name = "bevy_state_plugin_generator"
+version = "1.0.1-dev"
 dependencies = [
  "async-std",
  "bevy",
- "bevy_state_plugin_generator 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bevy_state_plugin_generator 1.0.0",
  "derive_more 2.0.1",
  "duct",
  "insta",
@@ -465,17 +476,6 @@ dependencies = [
  "rstest",
  "speculoos",
  "tempfile",
-]
-
-[[package]]
-name = "bevy_state_plugin_generator"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b7e52f1e1fa493dbfcc6aa7037e8785c2bcd55798e5dfdc8a73852653d83707"
-dependencies = [
- "duct",
- "iter_tools",
- "nom 8.0.0",
 ]
 
 [[package]]

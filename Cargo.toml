@@ -1,6 +1,6 @@
 [package]
 name = "bevy_state_plugin_generator"
-version = "1.0.0"
+version = "1.0.1-dev"
 edition = "2024"
 license = "MIT"
 description = "A build-dependency that generates a Bevy State Plugin from a simple state definition."
@@ -20,10 +20,10 @@ format = ["dep:duct"]
 
 [dependencies]
 derive_more = { version = "2.0.1", features = [
-    "deref",
-    "deref_mut",
-    "as_ref",
-    "from",
+  "deref",
+  "deref_mut",
+  "as_ref",
+  "from",
 ] }
 duct = { version = "0.13.7", optional = true }
 iter_tools = "0.24.0"
