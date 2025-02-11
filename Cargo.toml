@@ -34,3 +34,6 @@ tempfile = "3.16.0"
 version = "0.15.2"
 default-features = false
 features = ["bevy_state"]
+
+[build-dependencies]
+bevy_state_plugin_generator = "1.0.0"

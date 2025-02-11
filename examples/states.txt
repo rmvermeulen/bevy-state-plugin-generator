@@ -1,0 +1,15 @@
+Loading [ 
+    Config
+    Assets
+]
+Ready {
+    Menu
+    Game {
+        Playing [
+            Player { Alive Dead }
+            Environment { Normal Danger }
+        ]
+        Paused
+        Over
+    }
+}
