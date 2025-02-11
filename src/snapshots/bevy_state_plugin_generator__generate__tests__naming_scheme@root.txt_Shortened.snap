@@ -17,8 +17,8 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(RootState = RootState::RootState)]
-    pub struct RootStateRootState;
+    #[source(GameState = GameState::RootState)]
+    pub struct GameStateRootState;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {

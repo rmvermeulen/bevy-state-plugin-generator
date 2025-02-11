@@ -7,28 +7,28 @@ expression: "generate_all_type_definitions(Some(source), &node, scheme)"
 pub enum GameMenu { #[default] Main, Options, Continue }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(MenuMain = MenuMain::Main)]
-pub struct MenuMainMain;
+#[source(Menu = Menu::Main)]
+pub struct MenuMain;
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(MenuOptions = MenuOptions::Options)]
-pub enum MenuOptionsOptions { #[default] Graphics, Audio, Gameplay }
+#[source(Menu = Menu::Options)]
+pub enum MenuOptions { #[default] Graphics, Audio, Gameplay }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(OptionsGraphics = OptionsGraphics::Graphics)]
-pub struct OptionsGraphicsGraphics;
+#[source(Options = Options::Graphics)]
+pub struct OptionsGraphics;
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(OptionsAudio = OptionsAudio::Audio)]
-pub struct OptionsAudioAudio;
+#[source(Options = Options::Audio)]
+pub struct OptionsAudio;
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(OptionsGameplay = OptionsGameplay::Gameplay)]
-pub struct OptionsGameplayGameplay;
+#[source(Options = Options::Gameplay)]
+pub struct OptionsGameplay;
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(MenuContinue = MenuContinue::Continue)]
-pub enum MenuContinueContinue { #[default] Save, Load }
+#[source(Menu = Menu::Continue)]
+pub enum MenuContinue { #[default] Save, Load }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(ContinueSave = ContinueSave::Save)]
-pub struct ContinueSaveSave;
+#[source(Continue = Continue::Save)]
+pub struct ContinueSave;
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(ContinueLoad = ContinueLoad::Load)]
-pub struct ContinueLoadLoad;
+#[source(Continue = Continue::Load)]
+pub struct ContinueLoad;

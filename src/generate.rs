@@ -13,7 +13,7 @@ fn generate_all_type_definitions(
     scheme: NamingScheme,
 ) -> String {
     const DERIVES: &str = "Hash, Default, Debug, Clone, PartialEq, Eq";
-    let own_type = {
+    let root_typedef = {
         let typename = parent
             .clone()
             .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
@@ -42,7 +42,7 @@ fn generate_all_type_definitions(
         }
     };
     match root_node {
-        Node::Singleton(_) => own_type,
+        Node::Singleton(_) => root_typedef,
         Node::Enum(_, variants) | Node::List(_, variants) => {
             let parent_name = root_node.name().to_string();
             let variants = variants
@@ -54,13 +54,16 @@ fn generate_all_type_definitions(
                     };
                     let variant = child_node.name().to_string();
                     generate_all_type_definitions(
-                        Some(SourceState { name, variant }),
+                        Some(SourceState {
+                            name: parent_name.clone(),
+                            variant,
+                        }),
                         child_node,
                         scheme,
                     )
                 })
                 .join("\n");
-            format!("{own_type}\n\n{variants}")
+            format!("{root_typedef}\n\n{variants}")
         }
     }
 }
