@@ -17,6 +17,7 @@ full = ["parse", "generate", "format"]
 parse = []
 generate = []
 format = ["dep:duct"]
+dogfood = ["dep:bevy_state_plugin_generator"]
 
 [dependencies]
 derive_more = { version = "2.0.1", features = [
@@ -41,5 +42,7 @@ version = "0.15.2"
 default-features = false
 features = ["bevy_state"]
 
-[build-dependencies]
-bevy_state_plugin_generator = { version = "1.0.1", features = ["full"] }
+[build-dependencies.bevy_state_plugin_generator]
+version = "1.0.0"
+features = ["full"]
+optional = true

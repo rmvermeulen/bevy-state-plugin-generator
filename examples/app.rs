@@ -1,11 +1,18 @@
 use bevy::prelude::{App, AppExit, DefaultPlugins};
 
-// mod generated_states;
-// use generated_states::GeneratedStatesPlugin;
+#[cfg(feature = "dogfood")]
+mod generated_states;
 
 fn main() -> AppExit {
-    App::new()
-        .add_plugins(DefaultPlugins)
-        // .add_plugins(GeneratedStatesPlugin)
-        .run()
+    let mut app = App::new();
+
+    app.add_plugins(DefaultPlugins);
+    #[cfg(feature = "dogfood")]
+    app.add_plugins(generated_states::GeneratedStatesPlugin);
+
+    println!("App created, starting...");
+
+    let exit = app.run();
+    println!("App exited with {:?}", exit);
+    exit
 }
