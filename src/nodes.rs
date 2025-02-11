@@ -36,12 +36,6 @@ impl Node {
     pub fn list_empty<N: ToString>(name: N) -> Self {
         Self::List(name.to_string(), Vec::new())
     }
-    pub fn children(&self) -> Vec<Rc<Node>> {
-        match self {
-            Node::Enum(_, variants) | Node::List(_, variants) => variants.clone(),
-            _ => Default::default(),
-        }
-    }
     pub fn name(&self) -> &str {
         match self {
             Node::Singleton(name) | Node::Enum(name, _) | Node::List(name, _) => name,

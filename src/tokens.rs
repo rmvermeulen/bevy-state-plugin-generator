@@ -1,9 +1,7 @@
 use derive_more::{Deref, From};
 
 #[derive(Debug, PartialEq)]
-pub enum Token<'a> {
-    Identifier(Identifier<'a>),
-    Comment(Comment<'a>),
+pub enum Token {
     Separator,
     OpenEnum,
     CloseEnum,

@@ -43,31 +43,31 @@ where
     preceded(multispace0, parser)
 }
 
-pub fn separator(input: &str) -> IResult<&str, Token<'_>> {
+pub fn separator(input: &str) -> IResult<&str, Token> {
     skip_to(tag(","))
         .parse(input)
         .map_result(|_| Token::Separator)
 }
 
-pub fn open_enum(input: &str) -> IResult<&str, Token<'_>> {
+pub fn open_enum(input: &str) -> IResult<&str, Token> {
     skip_to(tag("{"))
         .parse(input)
         .map_result(|_| Token::OpenEnum)
 }
 
-pub fn close_enum(input: &str) -> IResult<&str, Token<'_>> {
+pub fn close_enum(input: &str) -> IResult<&str, Token> {
     skip_to(tag("}"))
         .parse(input)
         .map_result(|_| Token::CloseEnum)
 }
 
-pub fn open_list(input: &str) -> IResult<&str, Token<'_>> {
+pub fn open_list(input: &str) -> IResult<&str, Token> {
     skip_to(tag("["))
         .parse(input)
         .map_result(|_| Token::OpenList)
 }
 
-pub fn close_list(input: &str) -> IResult<&str, Token<'_>> {
+pub fn close_list(input: &str) -> IResult<&str, Token> {
     skip_to(tag("]"))
         .parse(input)
         .map_result(|_| Token::CloseList)
@@ -130,7 +130,7 @@ pub fn parse_list(input: &str) -> IResult<&str, Node> {
     Ok((input, Node::List(name.to_string(), children)))
 }
 pub fn parse_elements_until(
-    until: impl Fn(&str) -> IResult<&str, Token<'_>> + Copy,
+    until: impl Fn(&str) -> IResult<&str, Token> + Copy,
 ) -> impl Fn(&str) -> IResult<&str, Vec<Rc<Node>>> {
     move |input: &str| {
         terminated(
