@@ -13,13 +13,15 @@ impl SourceState {
     }
 }
 /// How state-names are determined
-#[derive(Default, Debug, Clone, Copy)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NamingScheme {
     /// Name includes the names of all ancestors
     #[default]
     Full,
     /// Name includes only the name of the immediate parent
     Shortened,
+    /// None (all names must be unique)
+    None,
 }
 
 /// Configuration for the generated plugin

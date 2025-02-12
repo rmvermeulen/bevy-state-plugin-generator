@@ -13,12 +13,17 @@ fn generate_all_type_definitions(
     scheme: NamingScheme,
 ) -> String {
     const DERIVES: &str = "Hash, Default, Debug, Clone, PartialEq, Eq";
-    let typename = parent
-        .clone()
-        .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
-        .unwrap_or_else(|| root_node.name().to_string());
+    let typename = if scheme == NamingScheme::None {
+        root_node.name().to_string()
+    } else {
+        parent
+            .clone()
+            .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
+            .unwrap_or_else(|| root_node.name().to_string())
+    };
     let root_typedef = {
         let derives = parent
+            .clone()
             .map(|source_state| {
                 let source = source_state.display_name();
                 let variant = source_state.display_variant();
@@ -50,7 +55,7 @@ fn generate_all_type_definitions(
                     generate_all_type_definitions(
                         Some(SourceState {
                             name: match scheme {
-                                NamingScheme::Shortened => root_name.clone(),
+                                NamingScheme::Shortened | NamingScheme::None => root_name.clone(),
                                 NamingScheme::Full => typename.clone(),
                             },
                             variant: child_node.name().to_string(),
@@ -284,10 +289,10 @@ mod tests {
     ) {
         let typedef_result =
             generate_all_type_definitions(Some(source.clone()), &node, NamingScheme::Full);
-        assert_that!(typedef_result).contains("GameMenu");
-        assert_that!(typedef_result).contains("GameMenuMain");
-        assert_that!(typedef_result).contains("GameMenuOptions");
-        assert_that!(typedef_result).contains("GameMenuOptionsGraphics");
+        assert_that!(typedef_result).contains(" GameMenu");
+        assert_that!(typedef_result).contains(" GameMenuMain");
+        assert_that!(typedef_result).contains(" GameMenuOptions");
+        assert_that!(typedef_result).contains(" GameMenuOptionsGraphics");
     }
 
     #[rstest]
@@ -297,10 +302,22 @@ mod tests {
     ) {
         let typedef_result =
             generate_all_type_definitions(Some(source), &node, NamingScheme::Shortened);
-        assert_that!(typedef_result).contains("GameMenu");
-        assert_that!(typedef_result).contains("GameMenuMain");
-        assert_that!(typedef_result).contains("MenuOptions");
-        assert_that!(typedef_result).contains("OptionsGraphics");
+        assert_that!(typedef_result).contains(" GameMenu");
+        assert_that!(typedef_result).contains(" MenuMain");
+        assert_that!(typedef_result).contains(" MenuOptions");
+        assert_that!(typedef_result).contains(" OptionsGraphics");
+    }
+
+    #[rstest]
+    fn test_generate_all_type_definitions_none(
+        #[from(root_source_state)] source: SourceState,
+        #[from(nested_node)] node: Node,
+    ) {
+        let typedef_result = generate_all_type_definitions(Some(source), &node, NamingScheme::None);
+        assert_that!(typedef_result).contains(" Menu");
+        assert_that!(typedef_result).contains(" Main");
+        assert_that!(typedef_result).contains(" Options");
+        assert_that!(typedef_result).contains(" Graphics");
     }
 
     #[rstest]
