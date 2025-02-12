@@ -8,7 +8,7 @@ use crate::parser::parse_states_file;
 use crate::{NamingScheme, PluginConfig};
 
 fn generate_all_type_definitions(
-    parent: Option<SourceState>,
+    source_state: Option<SourceState>,
     root_node: &Node,
     scheme: NamingScheme,
 ) -> String {
@@ -16,13 +16,13 @@ fn generate_all_type_definitions(
     let typename = if scheme == NamingScheme::None {
         root_node.name().to_string()
     } else {
-        parent
+        source_state
             .clone()
             .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
             .unwrap_or_else(|| root_node.name().to_string())
     };
     let root_typedef = {
-        let derives = parent
+        let derives = source_state
             .clone()
             .map(|source_state| {
                 let source = source_state.display_name();
@@ -47,7 +47,7 @@ fn generate_all_type_definitions(
     };
     match root_node {
         Node::Singleton(_) => root_typedef,
-        Node::Enum(_, variants) | Node::List(_, variants) => {
+        Node::Enum(_, variants) => {
             let root_name = root_node.name().to_string();
             let variants = variants
                 .iter()
@@ -67,6 +67,19 @@ fn generate_all_type_definitions(
                 .join("\n");
             format!("{root_typedef}\n\n{variants}")
         }
+        Node::List(_, variants) => variants
+            .iter()
+            .map(|child_node| {
+                generate_all_type_definitions(
+                    Some(SourceState {
+                        name: typename.clone(),
+                        variant: child_node.name().to_string(),
+                    }),
+                    child_node,
+                    scheme,
+                )
+            })
+            .join("\n"),
     }
 }
 
@@ -328,5 +341,116 @@ mod tests {
     ) {
         set_snapshot_suffix!("{scheme:?}");
         assert_snapshot!(generate_all_type_definitions(Some(source), &node, scheme));
+    }
+
+    #[rstest]
+    fn snapshot1() {
+        assert_snapshot!(generate_all_type_definitions(
+            Some(SourceState {
+                name: "GameState".to_string(),
+                variant: "Alpha".to_string()
+            }),
+            &Node::singleton("Alpha"),
+            NamingScheme::Full
+        ), @r"
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameState = GameState::Alpha)]
+        pub struct GameStateAlpha;
+        ");
+    }
+
+    #[rstest]
+    fn snapshot1a() {
+        assert_snapshot!(generate_all_type_definitions(None, &Node::singleton("Alpha"), NamingScheme::Full), @r"
+        #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        pub struct Alpha;
+        ");
+    }
+
+    #[rstest]
+    fn snapshot2() {
+        assert_snapshot!(generate_all_type_definitions(
+            Some(SourceState {
+                name: "GameState".to_string(),
+                variant: "Alpha".to_string()
+            }),
+            &Node::enumeration("Alpha", [Node::singleton("Beta")]),
+            NamingScheme::Full
+        ), @r"
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameState = GameState::Alpha)]
+        pub enum GameStateAlpha { #[default] Beta }
+
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameStateAlpha = GameStateAlpha::Beta)]
+        pub struct GameStateAlphaBeta;
+        ");
+    }
+
+    #[rstest]
+    fn snapshot2a() {
+        assert_snapshot!(generate_all_type_definitions(
+            None, &Node::enumeration("Alpha", [Node::singleton("Beta")]),
+            NamingScheme::Full
+        ), @r"
+        #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        pub enum Alpha { #[default] Beta }
+
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(Alpha = Alpha::Beta)]
+        pub struct AlphaBeta;
+        ");
+    }
+
+    #[rstest]
+    fn snapshot3() {
+        assert_snapshot!(generate_all_type_definitions(
+            Some(SourceState {
+                name: "GameState".to_string(),
+                variant: "Alpha".to_string()
+            }),
+            &Node::list("Alpha", [Node::singleton("Beta")]),
+            NamingScheme::Full
+        ), @r"
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameStateAlpha = GameStateAlpha::Beta)]
+        pub struct GameStateAlphaBeta;
+        ");
+    }
+
+    #[rstest]
+    fn snapshot4() {
+        assert_snapshot!(generate_all_type_definitions(
+            Some(SourceState {
+                name: "GameState".to_string(),
+                variant: "Alpha".to_string()
+            }),
+            &Node::list("List", [
+                Node::singleton("Item1"),
+                Node::enumeration("Item2", [
+                    Node::singleton("A"),
+                    Node::singleton("B"),
+                ]),
+                Node::singleton("Item3"),
+            ]),
+            NamingScheme::Full
+        ), @r"
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameStateList = GameStateList::Item1)]
+        pub struct GameStateListItem1;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameStateList = GameStateList::Item2)]
+        pub enum GameStateListItem2 { #[default] A, B }
+
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameStateListItem2 = GameStateListItem2::A)]
+        pub struct GameStateListItem2A;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameStateListItem2 = GameStateListItem2::B)]
+        pub struct GameStateListItem2B;
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+        #[source(GameStateList = GameStateList::Item3)]
+        pub struct GameStateListItem3;
+        ");
     }
 }
