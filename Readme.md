@@ -10,6 +10,10 @@ in a `Plugin`.
 | ------ | ---------- |
 | 0.15.2 | 1.0.0      |
 
+## bugs
+
+Lots.
+
 ## usage
 
 Create a `states.txt` in `src/`:
