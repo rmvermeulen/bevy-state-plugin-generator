@@ -47,3 +47,12 @@ impl Default for PluginConfig<'_> {
         }
     }
 }
+
+impl From<NamingScheme> for PluginConfig<'_> {
+    fn from(scheme: NamingScheme) -> Self {
+        Self {
+            scheme,
+            ..Default::default()
+        }
+    }
+}
