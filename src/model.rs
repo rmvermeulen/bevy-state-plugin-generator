@@ -27,12 +27,28 @@ pub enum NamingScheme {
 
 impl NamingScheme {
     /// Get the name of the naming scheme
+    /// ```rust
+    /// # use bevy_state_plugin_generator::NamingScheme;
+    /// assert_eq!(NamingScheme::Full.name(), "Full");
+    /// assert_eq!(NamingScheme::Short.name(), "Short");
+    /// assert_eq!(NamingScheme::None.name(), "None");
+    /// ```
     pub fn name(&self) -> &str {
         match self {
             NamingScheme::Full => "Full",
             NamingScheme::Short => "Short",
             NamingScheme::None => "None",
         }
+    }
+    /// Get the identifying tag for this scheme
+    /// ```rust
+    /// # use bevy_state_plugin_generator::NamingScheme;
+    /// assert_eq!(NamingScheme::Full.tag(), "full");
+    /// assert_eq!(NamingScheme::Short.tag(), "short");
+    /// assert_eq!(NamingScheme::None.tag(), "none");
+    /// ```
+    pub fn tag(&self) -> String {
+        self.name().to_lowercase()
     }
 }
 
