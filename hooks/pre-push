@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -exu
+echo "Pre-push hook"
+cargo fmt --check
+
+cargo make report
+status=$(git status -s)
+if [ -n "$status" ]; then
+    echo "You have uncommitted changes; aborting push"
+    exit 1
+fi

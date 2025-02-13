@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -exu
+echo "Pre-commit hook"
+cargo fmt --check
