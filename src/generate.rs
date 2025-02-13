@@ -18,15 +18,15 @@ fn generate_all_type_definitions(
     } else {
         source_state
             .clone()
-            .map(|source_state| format!("{}{}", source_state.display_name(), root_node.name()))
+            .map(|source_state| format!("{}{}", source_state.name(), root_node.name()))
             .unwrap_or_else(|| root_node.name().to_string())
     };
     let root_typedef = {
         let derives = source_state
             .clone()
             .map(|source_state| {
-                let source = source_state.display_name();
-                let variant = source_state.display_variant();
+                let source = source_state.name();
+                let variant = source_state.name_and_variant();
                 [
                     format!("#[derive(bevy::prelude::SubStates, {DERIVES})]"),
                     format!("#[source({source} = {variant})]"),

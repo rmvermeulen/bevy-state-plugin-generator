@@ -5,13 +5,14 @@ pub struct SourceState {
 }
 
 impl SourceState {
-    pub fn display_name(&self) -> String {
+    pub fn name(&self) -> String {
         self.name.clone()
     }
-    pub fn display_variant(&self) -> String {
+    pub fn name_and_variant(&self) -> String {
         format!("{}::{}", self.name, self.variant)
     }
 }
+
 /// How state-names are determined
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NamingScheme {
