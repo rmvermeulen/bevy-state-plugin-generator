@@ -4,6 +4,7 @@ version = "1.0.4"
 edition = "2024"
 license = "MIT"
 description = "A build-dependency that generates a Bevy State Plugin from a simple state definition."
+repository = "https://github.com/rmvermeulen/bevy-state-plugin-generator.git"
 
 [lib]
 
