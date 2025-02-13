@@ -1,3 +1,8 @@
+use iter_tools::Itertools;
+use std::rc::Rc;
+
+use crate::tokens::ParseNode;
+
 #[derive(PartialEq, Debug, Clone)]
 pub struct SourceState {
     pub name: String,
@@ -90,6 +95,61 @@ impl From<NamingScheme> for PluginConfig<'_> {
         Self {
             scheme,
             ..Default::default()
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum StateNode {
+    Singleton(String),
+    Enum(String, Vec<Rc<StateNode>>),
+    List(String, Vec<Rc<StateNode>>),
+}
+
+impl StateNode {
+    pub fn singleton<S: ToString>(name: S) -> Self {
+        Self::Singleton(name.to_string())
+    }
+    pub fn enumeration<N: Into<Rc<StateNode>>, V: IntoIterator<Item = N>, S: ToString>(
+        name: S,
+        variants: V,
+    ) -> Self {
+        Self::Enum(
+            name.to_string(),
+            variants.into_iter().map(Into::into).collect_vec(),
+        )
+    }
+    pub fn list<N: Into<Rc<StateNode>>, V: IntoIterator<Item = N>, S: ToString>(
+        name: S,
+        variants: V,
+    ) -> Self {
+        Self::List(
+            name.to_string(),
+            variants.into_iter().map(Into::into).collect_vec(),
+        )
+    }
+    pub fn name(&self) -> &str {
+        match self {
+            StateNode::Singleton(name) | StateNode::Enum(name, _) | StateNode::List(name, _) => {
+                name
+            }
+        }
+    }
+}
+
+impl From<ParseNode<'_>> for StateNode {
+    fn from(node: ParseNode) -> Self {
+        let map_children = |children: Vec<ParseNode>| {
+            children
+                .into_iter()
+                .map(Into::into)
+                .map(Rc::new)
+                .collect_vec()
+        };
+        match node {
+            ParseNode::Singleton(name) => StateNode::singleton(name),
+            ParseNode::Enum(name, children) => StateNode::enumeration(name, map_children(children)),
+            ParseNode::List(name, children) => StateNode::list(name, map_children(children)),
         }
     }
 }

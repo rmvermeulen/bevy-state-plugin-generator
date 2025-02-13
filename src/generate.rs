@@ -2,14 +2,13 @@ use std::{io, rc::Rc};
 
 use iter_tools::Itertools;
 
-use crate::model::SourceState;
-use crate::nodes::Node;
+use crate::model::{SourceState, StateNode};
 use crate::parser::parse_states_file;
 use crate::{NamingScheme, PluginConfig};
 
 fn generate_all_type_definitions(
     source_state: Option<SourceState>,
-    root_node: &Node,
+    root_node: &StateNode,
     scheme: NamingScheme,
 ) -> String {
     const DERIVES: &str = "Hash, Default, Debug, Clone, PartialEq, Eq";
@@ -36,18 +35,18 @@ fn generate_all_type_definitions(
             .unwrap_or(format!("#[derive(bevy::prelude::States, {DERIVES})]"));
 
         match root_node {
-            Node::Singleton(_) | Node::List(_, _) => {
+            StateNode::Singleton(_) | StateNode::List(_, _) => {
                 format!("{derives}\npub struct {typename};")
             }
-            Node::Enum(_, variants) => {
+            StateNode::Enum(_, variants) => {
                 let variants = variants.iter().map(|variant| variant.name()).join(", ");
                 format!("{derives}\npub enum {typename} {{ #[default] {variants} }}")
             }
         }
     };
     match root_node {
-        Node::Singleton(_) => root_typedef,
-        Node::Enum(_, variants) => {
+        StateNode::Singleton(_) => root_typedef,
+        StateNode::Enum(_, variants) => {
             let root_name = root_node.name().to_string();
             let variants = variants
                 .iter()
@@ -67,7 +66,7 @@ fn generate_all_type_definitions(
                 .join("\n");
             format!("{root_typedef}\n\n{variants}")
         }
-        Node::List(_, variants) => variants
+        StateNode::List(_, variants) => variants
             .iter()
             .map(|child_node| {
                 generate_all_type_definitions(
@@ -90,7 +89,7 @@ pub fn generate_debug_info(src_path: &str, source: &str) -> String {
     )
 }
 
-pub(crate) fn generate_plugin_source(root_state: Rc<Node>, config: PluginConfig) -> String {
+pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginConfig) -> String {
     let PluginConfig {
         plugin_name,
         state_name,
@@ -142,9 +141,9 @@ pub fn generate_full_source<P: AsRef<str> + std::fmt::Display, S: AsRef<str>>(
     plugin_config: PluginConfig,
 ) -> Result<String, String> {
     let source = source.as_ref();
-    let root_node =
-        parse_states_file(source, plugin_config.state_name).map_err(|e| format!("{e:?}"))?;
-
+    let parse_tree =
+        parse_states_file(source, plugin_config.state_name).map_err(|e| e.to_string())?;
+    let root_node = Rc::new(parse_tree.into());
     let debug_info = generate_debug_info(src_path.as_ref(), source);
     let plugin_source = generate_plugin_source(root_node, plugin_config);
     let source = [debug_info, plugin_source].join("\n");
@@ -183,17 +182,17 @@ mod tests {
 
     #[rstest]
     fn test_generate_states_plugin() {
-        let states = Node::enumeration("GameState", [
-            Node::singleton("Loading"),
-            Node::enumeration("Ready", [
-                Node::enumeration("Menu", [
-                    Node::singleton("Main"),
-                    Node::singleton("Options"),
+        let states = StateNode::enumeration("GameState", [
+            StateNode::singleton("Loading"),
+            StateNode::enumeration("Ready", [
+                StateNode::enumeration("Menu", [
+                    StateNode::singleton("Main"),
+                    StateNode::singleton("Options"),
                 ]),
-                Node::enumeration("Game", [
-                    Node::singleton("Playing"),
-                    Node::singleton("Paused"),
-                    Node::singleton("GameOver"),
+                StateNode::enumeration("Game", [
+                    StateNode::singleton("Playing"),
+                    StateNode::singleton("Paused"),
+                    StateNode::singleton("GameOver"),
                 ]),
             ]),
         ]);
@@ -208,28 +207,28 @@ mod tests {
         assert_snapshot!(generate_debug_info(src_path, source));
     }
 
-    fn test_plugin_formatted(root_node: Rc<Node>, plugin_config: PluginConfig) -> String {
+    fn test_plugin_formatted(root_node: Rc<StateNode>, plugin_config: PluginConfig) -> String {
         format_source(generate_plugin_source(root_node, plugin_config))
     }
 
     #[rstest]
-    #[case("fruits.txt", Rc::new(Node::enumeration("GameState", [
-            Node::singleton("Loading"),
-            Node::enumeration("Ready", [
-                Node::enumeration("Menu", [
-                    Node::singleton("Main"),
-                    Node::singleton("Options"),
+    #[case("fruits.txt", Rc::new(StateNode::enumeration("GameState", [
+            StateNode::singleton("Loading"),
+            StateNode::enumeration("Ready", [
+                StateNode::enumeration("Menu", [
+                    StateNode::singleton("Main"),
+                    StateNode::singleton("Options"),
                 ]),
-                Node::enumeration("Game", [
-                    Node::singleton("Playing"),
-                    Node::singleton("Paused"),
-                    Node::singleton("GameOver"),
+                StateNode::enumeration("Game", [
+                    StateNode::singleton("Playing"),
+                    StateNode::singleton("Paused"),
+                    StateNode::singleton("GameOver"),
                 ]),
             ]),
         ])), PluginConfig::default())]
     fn test_generate_plugin_source(
         #[case] src_path: &str,
-        #[case] root_node: Rc<Node>,
+        #[case] root_node: Rc<StateNode>,
         #[case] plugin_config: PluginConfig,
     ) {
         set_snapshot_suffix!("{src_path}");
@@ -280,17 +279,17 @@ mod tests {
         }
     }
     #[fixture]
-    fn nested_node() -> Node {
-        Node::enumeration("Menu", [
-            Node::singleton("Main"),
-            Node::enumeration("Options", [
-                Node::singleton("Graphics"),
-                Node::singleton("Audio"),
-                Node::singleton("Gameplay"),
+    fn nested_node() -> StateNode {
+        StateNode::enumeration("Menu", [
+            StateNode::singleton("Main"),
+            StateNode::enumeration("Options", [
+                StateNode::singleton("Graphics"),
+                StateNode::singleton("Audio"),
+                StateNode::singleton("Gameplay"),
             ]),
-            Node::enumeration("Continue", [
-                Node::singleton("Save"),
-                Node::singleton("Load"),
+            StateNode::enumeration("Continue", [
+                StateNode::singleton("Save"),
+                StateNode::singleton("Load"),
             ]),
         ])
     }
@@ -298,7 +297,7 @@ mod tests {
     #[rstest]
     fn test_generate_all_type_definitions_full(
         #[from(root_source_state)] source: SourceState,
-        #[from(nested_node)] node: Node,
+        #[from(nested_node)] node: StateNode,
     ) {
         let typedef_result =
             generate_all_type_definitions(Some(source.clone()), &node, NamingScheme::Full);
@@ -311,7 +310,7 @@ mod tests {
     #[rstest]
     fn test_generate_all_type_definitions_shortened(
         #[from(root_source_state)] source: SourceState,
-        #[from(nested_node)] node: Node,
+        #[from(nested_node)] node: StateNode,
     ) {
         let typedef_result =
             generate_all_type_definitions(Some(source), &node, NamingScheme::Short);
@@ -324,7 +323,7 @@ mod tests {
     #[rstest]
     fn test_generate_all_type_definitions_none(
         #[from(root_source_state)] source: SourceState,
-        #[from(nested_node)] node: Node,
+        #[from(nested_node)] node: StateNode,
     ) {
         let typedef_result = generate_all_type_definitions(Some(source), &node, NamingScheme::None);
         assert_that!(typedef_result).contains(" Menu");
@@ -337,7 +336,7 @@ mod tests {
     fn snapshots(
         #[values(NamingScheme::Full, NamingScheme::Short)] scheme: NamingScheme,
         #[from(root_source_state)] source: SourceState,
-        #[from(nested_node)] node: Node,
+        #[from(nested_node)] node: StateNode,
     ) {
         set_snapshot_suffix!("{scheme:?}");
         assert_snapshot!(generate_all_type_definitions(Some(source), &node, scheme));
@@ -350,7 +349,7 @@ mod tests {
                 name: "GameState".to_string(),
                 variant: "Alpha".to_string()
             }),
-            &Node::singleton("Alpha"),
+            &StateNode::singleton("Alpha"),
             NamingScheme::Full
         ), @r"
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -361,7 +360,7 @@ mod tests {
 
     #[rstest]
     fn snapshot1a() {
-        assert_snapshot!(generate_all_type_definitions(None, &Node::singleton("Alpha"), NamingScheme::Full), @r"
+        assert_snapshot!(generate_all_type_definitions(None, &StateNode::singleton("Alpha"), NamingScheme::Full), @r"
         #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
         pub struct Alpha;
         ");
@@ -374,7 +373,7 @@ mod tests {
                 name: "GameState".to_string(),
                 variant: "Alpha".to_string()
             }),
-            &Node::enumeration("Alpha", [Node::singleton("Beta")]),
+            &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
             NamingScheme::Full
         ), @r"
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -390,7 +389,7 @@ mod tests {
     #[rstest]
     fn snapshot2a() {
         assert_snapshot!(generate_all_type_definitions(
-            None, &Node::enumeration("Alpha", [Node::singleton("Beta")]),
+            None, &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
             NamingScheme::Full
         ), @r"
         #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -409,7 +408,7 @@ mod tests {
                 name: "GameState".to_string(),
                 variant: "Alpha".to_string()
             }),
-            &Node::list("Alpha", [Node::singleton("Beta")]),
+            &StateNode::list("Alpha", [StateNode::singleton("Beta")]),
             NamingScheme::Full
         ), @r"
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -425,13 +424,13 @@ mod tests {
                 name: "GameState".to_string(),
                 variant: "Alpha".to_string()
             }),
-            &Node::list("List", [
-                Node::singleton("Item1"),
-                Node::enumeration("Item2", [
-                    Node::singleton("A"),
-                    Node::singleton("B"),
+            &StateNode::list("List", [
+                StateNode::singleton("Item1"),
+                StateNode::enumeration("Item2", [
+                    StateNode::singleton("A"),
+                    StateNode::singleton("B"),
                 ]),
-                Node::singleton("Item3"),
+                StateNode::singleton("Item3"),
             ]),
             NamingScheme::Full
         ), @r"

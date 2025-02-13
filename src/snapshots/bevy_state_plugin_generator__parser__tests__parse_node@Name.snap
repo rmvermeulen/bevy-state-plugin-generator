@@ -6,7 +6,9 @@ Ok(
     (
         "",
         Singleton(
-            "Name",
+            Identifier(
+                "Name",
+            ),
         ),
     ),
 )

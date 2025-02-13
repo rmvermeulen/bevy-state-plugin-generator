@@ -6,43 +6,65 @@ Ok(
     (
         "",
         List(
-            "Name",
+            Identifier(
+                "Name",
+            ),
             [
                 Enum(
-                    "A",
+                    Identifier(
+                        "A",
+                    ),
                     [
                         Singleton(
-                            "B",
+                            Identifier(
+                                "B",
+                            ),
                         ),
                         List(
-                            "C",
+                            Identifier(
+                                "C",
+                            ),
                             [
                                 Singleton(
-                                    "D",
+                                    Identifier(
+                                        "D",
+                                    ),
                                 ),
                                 Enum(
-                                    "E",
+                                    Identifier(
+                                        "E",
+                                    ),
                                     [
                                         Singleton(
-                                            "F",
+                                            Identifier(
+                                                "F",
+                                            ),
                                         ),
                                         Singleton(
-                                            "G",
+                                            Identifier(
+                                                "G",
+                                            ),
                                         ),
                                     ],
                                 ),
                             ],
                         ),
                         Singleton(
-                            "H",
+                            Identifier(
+                                "H",
+                            ),
                         ),
                     ],
                 ),
                 Singleton(
-                    "I",
+                    Identifier(
+                        "I",
+                    ),
                 ),
                 Singleton(
-                    "J",
+                    Identifier(
+                        "J",
+                    ),
                 ),
             ],
         ),

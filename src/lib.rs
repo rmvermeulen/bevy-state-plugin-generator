@@ -8,7 +8,6 @@ use generate::generate_full_source;
 
 pub(crate) mod generate;
 pub(crate) mod model;
-pub(crate) mod nodes;
 pub(crate) mod parser;
 pub(crate) mod tokens;
 

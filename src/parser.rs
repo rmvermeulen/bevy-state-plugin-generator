@@ -1,14 +1,9 @@
-use std::rc::Rc;
-
 use nom::{
     IResult, Parser, branch::alt, bytes::complete::*, character::complete::*,
     combinator::recognize, multi::many0, sequence::*,
 };
 
-use crate::{
-    nodes::Node,
-    tokens::{Identifier, Token},
-};
+use crate::tokens::{Identifier, ParseNode, Token};
 
 #[cfg(test)]
 use crate::tokens::Comment;
@@ -83,7 +78,7 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
-fn parse_config(input: &str) -> IResult<&str, Vec<Node>> {
+fn parse_config<'a>(input: &'a str) -> IResult<&'a str, Vec<ParseNode<'a>>> {
     many0(alt((
         parse_node,
         terminated(parse_node, separator),
@@ -92,47 +87,48 @@ fn parse_config(input: &str) -> IResult<&str, Vec<Node>> {
     .parse(input)
 }
 
-pub fn parse_states_file(input: &str, root_state_name: &str) -> Result<Rc<Node>, String> {
+pub fn parse_states_file<'a>(
+    input: &'a str,
+    root_state_name: &'a str,
+) -> Result<ParseNode<'a>, String> {
     parse_config(input)
         .map_err(|e| format!("{:?}", e))
         .map(|(_, nodes)| {
             if nodes.is_empty() {
-                Node::singleton(root_state_name)
+                ParseNode::singleton(root_state_name)
             } else {
-                Node::enumeration(root_state_name, nodes)
+                ParseNode::enumeration(root_state_name, nodes)
             }
         })
-        .map(Rc::new)
 }
 
-pub fn parse_node(input: &str) -> IResult<&str, Node> {
+pub fn parse_node(input: &str) -> IResult<&str, ParseNode> {
     alt((parse_enum, parse_list, parse_singleton)).parse(input)
 }
 
-pub fn parse_singleton(input: &str) -> IResult<&str, Node> {
+pub fn parse_singleton(input: &str) -> IResult<&str, ParseNode> {
     skip_to(identifier)
         .parse(input)
-        .map_result(|s| s.to_string())
-        .map_result(Node::Singleton)
+        .map_result(ParseNode::singleton)
 }
 
-pub fn parse_enum(input: &str) -> IResult<&str, Node> {
+pub fn parse_enum<'a>(input: &'a str) -> IResult<&'a str, ParseNode<'a>> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_enum, parse_elements_until(close_enum))).parse(input)?;
-    Ok((input, Node::Enum(name.to_string(), children)))
+    Ok((input, ParseNode::Enum(name, children)))
 }
 
-pub fn parse_list(input: &str) -> IResult<&str, Node> {
+pub fn parse_list(input: &str) -> IResult<&str, ParseNode> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
-    Ok((input, Node::List(name.to_string(), children)))
+    Ok((input, ParseNode::List(name, children)))
 }
-pub fn parse_elements_until(
-    until: impl Fn(&str) -> IResult<&str, Token> + Copy,
-) -> impl Fn(&str) -> IResult<&str, Vec<Rc<Node>>> {
-    move |input: &str| {
+pub fn parse_elements_until<'a>(
+    until: impl Fn(&'a str) -> IResult<&'a str, Token> + Copy,
+) -> impl Fn(&'a str) -> IResult<&'a str, Vec<ParseNode<'a>>> {
+    move |input: &'a str| {
         terminated(
             // 0 or more elements, separated by whitespace or a comma
             many0(alt((
@@ -144,7 +140,6 @@ pub fn parse_elements_until(
             until,
         )
         .parse(input)
-        .map_result(|nodes| nodes.into_iter().map(Rc::new).collect())
     }
 }
 
@@ -195,10 +190,10 @@ mod tests {
     }
 
     #[rstest]
-    #[case("Name,", ",", Node::singleton("Name"))]
-    #[case("  Name,", ",", Node::singleton("Name"))]
-    #[case("First, Second", ", Second", Node::singleton("First"))]
-    fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: Node) {
+    #[case("Name,", ",", ParseNode::singleton("Name"))]
+    #[case("  Name,", ",", ParseNode::singleton("Name"))]
+    #[case("First, Second", ", Second", ParseNode::singleton("First"))]
+    fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: ParseNode) {
         assert_that!(parse_singleton(input).unwrap()).is_equal_to((rest, node));
     }
 
@@ -208,7 +203,9 @@ mod tests {
         (
             "",
             Enum(
-                "Name",
+                Identifier(
+                    "Name",
+                ),
                 [],
             ),
         )
@@ -217,7 +214,9 @@ mod tests {
         (
             "",
             Enum(
-                "Name",
+                Identifier(
+                    "Name",
+                ),
                 [],
             ),
         )
@@ -225,43 +224,43 @@ mod tests {
     }
 
     #[rstest]
-    #[case("Name {A}",  Node::enumeration("Name", [Node::singleton("A")]))]
-    #[case("Name { A}",  Node::enumeration("Name", [Node::singleton("A")]))]
-    #[case("Name {A }",  Node::enumeration("Name", [Node::singleton("A")]))]
-    #[case("Name { A }",  Node::enumeration("Name", [Node::singleton("A")]))]
-    fn test_parse_enum_single(#[case] input: &str, #[case] node: Node) {
+    #[case("Name {A}",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
+    #[case("Name { A}",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
+    #[case("Name {A }",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
+    #[case("Name { A }",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
+    fn test_parse_enum_single(#[case] input: &str, #[case] node: ParseNode) {
         assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
     }
 
     #[rstest]
-    #[case("Name {A,B}", Node::enumeration("Name", [
-        Node::singleton("A"),
-        Node::singleton("B")
+    #[case("Name {A,B}", ParseNode::enumeration("Name", [
+        ParseNode::singleton("A"),
+        ParseNode::singleton("B")
     ]))]
-    #[case("Name { A B }",  Node::enumeration("Name", [
-        Node::singleton("A"),
-        Node::singleton("B")
+    #[case("Name { A B }",  ParseNode::enumeration("Name", [
+        ParseNode::singleton("A"),
+        ParseNode::singleton("B")
     ]))]
-    #[case("Name { A { B } }",  Node::enumeration("Name", [
-        Node::enumeration("A", [Node::singleton("B")])
+    #[case("Name { A { B } }",  ParseNode::enumeration("Name", [
+        ParseNode::enumeration("A", [ParseNode::singleton("B")])
     ]))]
-    #[case("Name { A { B }, C }",  Node::enumeration("Name", [
-        Node::enumeration("A", [Node::singleton("B")]),
-        Node::singleton("C")
+    #[case("Name { A { B }, C }",  ParseNode::enumeration("Name", [
+        ParseNode::enumeration("A", [ParseNode::singleton("B")]),
+        ParseNode::singleton("C")
     ]))]
-    fn test_parse_enum_variants(#[case] input: &str, #[case] node: Node) {
+    fn test_parse_enum_variants(#[case] input: &str, #[case] node: ParseNode) {
         assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
     }
 
     #[rstest]
-    #[case("Name []", Node::list_empty("Name"))]
-    #[case("Name[]", Node::list_empty("Name"))]
-    #[case("Name[A]",  Node::list("Name", [Node::singleton("A")]))]
-    #[case("Name[A,B]",  Node::list("Name", [
-        Node::singleton("A"),
-        Node::singleton("B"),
+    #[case("Name []", ParseNode::list_empty("Name"))]
+    #[case("Name[]", ParseNode::list_empty("Name"))]
+    #[case("Name[A]",  ParseNode::list("Name", [ParseNode::singleton("A")]))]
+    #[case("Name[A,B]",  ParseNode::list("Name", [
+        ParseNode::singleton("A"),
+        ParseNode::singleton("B"),
     ]))]
-    fn test_parse_list(#[case] input: &str, #[case] node: Node) {
+    fn test_parse_list(#[case] input: &str, #[case] node: ParseNode) {
         assert_that!(parse_list(input).unwrap()).is_equal_to(("", node));
     }
 
