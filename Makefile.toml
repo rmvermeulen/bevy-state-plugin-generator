@@ -25,7 +25,7 @@ args = ["llvm-cov", "nextest"]
 [tasks.generate-report]
 install_crate = "cargo-llvm-cov"
 command = "cargo"
-args = ["llvm-cov", "nextest", "--html"]
+args = ["llvm-cov", "nextest", "--doctests", "--html"]
 
 [tasks.format-report]
 command = "npx"
