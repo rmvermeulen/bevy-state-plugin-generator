@@ -55,7 +55,7 @@ fn generate_all_type_definitions(
                     generate_all_type_definitions(
                         Some(SourceState {
                             name: match scheme {
-                                NamingScheme::Shortened | NamingScheme::None => root_name.clone(),
+                                NamingScheme::Short | NamingScheme::None => root_name.clone(),
                                 NamingScheme::Full => typename.clone(),
                             },
                             variant: child_node.name().to_string(),
@@ -256,7 +256,7 @@ mod tests {
 
     #[rstest]
     #[case("root.txt", "RootState", NamingScheme::Full)]
-    #[case("root.txt", "RootState", NamingScheme::Shortened)]
+    #[case("root.txt", "RootState", NamingScheme::Short)]
     fn test_naming_scheme(
         #[case] src_path: &str,
         #[case] source: &str,
@@ -314,7 +314,7 @@ mod tests {
         #[from(nested_node)] node: Node,
     ) {
         let typedef_result =
-            generate_all_type_definitions(Some(source), &node, NamingScheme::Shortened);
+            generate_all_type_definitions(Some(source), &node, NamingScheme::Short);
         assert_that!(typedef_result).contains(" GameMenu");
         assert_that!(typedef_result).contains(" MenuMain");
         assert_that!(typedef_result).contains(" MenuOptions");
@@ -335,7 +335,7 @@ mod tests {
 
     #[rstest]
     fn snapshots(
-        #[values(NamingScheme::Full, NamingScheme::Shortened)] scheme: NamingScheme,
+        #[values(NamingScheme::Full, NamingScheme::Short)] scheme: NamingScheme,
         #[from(root_source_state)] source: SourceState,
         #[from(nested_node)] node: Node,
     ) {

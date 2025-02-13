@@ -19,7 +19,7 @@ pub enum NamingScheme {
     #[default]
     Full,
     /// Name includes only the name of the immediate parent
-    Shortened,
+    Short,
     /// None (all names must be unique)
     None,
 }
