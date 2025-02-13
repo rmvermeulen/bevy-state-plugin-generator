@@ -25,27 +25,26 @@ args = ["llvm-cov", "nextest"]
 [tasks.generate-report]
 install_crate = "cargo-llvm-cov"
 command = "cargo"
-args = ["llvm-cov", "nextest", "--doctests", "--html"]
-
-[tasks.format-report]
-command = "npx"
-args = ["-y", "prettier", "--write", "target/llvm-cov/html"]
-ignore_errors = true
+args = ["llvm-cov", "--doctests", "--html"]
 
 [tasks.copy-report]
 command = "cp"
-args = ["-r", "target/llvm-cov/html", ".report"]
+args = ["-r", "target/llvm-cov/html", "report"]
 
-[tasks.replace-report]
-command = "mv"
-args = ["-f", ".report", "report"]
+[tasks.clean-report]
+command = "rm"
+args = ["-rf", "report/"]
+
+[tasks.format-report]
+command = "npx"
+args = ["-y", "prettier", "--write", "report/"]
 
 [tasks.report]
 run_task = [
     { name = [
         "generate-report",
-        "format-report",
+        "clean-report",
         "copy-report",
-        "replace-report",
+        "format-report",
     ] },
 ]
