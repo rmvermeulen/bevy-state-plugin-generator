@@ -1,3 +1,5 @@
 target
 *.snap.new
 *.pending-snap
+report/*.js
+report/*.css
