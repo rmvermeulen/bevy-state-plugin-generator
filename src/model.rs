@@ -24,6 +24,17 @@ pub enum NamingScheme {
     None,
 }
 
+impl NamingScheme {
+    /// Get the name of the naming scheme
+    pub fn name(&self) -> &str {
+        match self {
+            NamingScheme::Full => "Full",
+            NamingScheme::Short => "Short",
+            NamingScheme::None => "None",
+        }
+    }
+}
+
 /// Configuration for the generated plugin
 #[derive(Debug, Clone, Copy)]
 pub struct PluginConfig<'a> {
