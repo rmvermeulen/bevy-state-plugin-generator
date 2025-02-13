@@ -21,3 +21,31 @@ args = ["insta", "review"]
 install_crate = "cargo-llvm-cov"
 command = "cargo"
 args = ["llvm-cov", "nextest"]
+
+[tasks.generate-report]
+install_crate = "cargo-llvm-cov"
+command = "cargo"
+args = ["llvm-cov", "nextest", "--html"]
+
+[tasks.format-report]
+command = "npx"
+args = ["-y", "prettier", "--write", "target/llvm-cov/html"]
+ignore_errors = true
+
+[tasks.copy-report]
+command = "cp"
+args = ["-r", "target/llvm-cov/html", ".report"]
+
+[tasks.replace-report]
+command = "mv"
+args = ["-f", ".report", "report"]
+
+[tasks.report]
+run_task = [
+    { name = [
+        "generate-report",
+        "format-report",
+        "copy-report",
+        "replace-report",
+    ] },
+]
