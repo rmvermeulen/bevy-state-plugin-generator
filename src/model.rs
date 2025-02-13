@@ -65,6 +65,15 @@ pub struct PluginConfig<'a> {
     pub scheme: NamingScheme,
 }
 
+/// Default configuration for the generated plugin
+/// ```rust
+/// # use bevy_state_plugin_generator::{NamingScheme, PluginConfig};
+/// let config = PluginConfig::default();
+/// assert_eq!(config.plugin_name, "GeneratedStatesPlugin");
+/// assert_eq!(config.state_name, "GameState");
+/// assert_eq!(config.states_module_name, "states");
+/// assert_eq!(config.scheme, NamingScheme::Full);
+/// ```
 impl Default for PluginConfig<'_> {
     fn default() -> Self {
         Self {
