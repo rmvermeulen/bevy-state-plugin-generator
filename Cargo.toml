@@ -27,6 +27,7 @@ derive_more = { version = "2.0.1", features = [
     "from",
 ] }
 duct = { version = "0.13.7", optional = true }
+indoc = "2.0.5"
 iter_tools = "0.24.0"
 nom = "8.0.0"
 
