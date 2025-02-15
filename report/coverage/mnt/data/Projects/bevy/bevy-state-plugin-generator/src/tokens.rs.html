@@ -177,7 +177,7 @@
           <td class="line-number">
             <a name="L20" href="#L20"><pre>20</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code">
             <pre>
     fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter&lt;&apos;_&gt;) -&gt; std::fmt::Result {</pre
@@ -188,7 +188,7 @@
           <td class="line-number">
             <a name="L21" href="#L21"><pre>21</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code">
             <pre>        write!(f, &quot;{}&quot;, self.0)</pre>
           </td>
@@ -197,7 +197,7 @@
           <td class="line-number">
             <a name="L22" href="#L22"><pre>22</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -320,7 +320,7 @@
           <td class="line-number">
             <a name="L37" href="#L37"><pre>37</pre></a>
           </td>
-          <td class="covered-line"><pre>40</pre></td>
+          <td class="covered-line"><pre>37</pre></td>
           <td class="code">
             <pre>
     pub fn singleton&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;&gt;(name: I) -&gt; Self {</pre
@@ -331,21 +331,21 @@
           <td class="line-number">
             <a name="L38" href="#L38"><pre>38</pre></a>
           </td>
-          <td class="covered-line"><pre>40</pre></td>
+          <td class="covered-line"><pre>37</pre></td>
           <td class="code"><pre>        Self::Singleton(name.into())</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L39" href="#L39"><pre>39</pre></a>
           </td>
-          <td class="covered-line"><pre>40</pre></td>
+          <td class="covered-line"><pre>37</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L40" href="#L40"><pre>40</pre></a>
           </td>
-          <td class="covered-line"><pre>14</pre></td>
+          <td class="covered-line"><pre>12</pre></td>
           <td class="code">
             <pre>
     pub fn enumeration&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;, V: IntoIterator&lt;Item = ParseNode&lt;&apos;a&gt;&gt;&gt;(</pre
@@ -356,28 +356,28 @@
           <td class="line-number">
             <a name="L41" href="#L41"><pre>41</pre></a>
           </td>
-          <td class="covered-line"><pre>14</pre></td>
+          <td class="covered-line"><pre>12</pre></td>
           <td class="code"><pre>        name: I,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L42" href="#L42"><pre>42</pre></a>
           </td>
-          <td class="covered-line"><pre>14</pre></td>
+          <td class="covered-line"><pre>12</pre></td>
           <td class="code"><pre>        variants: V,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L43" href="#L43"><pre>43</pre></a>
           </td>
-          <td class="covered-line"><pre>14</pre></td>
+          <td class="covered-line"><pre>12</pre></td>
           <td class="code"><pre>    ) -&gt; Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L44" href="#L44"><pre>44</pre></a>
           </td>
-          <td class="covered-line"><pre>14</pre></td>
+          <td class="covered-line"><pre>12</pre></td>
           <td class="code">
             <pre>
         Self::Enum(name.into(), variants.into_iter().collect())</pre
@@ -388,7 +388,7 @@
           <td class="line-number">
             <a name="L45" href="#L45"><pre>45</pre></a>
           </td>
-          <td class="covered-line"><pre>14</pre></td>
+          <td class="covered-line"><pre>12</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
