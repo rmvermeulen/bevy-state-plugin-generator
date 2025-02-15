@@ -10,15 +10,17 @@ in a `Plugin`.
 | ------ | ---------- |
 | 0.15.2 | 1.0.0      |
 
-## bugs
+## to-do
 
-Lots.
+- Fix the many bugs.
+  - generator leaves stuff out
+  - any naming-scheme can collide
 
 ## usage
 
 Create a `states.txt` in `src/`:
 
-```js
+```txt
 // the root is implicit
 // commas are optional
 Loading [ Configs Assets ]              // list state
