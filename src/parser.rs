@@ -326,4 +326,9 @@ mod tests {
         )
         "#);
     }
+
+    #[rstest]
+    fn test_parse_config() {
+        assert_debug_snapshot!(parse_config("Name, Name2").unwrap());
+    }
 }
