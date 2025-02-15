@@ -56,12 +56,14 @@ pub fn close_enum(input: &str) -> IResult<&str, Token> {
         .map_result(|_| Token::CloseEnum)
 }
 
+#[cfg(feature = "lists")]
 pub fn open_list(input: &str) -> IResult<&str, Token> {
     skip_to(tag("["))
         .parse(input)
         .map_result(|_| Token::OpenList)
 }
 
+#[cfg(feature = "lists")]
 pub fn close_list(input: &str) -> IResult<&str, Token> {
     skip_to(tag("]"))
         .parse(input)
@@ -103,7 +105,13 @@ pub fn parse_states_file<'a>(
 }
 
 pub fn parse_node(input: &str) -> IResult<&str, ParseNode> {
-    alt((parse_enum, parse_list, parse_singleton)).parse(input)
+    alt((
+        parse_enum,
+        #[cfg(feature = "lists")]
+        parse_list,
+        parse_singleton,
+    ))
+    .parse(input)
 }
 
 pub fn parse_singleton(input: &str) -> IResult<&str, ParseNode> {
@@ -119,12 +127,14 @@ pub fn parse_enum(input: &str) -> IResult<&str, ParseNode<'_>> {
     Ok((input, ParseNode::Enum(name, children)))
 }
 
+#[cfg(feature = "lists")]
 pub fn parse_list(input: &str) -> IResult<&str, ParseNode> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
     Ok((input, ParseNode::List(name, children)))
 }
+
 pub fn parse_elements_until<'a>(
     until: impl Fn(&'a str) -> IResult<&'a str, Token> + Copy,
 ) -> impl Fn(&'a str) -> IResult<&'a str, Vec<ParseNode<'a>>> {
@@ -178,15 +188,21 @@ mod tests {
     #[rstest]
     #[case("{", Token::OpenEnum)]
     #[case("}", Token::CloseEnum)]
-    #[case("[", Token::OpenList)]
-    #[case("]", Token::CloseList)]
+    #[cfg_attr(feature = "lists", case("[", Token::OpenList))]
+    #[cfg_attr(feature = "lists", case("]", Token::CloseList))]
     fn test_single_char_tokens(#[case] input: &str, #[case] expected: Token) {
-        let mut parser = alt((open_enum, close_enum, open_list, close_list));
+        let mut parser = alt((
+            open_enum,
+            close_enum,
+            #[cfg(feature = "lists")]
+            open_list,
+            #[cfg(feature = "lists")]
+            close_list,
+        ));
 
         assert_that!(parser.parse(input))
             .is_ok()
-            .map(|(_, token)| token)
-            .is_equal_to(expected);
+            .is_equal_to(("", expected));
     }
 
     #[rstest]
@@ -252,6 +268,7 @@ mod tests {
         assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
     }
 
+    #[cfg(feature = "lists")]
     #[rstest]
     #[case("Name []", ParseNode::list_empty("Name"))]
     #[case("Name[]", ParseNode::list_empty("Name"))]
@@ -280,6 +297,8 @@ mod tests {
         set_snapshot_suffix!("{}", input.replace(" ", "_"));
         assert_debug_snapshot!(parse_node(input));
     }
+
+    #[cfg(feature = "lists")]
     #[rstest]
     fn test_parse_list_incomplete() {
         assert_debug_snapshot!(parse_list("Name [ A"), @r#"

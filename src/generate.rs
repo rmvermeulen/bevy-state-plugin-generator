@@ -36,7 +36,11 @@ fn generate_all_type_definitions(
             .unwrap_or(format!("#[derive(bevy::prelude::States, {DERIVES})]"));
 
         match root_node {
-            StateNode::Singleton(_) | StateNode::List(_, _) => {
+            #[cfg(feature = "lists")]
+            StateNode::List(_, _) => {
+                format!("{derives}\npub struct {typename};")
+            }
+            StateNode::Singleton(_) => {
                 format!("{derives}\npub struct {typename};")
             }
             StateNode::Enum(_, variants) => {
@@ -67,6 +71,7 @@ fn generate_all_type_definitions(
                 .join("\n");
             format!("{root_typedef}\n\n{variants}")
         }
+        #[cfg(feature = "lists")]
         StateNode::List(_, variants) => variants
             .iter()
             .map(|child_node| {
@@ -413,6 +418,7 @@ mod tests {
         ");
     }
 
+    #[cfg(feature = "lists")]
     #[rstest]
     fn snapshot3() {
         assert_snapshot!(generate_all_type_definitions(
@@ -429,6 +435,7 @@ mod tests {
         ");
     }
 
+    #[cfg(feature = "lists")]
     #[rstest]
     fn snapshot4() {
         assert_snapshot!(generate_all_type_definitions(

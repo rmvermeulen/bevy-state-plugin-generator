@@ -1,0 +1,19 @@
+---
+source: src/parser.rs
+expression: "parse_config(\"Name, Name2\").unwrap()"
+---
+(
+    "",
+    [
+        Singleton(
+            Identifier(
+                "Name",
+            ),
+        ),
+        Singleton(
+            Identifier(
+                "Name2",
+            ),
+        ),
+    ],
+)

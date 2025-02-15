@@ -4,69 +4,11 @@ expression: parse_node(input)
 ---
 Ok(
     (
-        "",
-        List(
+        " [ A { B, C [D E {F G}] H } I J ]",
+        Singleton(
             Identifier(
                 "Name",
             ),
-            [
-                Enum(
-                    Identifier(
-                        "A",
-                    ),
-                    [
-                        Singleton(
-                            Identifier(
-                                "B",
-                            ),
-                        ),
-                        List(
-                            Identifier(
-                                "C",
-                            ),
-                            [
-                                Singleton(
-                                    Identifier(
-                                        "D",
-                                    ),
-                                ),
-                                Enum(
-                                    Identifier(
-                                        "E",
-                                    ),
-                                    [
-                                        Singleton(
-                                            Identifier(
-                                                "F",
-                                            ),
-                                        ),
-                                        Singleton(
-                                            Identifier(
-                                                "G",
-                                            ),
-                                        ),
-                                    ],
-                                ),
-                            ],
-                        ),
-                        Singleton(
-                            Identifier(
-                                "H",
-                            ),
-                        ),
-                    ],
-                ),
-                Singleton(
-                    Identifier(
-                        "I",
-                    ),
-                ),
-                Singleton(
-                    Identifier(
-                        "J",
-                    ),
-                ),
-            ],
         ),
     ),
 )

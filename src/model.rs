@@ -104,6 +104,7 @@ impl From<NamingScheme> for PluginConfig<'_> {
 pub enum StateNode {
     Singleton(String),
     Enum(String, Vec<Rc<StateNode>>),
+    #[cfg(feature = "lists")]
     List(String, Vec<Rc<StateNode>>),
 }
 
@@ -120,6 +121,7 @@ impl StateNode {
             variants.into_iter().map(Into::into).collect_vec(),
         )
     }
+    #[cfg(feature = "lists")]
     pub fn list<N: Into<Rc<StateNode>>, V: IntoIterator<Item = N>, S: ToString>(
         name: S,
         variants: V,
@@ -131,9 +133,9 @@ impl StateNode {
     }
     pub fn name(&self) -> &str {
         match self {
-            StateNode::Singleton(name) | StateNode::Enum(name, _) | StateNode::List(name, _) => {
-                name
-            }
+            #[cfg(feature = "lists")]
+            StateNode::List(name, _) => name,
+            StateNode::Singleton(name) | StateNode::Enum(name, _) => name,
         }
     }
 }
@@ -150,6 +152,7 @@ impl From<ParseNode<'_>> for StateNode {
         match node {
             ParseNode::Singleton(name) => StateNode::singleton(name),
             ParseNode::Enum(name, children) => StateNode::enumeration(name, map_children(children)),
+            #[cfg(feature = "lists")]
             ParseNode::List(name, children) => StateNode::list(name, map_children(children)),
         }
     }
@@ -163,7 +166,11 @@ impl SubTree for StateNode {
     fn get_size(&self) -> usize {
         match self {
             StateNode::Singleton(_) => 1,
-            StateNode::Enum(_, children) | StateNode::List(_, children) => {
+            StateNode::Enum(_, children) => {
+                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+            }
+            #[cfg(feature = "lists")]
+            StateNode::List(_, children) => {
                 children.iter().map(|child| child.get_size()).sum::<usize>() + 1
             }
         }
@@ -174,7 +181,11 @@ impl SubTree for ParseNode<'_> {
     fn get_size(&self) -> usize {
         match self {
             ParseNode::Singleton(_) => 1,
-            ParseNode::Enum(_, children) | ParseNode::List(_, children) => {
+            ParseNode::Enum(_, children) => {
+                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+            }
+            #[cfg(feature = "lists")]
+            ParseNode::List(_, children) => {
                 children.iter().map(|child| child.get_size()).sum::<usize>() + 1
             }
         }

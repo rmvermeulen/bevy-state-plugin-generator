@@ -15,6 +15,7 @@ name = "bspgen"
 [features]
 default = ["full"]
 full = ["parse", "generate", "format"]
+lists = ["parse", "generate"]
 parse = []
 generate = []
 format = ["dep:duct"]

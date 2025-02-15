@@ -7,7 +7,9 @@ pub enum Token {
     Separator,
     OpenEnum,
     CloseEnum,
+    #[cfg(feature = "lists")]
     OpenList,
+    #[cfg(feature = "lists")]
     CloseList,
 }
 
@@ -27,6 +29,7 @@ pub struct Comment<'a>(&'a str);
 pub enum ParseNode<'a> {
     Singleton(Identifier<'a>),
     Enum(Identifier<'a>, Vec<ParseNode<'a>>),
+    #[cfg(feature = "lists")]
     List(Identifier<'a>, Vec<ParseNode<'a>>),
 }
 
@@ -40,11 +43,11 @@ impl<'a> ParseNode<'a> {
     ) -> Self {
         Self::Enum(name.into(), variants.into_iter().collect())
     }
-    #[cfg(test)]
+    #[cfg(all(test, feature = "lists"))]
     pub fn list_empty<I: Into<Identifier<'a>>>(name: I) -> Self {
         Self::List(name.into(), vec![])
     }
-    #[cfg(test)]
+    #[cfg(all(test, feature = "lists"))]
     pub fn list<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
         name: I,
         variants: V,
