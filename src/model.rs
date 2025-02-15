@@ -1,3 +1,4 @@
+use derive_more::From;
 use iter_tools::Itertools;
 use std::rc::Rc;
 
@@ -154,11 +155,11 @@ impl From<ParseNode<'_>> for StateNode {
     }
 }
 
-pub trait StateTree {
+pub trait SubTree {
     fn get_size(&self) -> usize;
 }
 
-impl StateTree for StateNode {
+impl SubTree for StateNode {
     fn get_size(&self) -> usize {
         match self {
             StateNode::Singleton(_) => 1,
@@ -169,7 +170,7 @@ impl StateTree for StateNode {
     }
 }
 
-impl StateTree for ParseNode<'_> {
+impl SubTree for ParseNode<'_> {
     fn get_size(&self) -> usize {
         match self {
             ParseNode::Singleton(_) => 1,
@@ -177,5 +178,18 @@ impl StateTree for ParseNode<'_> {
                 children.iter().map(|child| child.get_size()).sum::<usize>() + 1
             }
         }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone, From)]
+pub struct StateTree {
+    root: Rc<StateNode>,
+}
+
+impl StateTree {}
+
+impl SubTree for StateTree {
+    fn get_size(&self) -> usize {
+        self.root.get_size()
     }
 }

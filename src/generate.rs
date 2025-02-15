@@ -3,7 +3,7 @@ use std::{io, rc::Rc};
 
 use iter_tools::Itertools;
 
-use crate::model::{SourceState, StateNode, StateTree};
+use crate::model::{SourceState, StateNode, SubTree};
 use crate::parser::parse_states_file;
 use crate::{NamingScheme, PluginConfig};
 
