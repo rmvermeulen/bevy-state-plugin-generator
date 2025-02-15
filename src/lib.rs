@@ -4,7 +4,7 @@
 
 use std::{fs, io, path::Path};
 
-use generate::generate_full_source;
+use generate::generate_state_plugin_source;
 
 pub(crate) mod generate;
 pub(crate) mod model;
@@ -29,7 +29,7 @@ pub fn on_build_generate_plugin(
     let src_display = src.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&src)?;
-    let source = match generate_full_source(src_display, source, plugin_config) {
+    let source = match generate_state_plugin_source(src_display, source, plugin_config) {
         Ok(source) => source,
         Err(message) => message,
     };

@@ -135,7 +135,7 @@ pub fn format_source<S: AsRef<str>>(source: S) -> String {
     }
 }
 
-pub fn generate_full_source<P: AsRef<str> + std::fmt::Display, S: AsRef<str>>(
+pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<str>>(
     src_path: P,
     source: S,
     plugin_config: PluginConfig,
@@ -249,7 +249,7 @@ mod tests {
     ) {
         set_snapshot_suffix!("{src_path}");
         assert_snapshot!(
-            generate_full_source(src_path, source, plugin_config).unwrap_or_else(identity)
+            generate_state_plugin_source(src_path, source, plugin_config).unwrap_or_else(identity)
         );
     }
 
@@ -263,7 +263,7 @@ mod tests {
     ) {
         set_snapshot_suffix!("{src_path}_{scheme:?}");
         assert_snapshot!(
-            generate_full_source(src_path, source, PluginConfig {
+            generate_state_plugin_source(src_path, source, PluginConfig {
                 scheme,
                 ..Default::default()
             })
