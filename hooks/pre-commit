@@ -3,3 +3,4 @@
 set -exu
 echo "Pre-commit hook"
 cargo fmt --check
+cargo t --doc
