@@ -2,7 +2,7 @@ use std::{io, rc::Rc};
 
 use iter_tools::Itertools;
 
-use crate::model::{SourceState, StateNode};
+use crate::model::{SourceState, StateNode, StateTree};
 use crate::parser::parse_states_file;
 use crate::{NamingScheme, PluginConfig};
 
@@ -143,10 +143,17 @@ pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<
     let source = source.as_ref();
     let parse_tree =
         parse_states_file(source, plugin_config.state_name).map_err(|e| e.to_string())?;
-    let root_node = Rc::new(parse_tree.into());
+    let parse_tree_size = parse_tree.get_size();
+
+    let root_node: Rc<StateNode> = Rc::new(parse_tree.into());
+    let state_tree_size = root_node.get_size();
+
+    assert_eq!(parse_tree_size, state_tree_size);
+
     let debug_info = generate_debug_info(src_path.as_ref(), source);
     let plugin_source = generate_plugin_source(root_node, plugin_config);
     let source = [debug_info, plugin_source].join("\n");
+
     Ok(format_source(source))
 }
 

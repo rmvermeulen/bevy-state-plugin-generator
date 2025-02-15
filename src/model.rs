@@ -153,3 +153,29 @@ impl From<ParseNode<'_>> for StateNode {
         }
     }
 }
+
+pub trait StateTree {
+    fn get_size(&self) -> usize;
+}
+
+impl StateTree for StateNode {
+    fn get_size(&self) -> usize {
+        match self {
+            StateNode::Singleton(_) => 1,
+            StateNode::Enum(_, children) | StateNode::List(_, children) => {
+                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+            }
+        }
+    }
+}
+
+impl StateTree for ParseNode<'_> {
+    fn get_size(&self) -> usize {
+        match self {
+            ParseNode::Singleton(_) => 1,
+            ParseNode::Enum(_, children) | ParseNode::List(_, children) => {
+                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+            }
+        }
+    }
+}
