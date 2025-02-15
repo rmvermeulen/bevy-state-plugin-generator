@@ -125,7 +125,7 @@
           <td class="line-number">
             <a name="L14" href="#L14"><pre>14</pre></a>
           </td>
-          <td class="covered-line"><pre>149</pre></td>
+          <td class="covered-line"><pre>133</pre></td>
           <td class="code">
             <pre>    pub fn name(&amp;self) -&gt; String {</pre>
           </td>
@@ -134,21 +134,21 @@
           <td class="line-number">
             <a name="L15" href="#L15"><pre>15</pre></a>
           </td>
-          <td class="covered-line"><pre>149</pre></td>
+          <td class="covered-line"><pre>133</pre></td>
           <td class="code"><pre>        self.name.clone()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L16" href="#L16"><pre>16</pre></a>
           </td>
-          <td class="covered-line"><pre>149</pre></td>
+          <td class="covered-line"><pre>133</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L17" href="#L17"><pre>17</pre></a>
           </td>
-          <td class="covered-line"><pre>79</pre></td>
+          <td class="covered-line"><pre>71</pre></td>
           <td class="code">
             <pre>    pub fn name_and_variant(&amp;self) -&gt; String {</pre>
           </td>
@@ -157,7 +157,7 @@
           <td class="line-number">
             <a name="L18" href="#L18"><pre>18</pre></a>
           </td>
-          <td class="covered-line"><pre>79</pre></td>
+          <td class="covered-line"><pre>71</pre></td>
           <td class="code">
             <pre>
         format!(&quot;{}::{}&quot;, self.name, self.variant)</pre
@@ -168,7 +168,7 @@
           <td class="line-number">
             <a name="L19" href="#L19"><pre>19</pre></a>
           </td>
-          <td class="covered-line"><pre>79</pre></td>
+          <td class="covered-line"><pre>71</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -908,7 +908,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>    List(String, Vec&lt;Rc&lt;StateNode&gt;&gt;),</pre>
+            <pre>    #[cfg(feature = &quot;lists&quot;)]</pre>
           </td>
         </tr>
         <tr>
@@ -916,27 +916,36 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
             <a name="L108" href="#L108"><pre>108</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
+          <td class="code">
+            <pre>    List(String, Vec&lt;Rc&lt;StateNode&gt;&gt;),</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L109" href="#L109"><pre>109</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L110" href="#L110"><pre>110</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>impl StateNode {</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L111" href="#L111"><pre>111</pre></a>
           </td>
-          <td class="covered-line"><pre>56</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>impl StateNode {</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L112" href="#L112"><pre>112</pre></a>
+          </td>
+          <td class="covered-line"><pre>51</pre></td>
           <td class="code">
             <pre>
     pub fn singleton&lt;S: ToString&gt;(name: S) -&gt; Self {</pre
@@ -945,25 +954,25 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L112" href="#L112"><pre>112</pre></a>
+            <a name="L113" href="#L113"><pre>113</pre></a>
           </td>
-          <td class="covered-line"><pre>56</pre></td>
+          <td class="covered-line"><pre>51</pre></td>
           <td class="code">
             <pre>        Self::Singleton(name.to_string())</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L113" href="#L113"><pre>113</pre></a>
+            <a name="L114" href="#L114"><pre>114</pre></a>
           </td>
-          <td class="covered-line"><pre>56</pre></td>
+          <td class="covered-line"><pre>51</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L114" href="#L114"><pre>114</pre></a>
+            <a name="L115" href="#L115"><pre>115</pre></a>
           </td>
-          <td class="covered-line"><pre>30</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code">
             <pre>
     pub fn enumeration&lt;N: Into&lt;Rc&lt;StateNode&gt;&gt;, V: IntoIterator&lt;Item = N&gt;, S: ToString&gt;(</pre
@@ -972,44 +981,44 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L115" href="#L115"><pre>115</pre></a>
-          </td>
-          <td class="covered-line"><pre>30</pre></td>
-          <td class="code"><pre>        name: S,</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L116" href="#L116"><pre>116</pre></a>
           </td>
-          <td class="covered-line"><pre>30</pre></td>
-          <td class="code"><pre>        variants: V,</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
+          <td class="code"><pre>        name: S,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L117" href="#L117"><pre>117</pre></a>
           </td>
-          <td class="covered-line"><pre>30</pre></td>
-          <td class="code"><pre>    ) -&gt; Self {</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
+          <td class="code"><pre>        variants: V,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L118" href="#L118"><pre>118</pre></a>
           </td>
-          <td class="covered-line"><pre>30</pre></td>
-          <td class="code"><pre>        Self::Enum(</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
+          <td class="code"><pre>    ) -&gt; Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L119" href="#L119"><pre>119</pre></a>
           </td>
-          <td class="covered-line"><pre>30</pre></td>
-          <td class="code"><pre>            name.to_string(),</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
+          <td class="code"><pre>        Self::Enum(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L120" href="#L120"><pre>120</pre></a>
           </td>
-          <td class="covered-line"><pre>30</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
+          <td class="code"><pre>            name.to_string(),</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L121" href="#L121"><pre>121</pre></a>
+          </td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code">
             <pre>
             variants.into_iter().map(Into::into).collect_vec(),</pre
@@ -1018,23 +1027,32 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L121" href="#L121"><pre>121</pre></a>
-          </td>
-          <td class="covered-line"><pre>30</pre></td>
-          <td class="code"><pre>        )</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L122" href="#L122"><pre>122</pre></a>
           </td>
-          <td class="covered-line"><pre>30</pre></td>
-          <td class="code"><pre>    }</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
+          <td class="code"><pre>        )</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L123" href="#L123"><pre>123</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
+          <td class="code"><pre>    }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L124" href="#L124"><pre>124</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>    #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L125" href="#L125"><pre>125</pre></a>
+          </td>
+          <td class="skipped-line"></td>
           <td class="code">
             <pre>
     pub fn list&lt;N: Into&lt;Rc&lt;StateNode&gt;&gt;, V: IntoIterator&lt;Item = N&gt;, S: ToString&gt;(</pre
@@ -1043,44 +1061,44 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L124" href="#L124"><pre>124</pre></a>
-          </td>
-          <td class="covered-line"><pre>2</pre></td>
-          <td class="code"><pre>        name: S,</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L125" href="#L125"><pre>125</pre></a>
-          </td>
-          <td class="covered-line"><pre>2</pre></td>
-          <td class="code"><pre>        variants: V,</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L126" href="#L126"><pre>126</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
-          <td class="code"><pre>    ) -&gt; Self {</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>        name: S,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L127" href="#L127"><pre>127</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
-          <td class="code"><pre>        Self::List(</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>        variants: V,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L128" href="#L128"><pre>128</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
-          <td class="code"><pre>            name.to_string(),</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    ) -&gt; Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L129" href="#L129"><pre>129</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>        Self::List(</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L130" href="#L130"><pre>130</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>            name.to_string(),</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L131" href="#L131"><pre>131</pre></a>
+          </td>
+          <td class="skipped-line"></td>
           <td class="code">
             <pre>
             variants.into_iter().map(Into::into).collect_vec(),</pre
@@ -1089,88 +1107,92 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L130" href="#L130"><pre>130</pre></a>
+            <a name="L132" href="#L132"><pre>132</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="skipped-line"></td>
           <td class="code"><pre>        )</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L131" href="#L131"><pre>131</pre></a>
+            <a name="L133" href="#L133"><pre>133</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L132" href="#L132"><pre>132</pre></a>
+            <a name="L134" href="#L134"><pre>134</pre></a>
           </td>
-          <td class="covered-line"><pre>254</pre></td>
+          <td class="covered-line"><pre>237</pre></td>
           <td class="code">
             <pre>    pub fn name(&amp;self) -&gt; &amp;str {</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L133" href="#L133"><pre>133</pre></a>
-          </td>
-          <td class="covered-line"><pre>254</pre></td>
-          <td class="code"><pre>        match self {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L134" href="#L134"><pre>134</pre></a>
-          </td>
-          <td class="covered-line"><pre>159</pre></td>
-          <td class="code">
-            <pre>            StateNode::Singleton(name) | StateNode::Enum(<div class='tooltip'>name<span class='tooltip-content'>93</span></div>, _) | StateNode::List(<div class='tooltip'>name<span class='tooltip-content'>2</span></div>, _) =&gt; {</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L135" href="#L135"><pre>135</pre></a>
           </td>
-          <td class="covered-line"><pre>254</pre></td>
-          <td class="code"><pre>                name</pre></td>
+          <td class="covered-line"><pre>237</pre></td>
+          <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L136" href="#L136"><pre>136</pre></a>
           </td>
-          <td class="covered-line"><pre>254</pre></td>
-          <td class="code"><pre>            }</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L137" href="#L137"><pre>137</pre></a>
           </td>
-          <td class="covered-line"><pre>254</pre></td>
-          <td class="code"><pre>        }</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            StateNode::List(name, _) =&gt; name,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L138" href="#L138"><pre>138</pre></a>
           </td>
-          <td class="covered-line"><pre>254</pre></td>
-          <td class="code"><pre>    }</pre></td>
+          <td class="covered-line"><pre>237</pre></td>
+          <td class="code">
+            <pre>            StateNode::Singleton(<div class='tooltip'>name<span class='tooltip-content'>147</span></div>) | StateNode::Enum(<div class='tooltip'>name<span class='tooltip-content'>90</span></div>, _) =&gt; name,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L139" href="#L139"><pre>139</pre></a>
+          </td>
+          <td class="covered-line"><pre>237</pre></td>
+          <td class="code"><pre>        }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L140" href="#L140"><pre>140</pre></a>
+          </td>
+          <td class="covered-line"><pre>237</pre></td>
+          <td class="code"><pre>    }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L141" href="#L141"><pre>141</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L140" href="#L140"><pre>140</pre></a>
+            <a name="L142" href="#L142"><pre>142</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L141" href="#L141"><pre>141</pre></a>
+            <a name="L143" href="#L143"><pre>143</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1179,7 +1201,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L142" href="#L142"><pre>142</pre></a>
+            <a name="L144" href="#L144"><pre>144</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code">
@@ -1188,7 +1210,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L143" href="#L143"><pre>143</pre></a>
+            <a name="L145" href="#L145"><pre>145</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code">
@@ -1199,56 +1221,56 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L144" href="#L144"><pre>144</pre></a>
+            <a name="L146" href="#L146"><pre>146</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>            children</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L145" href="#L145"><pre>145</pre></a>
+            <a name="L147" href="#L147"><pre>147</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>                .into_iter()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L146" href="#L146"><pre>146</pre></a>
+            <a name="L148" href="#L148"><pre>148</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>                .map(Into::into)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L147" href="#L147"><pre>147</pre></a>
+            <a name="L149" href="#L149"><pre>149</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>                .map(Rc::new)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L148" href="#L148"><pre>148</pre></a>
+            <a name="L150" href="#L150"><pre>150</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>                .collect_vec()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L149" href="#L149"><pre>149</pre></a>
+            <a name="L151" href="#L151"><pre>151</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>        };</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L150" href="#L150"><pre>150</pre></a>
+            <a name="L152" href="#L152"><pre>152</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>        match node {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L151" href="#L151"><pre>151</pre></a>
+            <a name="L153" href="#L153"><pre>153</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
@@ -1259,7 +1281,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L152" href="#L152"><pre>152</pre></a>
+            <a name="L154" href="#L154"><pre>154</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code">
@@ -1270,51 +1292,62 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L153" href="#L153"><pre>153</pre></a>
-          </td>
-          <td class="uncovered-line"><pre>0</pre></td>
-          <td class="code">
-            <pre>            ParseNode::List(<span class='region red'>name, children) =&gt; StateNode::list(name, map_children(children))</span>,</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L154" href="#L154"><pre>154</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>        }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L155" href="#L155"><pre>155</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
-          <td class="code"><pre>    }</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L156" href="#L156"><pre>156</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
+          <td class="code">
+            <pre>
+            ParseNode::List(name, children) =&gt; StateNode::list(name, map_children(children)),</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L157" href="#L157"><pre>157</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L158" href="#L158"><pre>158</pre></a>
+          </td>
+          <td class="covered-line"><pre>9</pre></td>
+          <td class="code"><pre>    }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L159" href="#L159"><pre>159</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>}</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L160" href="#L160"><pre>160</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre></pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L161" href="#L161"><pre>161</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>pub trait SubTree {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L159" href="#L159"><pre>159</pre></a>
+            <a name="L162" href="#L162"><pre>162</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1323,28 +1356,28 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L160" href="#L160"><pre>160</pre></a>
+            <a name="L163" href="#L163"><pre>163</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L161" href="#L161"><pre>161</pre></a>
+            <a name="L164" href="#L164"><pre>164</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L162" href="#L162"><pre>162</pre></a>
+            <a name="L165" href="#L165"><pre>165</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>impl SubTree for StateNode {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L163" href="#L163"><pre>163</pre></a>
+            <a name="L166" href="#L166"><pre>166</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code">
@@ -1353,14 +1386,14 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L164" href="#L164"><pre>164</pre></a>
+            <a name="L167" href="#L167"><pre>167</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L165" href="#L165"><pre>165</pre></a>
+            <a name="L168" href="#L168"><pre>168</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
@@ -1369,16 +1402,16 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L166" href="#L166"><pre>166</pre></a>
+            <a name="L169" href="#L169"><pre>169</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code">
-            <pre>            StateNode::Enum(_, children) | StateNode::List(_, <div class='tooltip'><span class='region red'>children</span><span class='tooltip-content'>0</span></div>) =&gt; {</pre>
+            <pre>            StateNode::Enum(_, children) =&gt; {</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L167" href="#L167"><pre>167</pre></a>
+            <a name="L170" href="#L170"><pre>170</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code">
@@ -1389,42 +1422,78 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L168" href="#L168"><pre>168</pre></a>
+            <a name="L171" href="#L171"><pre>171</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L169" href="#L169"><pre>169</pre></a>
+            <a name="L172" href="#L172"><pre>172</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L173" href="#L173"><pre>173</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            StateNode::List(_, children) =&gt; {</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L174" href="#L174"><pre>174</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>
+                children.iter().map(|child| child.get_size()).sum::&lt;usize&gt;() + 1</pre
+            >
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L175" href="#L175"><pre>175</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>            }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L176" href="#L176"><pre>176</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L170" href="#L170"><pre>170</pre></a>
+            <a name="L177" href="#L177"><pre>177</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L171" href="#L171"><pre>171</pre></a>
+            <a name="L178" href="#L178"><pre>178</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L172" href="#L172"><pre>172</pre></a>
+            <a name="L179" href="#L179"><pre>179</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L173" href="#L173"><pre>173</pre></a>
+            <a name="L180" href="#L180"><pre>180</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1433,7 +1502,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L174" href="#L174"><pre>174</pre></a>
+            <a name="L181" href="#L181"><pre>181</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code">
@@ -1442,14 +1511,14 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L175" href="#L175"><pre>175</pre></a>
+            <a name="L182" href="#L182"><pre>182</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L176" href="#L176"><pre>176</pre></a>
+            <a name="L183" href="#L183"><pre>183</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
@@ -1458,16 +1527,16 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L177" href="#L177"><pre>177</pre></a>
+            <a name="L184" href="#L184"><pre>184</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code">
-            <pre>            ParseNode::Enum(_, children) | ParseNode::List(_, <div class='tooltip'><span class='region red'>children</span><span class='tooltip-content'>0</span></div>) =&gt; {</pre>
+            <pre>            ParseNode::Enum(_, children) =&gt; {</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L178" href="#L178"><pre>178</pre></a>
+            <a name="L185" href="#L185"><pre>185</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code">
@@ -1478,42 +1547,78 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L179" href="#L179"><pre>179</pre></a>
+            <a name="L186" href="#L186"><pre>186</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L180" href="#L180"><pre>180</pre></a>
+            <a name="L187" href="#L187"><pre>187</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L188" href="#L188"><pre>188</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            ParseNode::List(_, children) =&gt; {</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L189" href="#L189"><pre>189</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>
+                children.iter().map(|child| child.get_size()).sum::&lt;usize&gt;() + 1</pre
+            >
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L190" href="#L190"><pre>190</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>            }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L191" href="#L191"><pre>191</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L181" href="#L181"><pre>181</pre></a>
+            <a name="L192" href="#L192"><pre>192</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L182" href="#L182"><pre>182</pre></a>
+            <a name="L193" href="#L193"><pre>193</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L183" href="#L183"><pre>183</pre></a>
+            <a name="L194" href="#L194"><pre>194</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L184" href="#L184"><pre>184</pre></a>
+            <a name="L195" href="#L195"><pre>195</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1522,56 +1627,56 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L185" href="#L185"><pre>185</pre></a>
+            <a name="L196" href="#L196"><pre>196</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>pub struct StateTree {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L186" href="#L186"><pre>186</pre></a>
+            <a name="L197" href="#L197"><pre>197</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    root: Rc&lt;StateNode&gt;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L187" href="#L187"><pre>187</pre></a>
+            <a name="L198" href="#L198"><pre>198</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L188" href="#L188"><pre>188</pre></a>
+            <a name="L199" href="#L199"><pre>199</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L189" href="#L189"><pre>189</pre></a>
+            <a name="L200" href="#L200"><pre>200</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>impl StateTree {}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L190" href="#L190"><pre>190</pre></a>
+            <a name="L201" href="#L201"><pre>201</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L191" href="#L191"><pre>191</pre></a>
+            <a name="L202" href="#L202"><pre>202</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>impl SubTree for StateTree {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L192" href="#L192"><pre>192</pre></a>
+            <a name="L203" href="#L203"><pre>203</pre></a>
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
@@ -1580,7 +1685,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L193" href="#L193"><pre>193</pre></a>
+            <a name="L204" href="#L204"><pre>204</pre></a>
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
@@ -1589,7 +1694,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L194" href="#L194"><pre>194</pre></a>
+            <a name="L205" href="#L205"><pre>205</pre></a>
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
@@ -1598,7 +1703,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L195" href="#L195"><pre>195</pre></a>
+            <a name="L206" href="#L206"><pre>206</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
