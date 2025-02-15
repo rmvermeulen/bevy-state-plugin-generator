@@ -159,34 +159,50 @@ impl From<ParseNode<'_>> for StateNode {
 }
 
 pub trait SubTree {
-    fn get_size(&self) -> usize;
+    fn get_tree_size(&self) -> usize;
 }
 
 impl SubTree for StateNode {
-    fn get_size(&self) -> usize {
+    fn get_tree_size(&self) -> usize {
         match self {
             StateNode::Singleton(_) => 1,
             StateNode::Enum(_, children) => {
-                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+                children
+                    .iter()
+                    .map(|child| child.get_tree_size())
+                    .sum::<usize>()
+                    + 1
             }
             #[cfg(feature = "lists")]
             StateNode::List(_, children) => {
-                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+                children
+                    .iter()
+                    .map(|child| child.get_tree_size())
+                    .sum::<usize>()
+                    + 1
             }
         }
     }
 }
 
 impl SubTree for ParseNode<'_> {
-    fn get_size(&self) -> usize {
+    fn get_tree_size(&self) -> usize {
         match self {
             ParseNode::Singleton(_) => 1,
             ParseNode::Enum(_, children) => {
-                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+                children
+                    .iter()
+                    .map(|child| child.get_tree_size())
+                    .sum::<usize>()
+                    + 1
             }
             #[cfg(feature = "lists")]
             ParseNode::List(_, children) => {
-                children.iter().map(|child| child.get_size()).sum::<usize>() + 1
+                children
+                    .iter()
+                    .map(|child| child.get_tree_size())
+                    .sum::<usize>()
+                    + 1
             }
         }
     }
@@ -200,7 +216,7 @@ pub struct StateTree {
 impl StateTree {}
 
 impl SubTree for StateTree {
-    fn get_size(&self) -> usize {
-        self.root.get_size()
+    fn get_tree_size(&self) -> usize {
+        self.root.get_tree_size()
     }
 }

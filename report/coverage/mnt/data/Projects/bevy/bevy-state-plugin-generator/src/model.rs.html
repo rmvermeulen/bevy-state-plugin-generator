@@ -1351,7 +1351,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>    fn get_size(&amp;self) -&gt; usize;</pre>
+            <pre>    fn get_tree_size(&amp;self) -&gt; usize;</pre>
           </td>
         </tr>
         <tr>
@@ -1381,7 +1381,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code">
-            <pre>    fn get_size(&amp;self) -&gt; usize {</pre>
+            <pre>    fn get_tree_size(&amp;self) -&gt; usize {</pre>
           </td>
         </tr>
         <tr>
@@ -1414,47 +1414,39 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
             <a name="L170" href="#L170"><pre>170</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
-          <td class="code">
-            <pre>
-                children.iter().map(|child| child.get_size()).sum::&lt;usize&gt;() + 1</pre
-            >
-          </td>
+          <td class="code"><pre>                children</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L171" href="#L171"><pre>171</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>            }</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
+          <td class="code"><pre>                    .iter()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L172" href="#L172"><pre>172</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
-            <pre>            #[cfg(feature = &quot;lists&quot;)]</pre>
+            <pre>                    .map(|child| child.get_tree_size())</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L173" href="#L173"><pre>173</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
-            <pre>            StateNode::List(_, children) =&gt; {</pre>
+            <pre>                    .sum::&lt;usize&gt;()</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L174" href="#L174"><pre>174</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-                children.iter().map(|child| child.get_size()).sum::&lt;usize&gt;() + 1</pre
-            >
-          </td>
+          <td class="covered-line"><pre>4</pre></td>
+          <td class="code"><pre>                    + 1</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1468,32 +1460,96 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
             <a name="L176" href="#L176"><pre>176</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        }</pre></td>
+          <td class="code">
+            <pre>            #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L177" href="#L177"><pre>177</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
-          <td class="code"><pre>    }</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            StateNode::List(_, children) =&gt; {</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L178" href="#L178"><pre>178</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
+          <td class="code"><pre>                children</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L179" href="#L179"><pre>179</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>                    .iter()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L180" href="#L180"><pre>180</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>                    .map(|child| child.get_tree_size())</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L181" href="#L181"><pre>181</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>                    .sum::&lt;usize&gt;()</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L182" href="#L182"><pre>182</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>                    + 1</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L183" href="#L183"><pre>183</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>            }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L184" href="#L184"><pre>184</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>        }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L185" href="#L185"><pre>185</pre></a>
+          </td>
+          <td class="covered-line"><pre>9</pre></td>
+          <td class="code"><pre>    }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L186" href="#L186"><pre>186</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>}</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L187" href="#L187"><pre>187</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre></pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L188" href="#L188"><pre>188</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1502,23 +1558,23 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L181" href="#L181"><pre>181</pre></a>
+            <a name="L189" href="#L189"><pre>189</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code">
-            <pre>    fn get_size(&amp;self) -&gt; usize {</pre>
+            <pre>    fn get_tree_size(&amp;self) -&gt; usize {</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L182" href="#L182"><pre>182</pre></a>
+            <a name="L190" href="#L190"><pre>190</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L183" href="#L183"><pre>183</pre></a>
+            <a name="L191" href="#L191"><pre>191</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
@@ -1527,7 +1583,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L184" href="#L184"><pre>184</pre></a>
+            <a name="L192" href="#L192"><pre>192</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code">
@@ -1536,25 +1592,53 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L185" href="#L185"><pre>185</pre></a>
+            <a name="L193" href="#L193"><pre>193</pre></a>
+          </td>
+          <td class="covered-line"><pre>4</pre></td>
+          <td class="code"><pre>                children</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L194" href="#L194"><pre>194</pre></a>
+          </td>
+          <td class="covered-line"><pre>4</pre></td>
+          <td class="code"><pre>                    .iter()</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L195" href="#L195"><pre>195</pre></a>
           </td>
           <td class="covered-line"><pre>4</pre></td>
           <td class="code">
-            <pre>
-                children.iter().map(|child| child.get_size()).sum::&lt;usize&gt;() + 1</pre
-            >
+            <pre>                    .map(|child| child.get_tree_size())</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L186" href="#L186"><pre>186</pre></a>
+            <a name="L196" href="#L196"><pre>196</pre></a>
+          </td>
+          <td class="covered-line"><pre>4</pre></td>
+          <td class="code">
+            <pre>                    .sum::&lt;usize&gt;()</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L197" href="#L197"><pre>197</pre></a>
+          </td>
+          <td class="covered-line"><pre>4</pre></td>
+          <td class="code"><pre>                    + 1</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L198" href="#L198"><pre>198</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L187" href="#L187"><pre>187</pre></a>
+            <a name="L199" href="#L199"><pre>199</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1563,7 +1647,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L188" href="#L188"><pre>188</pre></a>
+            <a name="L200" href="#L200"><pre>200</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1572,53 +1656,81 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L189" href="#L189"><pre>189</pre></a>
+            <a name="L201" href="#L201"><pre>201</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>                children</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L202" href="#L202"><pre>202</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>                    .iter()</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L203" href="#L203"><pre>203</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>
-                children.iter().map(|child| child.get_size()).sum::&lt;usize&gt;() + 1</pre
-            >
+            <pre>                    .map(|child| child.get_tree_size())</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L190" href="#L190"><pre>190</pre></a>
+            <a name="L204" href="#L204"><pre>204</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>                    .sum::&lt;usize&gt;()</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L205" href="#L205"><pre>205</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>                    + 1</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L206" href="#L206"><pre>206</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L191" href="#L191"><pre>191</pre></a>
+            <a name="L207" href="#L207"><pre>207</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L192" href="#L192"><pre>192</pre></a>
+            <a name="L208" href="#L208"><pre>208</pre></a>
           </td>
           <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L193" href="#L193"><pre>193</pre></a>
+            <a name="L209" href="#L209"><pre>209</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L194" href="#L194"><pre>194</pre></a>
+            <a name="L210" href="#L210"><pre>210</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L195" href="#L195"><pre>195</pre></a>
+            <a name="L211" href="#L211"><pre>211</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1627,74 +1739,74 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L196" href="#L196"><pre>196</pre></a>
+            <a name="L212" href="#L212"><pre>212</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>pub struct StateTree {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L197" href="#L197"><pre>197</pre></a>
+            <a name="L213" href="#L213"><pre>213</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    root: Rc&lt;StateNode&gt;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L198" href="#L198"><pre>198</pre></a>
+            <a name="L214" href="#L214"><pre>214</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L199" href="#L199"><pre>199</pre></a>
+            <a name="L215" href="#L215"><pre>215</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L200" href="#L200"><pre>200</pre></a>
+            <a name="L216" href="#L216"><pre>216</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>impl StateTree {}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L201" href="#L201"><pre>201</pre></a>
+            <a name="L217" href="#L217"><pre>217</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L202" href="#L202"><pre>202</pre></a>
+            <a name="L218" href="#L218"><pre>218</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>impl SubTree for StateTree {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L203" href="#L203"><pre>203</pre></a>
+            <a name="L219" href="#L219"><pre>219</pre></a>
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre>    <span class='region red'>fn get_size(&amp;self) -&gt; usize {</span></pre>
+            <pre>    <span class='region red'>fn get_tree_size(&amp;self) -&gt; usize {</span></pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L204" href="#L204"><pre>204</pre></a>
+            <a name="L220" href="#L220"><pre>220</pre></a>
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre><span class='region red'>        self.root.get_size()</span></pre>
+            <pre><span class='region red'>        self.root.get_tree_size()</span></pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L205" href="#L205"><pre>205</pre></a>
+            <a name="L221" href="#L221"><pre>221</pre></a>
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
@@ -1703,7 +1815,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L206" href="#L206"><pre>206</pre></a>
+            <a name="L222" href="#L222"><pre>222</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
