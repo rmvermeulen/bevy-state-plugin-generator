@@ -64,7 +64,7 @@
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>use crate::model::{SourceState, StateNode};</pre>
+            <pre>use crate::model::{SourceState, StateNode, StateTree};</pre>
           </td>
         </tr>
         <tr>
@@ -1150,7 +1150,7 @@ pub fn format_source&lt;S: AsRef&lt;str&gt;&gt;(source: S) -&gt; String {</pre
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
             <pre>
-pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef&lt;str&gt;&gt;(</pre
+pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef&lt;str&gt;&gt;(</pre
             >
           </td>
         </tr>
@@ -1213,7 +1213,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
-            <pre>    let root_node = Rc::new(parse_tree.into());</pre>
+            <pre>    let parse_tree_size = parse_tree.get_size();</pre>
           </td>
         </tr>
         <tr>
@@ -1221,11 +1221,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
             <a name="L147" href="#L147"><pre>147</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>
-    let debug_info = generate_debug_info(src_path.as_ref(), source);</pre
-            >
-          </td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1234,7 +1230,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
             <pre>
-    let plugin_source = generate_plugin_source(root_node, plugin_config);</pre
+    let root_node: Rc&lt;StateNode&gt; = Rc::new(parse_tree.into());</pre
             >
           </td>
         </tr>
@@ -1244,9 +1240,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
-            <pre>
-    let source = [debug_info, plugin_source].join(&quot;\n&quot;);</pre
-            >
+            <pre>    let state_tree_size = root_node.get_size();</pre>
           </td>
         </tr>
         <tr>
@@ -1254,14 +1248,16 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
             <a name="L150" href="#L150"><pre>150</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    Ok(format_source(source))</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L151" href="#L151"><pre>151</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>}</pre></td>
+          <td class="code">
+            <pre>    assert_eq!(parse_tree_size, state_tree_size);</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1274,66 +1270,76 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           <td class="line-number">
             <a name="L153" href="#L153"><pre>153</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>#[cfg(test)]</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code">
+            <pre>
+    let debug_info = generate_debug_info(src_path.as_ref(), source);</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L154" href="#L154"><pre>154</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>mod tests {</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code">
+            <pre>
+    let plugin_source = generate_plugin_source(root_node, plugin_config);</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L155" href="#L155"><pre>155</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code">
-            <pre>    use std::{convert::identity, time::Duration};</pre>
+            <pre>
+    let source = [debug_info, plugin_source].join(&quot;\n&quot;);</pre
+            >
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L156" href="#L156"><pre>156</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L157" href="#L157"><pre>157</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    use super::*;</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code"><pre>    Ok(format_source(source))</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L158" href="#L158"><pre>158</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    use insta::assert_snapshot;</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L159" href="#L159"><pre>159</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    use rstest::{fixture, rstest};</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L160" href="#L160"><pre>160</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    use speculoos::prelude::*;</pre></td>
+          <td class="code"><pre>#[cfg(test)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L161" href="#L161"><pre>161</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>mod tests {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1341,7 +1347,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>    use crate::{NamingScheme, PluginConfig};</pre>
+            <pre>    use std::{convert::identity, time::Duration};</pre>
           </td>
         </tr>
         <tr>
@@ -1356,20 +1362,71 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
             <a name="L164" href="#L164"><pre>164</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    macro_rules! set_snapshot_suffix {</pre>
-          </td>
+          <td class="code"><pre>    use super::*;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L165" href="#L165"><pre>165</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        ($($expr:expr),*) =&gt; {</pre></td>
+          <td class="code"><pre>    use insta::assert_snapshot;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L166" href="#L166"><pre>166</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    use rstest::{fixture, rstest};</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L167" href="#L167"><pre>167</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    use speculoos::prelude::*;</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L168" href="#L168"><pre>168</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre></pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L169" href="#L169"><pre>169</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>    use crate::{NamingScheme, PluginConfig};</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L170" href="#L170"><pre>170</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre></pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L171" href="#L171"><pre>171</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>    macro_rules! set_snapshot_suffix {</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L172" href="#L172"><pre>172</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>        ($($expr:expr),*) =&gt; {</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L173" href="#L173"><pre>173</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1380,7 +1437,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L167" href="#L167"><pre>167</pre></a>
+            <a name="L174" href="#L174"><pre>174</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1391,7 +1448,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L168" href="#L168"><pre>168</pre></a>
+            <a name="L175" href="#L175"><pre>175</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1400,35 +1457,35 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L169" href="#L169"><pre>169</pre></a>
+            <a name="L176" href="#L176"><pre>176</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L170" href="#L170"><pre>170</pre></a>
+            <a name="L177" href="#L177"><pre>177</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L171" href="#L171"><pre>171</pre></a>
+            <a name="L178" href="#L178"><pre>178</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L172" href="#L172"><pre>172</pre></a>
+            <a name="L179" href="#L179"><pre>179</pre></a>
           </td>
           <td class="covered-line"><pre>1</pre></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L173" href="#L173"><pre>173</pre></a>
+            <a name="L180" href="#L180"><pre>180</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1437,14 +1494,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L174" href="#L174"><pre>174</pre></a>
+            <a name="L181" href="#L181"><pre>181</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    async fn test_format_source() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L175" href="#L175"><pre>175</pre></a>
+            <a name="L182" href="#L182"><pre>182</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1455,7 +1512,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L176" href="#L176"><pre>176</pre></a>
+            <a name="L183" href="#L183"><pre>183</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1464,14 +1521,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L177" href="#L177"><pre>177</pre></a>
+            <a name="L184" href="#L184"><pre>184</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        fn main() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L178" href="#L178"><pre>178</pre></a>
+            <a name="L185" href="#L185"><pre>185</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1480,42 +1537,42 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L179" href="#L179"><pre>179</pre></a>
+            <a name="L186" href="#L186"><pre>186</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L180" href="#L180"><pre>180</pre></a>
+            <a name="L187" href="#L187"><pre>187</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;#);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L181" href="#L181"><pre>181</pre></a>
+            <a name="L188" href="#L188"><pre>188</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L182" href="#L182"><pre>182</pre></a>
+            <a name="L189" href="#L189"><pre>189</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L183" href="#L183"><pre>183</pre></a>
+            <a name="L190" href="#L190"><pre>190</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L184" href="#L184"><pre>184</pre></a>
+            <a name="L191" href="#L191"><pre>191</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1524,7 +1581,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L185" href="#L185"><pre>185</pre></a>
+            <a name="L192" href="#L192"><pre>192</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1535,7 +1592,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L186" href="#L186"><pre>186</pre></a>
+            <a name="L193" href="#L193"><pre>193</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1544,7 +1601,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L187" href="#L187"><pre>187</pre></a>
+            <a name="L194" href="#L194"><pre>194</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1553,7 +1610,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L188" href="#L188"><pre>188</pre></a>
+            <a name="L195" href="#L195"><pre>195</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1564,7 +1621,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L189" href="#L189"><pre>189</pre></a>
+            <a name="L196" href="#L196"><pre>196</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1575,7 +1632,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L190" href="#L190"><pre>190</pre></a>
+            <a name="L197" href="#L197"><pre>197</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1586,14 +1643,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L191" href="#L191"><pre>191</pre></a>
+            <a name="L198" href="#L198"><pre>198</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L192" href="#L192"><pre>192</pre></a>
+            <a name="L199" href="#L199"><pre>199</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1604,7 +1661,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L193" href="#L193"><pre>193</pre></a>
+            <a name="L200" href="#L200"><pre>200</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1615,7 +1672,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L194" href="#L194"><pre>194</pre></a>
+            <a name="L201" href="#L201"><pre>201</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1626,7 +1683,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L195" href="#L195"><pre>195</pre></a>
+            <a name="L202" href="#L202"><pre>202</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1637,28 +1694,28 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L196" href="#L196"><pre>196</pre></a>
+            <a name="L203" href="#L203"><pre>203</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L197" href="#L197"><pre>197</pre></a>
+            <a name="L204" href="#L204"><pre>204</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L198" href="#L198"><pre>198</pre></a>
+            <a name="L205" href="#L205"><pre>205</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        ]);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L199" href="#L199"><pre>199</pre></a>
+            <a name="L206" href="#L206"><pre>206</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1669,28 +1726,28 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L200" href="#L200"><pre>200</pre></a>
+            <a name="L207" href="#L207"><pre>207</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L201" href="#L201"><pre>201</pre></a>
+            <a name="L208" href="#L208"><pre>208</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L202" href="#L202"><pre>202</pre></a>
+            <a name="L209" href="#L209"><pre>209</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L203" href="#L203"><pre>203</pre></a>
+            <a name="L210" href="#L210"><pre>210</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1699,7 +1756,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L204" href="#L204"><pre>204</pre></a>
+            <a name="L211" href="#L211"><pre>211</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1710,7 +1767,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L205" href="#L205"><pre>205</pre></a>
+            <a name="L212" href="#L212"><pre>212</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1721,7 +1778,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L206" href="#L206"><pre>206</pre></a>
+            <a name="L213" href="#L213"><pre>213</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1730,7 +1787,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L207" href="#L207"><pre>207</pre></a>
+            <a name="L214" href="#L214"><pre>214</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1741,21 +1798,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L208" href="#L208"><pre>208</pre></a>
+            <a name="L215" href="#L215"><pre>215</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L209" href="#L209"><pre>209</pre></a>
+            <a name="L216" href="#L216"><pre>216</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L210" href="#L210"><pre>210</pre></a>
+            <a name="L217" href="#L217"><pre>217</pre></a>
           </td>
           <td class="covered-line"><pre>1</pre></td>
           <td class="code">
@@ -1766,7 +1823,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L211" href="#L211"><pre>211</pre></a>
+            <a name="L218" href="#L218"><pre>218</pre></a>
           </td>
           <td class="covered-line"><pre>1</pre></td>
           <td class="code">
@@ -1777,28 +1834,28 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L212" href="#L212"><pre>212</pre></a>
+            <a name="L219" href="#L219"><pre>219</pre></a>
           </td>
           <td class="covered-line"><pre>1</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L213" href="#L213"><pre>213</pre></a>
+            <a name="L220" href="#L220"><pre>220</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L214" href="#L214"><pre>214</pre></a>
+            <a name="L221" href="#L221"><pre>221</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L215" href="#L215"><pre>215</pre></a>
+            <a name="L222" href="#L222"><pre>222</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1809,7 +1866,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L216" href="#L216"><pre>216</pre></a>
+            <a name="L223" href="#L223"><pre>223</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1818,7 +1875,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L217" href="#L217"><pre>217</pre></a>
+            <a name="L224" href="#L224"><pre>224</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1827,7 +1884,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L218" href="#L218"><pre>218</pre></a>
+            <a name="L225" href="#L225"><pre>225</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1838,7 +1895,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L219" href="#L219"><pre>219</pre></a>
+            <a name="L226" href="#L226"><pre>226</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1849,7 +1906,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L220" href="#L220"><pre>220</pre></a>
+            <a name="L227" href="#L227"><pre>227</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1860,14 +1917,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L221" href="#L221"><pre>221</pre></a>
+            <a name="L228" href="#L228"><pre>228</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L222" href="#L222"><pre>222</pre></a>
+            <a name="L229" href="#L229"><pre>229</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1878,7 +1935,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L223" href="#L223"><pre>223</pre></a>
+            <a name="L230" href="#L230"><pre>230</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1889,7 +1946,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L224" href="#L224"><pre>224</pre></a>
+            <a name="L231" href="#L231"><pre>231</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1900,7 +1957,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L225" href="#L225"><pre>225</pre></a>
+            <a name="L232" href="#L232"><pre>232</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1911,21 +1968,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L226" href="#L226"><pre>226</pre></a>
+            <a name="L233" href="#L233"><pre>233</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L227" href="#L227"><pre>227</pre></a>
+            <a name="L234" href="#L234"><pre>234</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L228" href="#L228"><pre>228</pre></a>
+            <a name="L235" href="#L235"><pre>235</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1934,21 +1991,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L229" href="#L229"><pre>229</pre></a>
+            <a name="L236" href="#L236"><pre>236</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn test_generate_plugin_source(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L230" href="#L230"><pre>230</pre></a>
+            <a name="L237" href="#L237"><pre>237</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        #[case] src_path: &amp;str,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L231" href="#L231"><pre>231</pre></a>
+            <a name="L238" href="#L238"><pre>238</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1957,7 +2014,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L232" href="#L232"><pre>232</pre></a>
+            <a name="L239" href="#L239"><pre>239</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1966,14 +2023,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L233" href="#L233"><pre>233</pre></a>
+            <a name="L240" href="#L240"><pre>240</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ) {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L234" href="#L234"><pre>234</pre></a>
+            <a name="L241" href="#L241"><pre>241</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1982,7 +2039,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L235" href="#L235"><pre>235</pre></a>
+            <a name="L242" href="#L242"><pre>242</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1993,28 +2050,28 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L236" href="#L236"><pre>236</pre></a>
+            <a name="L243" href="#L243"><pre>243</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L237" href="#L237"><pre>237</pre></a>
+            <a name="L244" href="#L244"><pre>244</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L238" href="#L238"><pre>238</pre></a>
+            <a name="L245" href="#L245"><pre>245</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L239" href="#L239"><pre>239</pre></a>
+            <a name="L246" href="#L246"><pre>246</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2025,14 +2082,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L240" href="#L240"><pre>240</pre></a>
+            <a name="L247" href="#L247"><pre>247</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[case(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L241" href="#L241"><pre>241</pre></a>
+            <a name="L248" href="#L248"><pre>248</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2041,7 +2098,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L242" href="#L242"><pre>242</pre></a>
+            <a name="L249" href="#L249"><pre>249</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2050,42 +2107,42 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L243" href="#L243"><pre>243</pre></a>
+            <a name="L250" href="#L250"><pre>250</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        PluginConfig::default()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L244" href="#L244"><pre>244</pre></a>
+            <a name="L251" href="#L251"><pre>251</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    )]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L245" href="#L245"><pre>245</pre></a>
+            <a name="L252" href="#L252"><pre>252</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn test_generate_full_source(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L246" href="#L246"><pre>246</pre></a>
+            <a name="L253" href="#L253"><pre>253</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        #[case] src_path: &amp;str,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L247" href="#L247"><pre>247</pre></a>
+            <a name="L254" href="#L254"><pre>254</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        #[case] source: &amp;str,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L248" href="#L248"><pre>248</pre></a>
+            <a name="L255" href="#L255"><pre>255</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2094,14 +2151,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L249" href="#L249"><pre>249</pre></a>
+            <a name="L256" href="#L256"><pre>256</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ) {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L250" href="#L250"><pre>250</pre></a>
+            <a name="L257" href="#L257"><pre>257</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2110,53 +2167,53 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L251" href="#L251"><pre>251</pre></a>
+            <a name="L258" href="#L258"><pre>258</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        assert_snapshot!(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L252" href="#L252"><pre>252</pre></a>
+            <a name="L259" href="#L259"><pre>259</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
             <pre>
-            generate_full_source(src_path, source, plugin_config).unwrap_or_else(identity)</pre
+            generate_state_plugin_source(src_path, source, plugin_config).unwrap_or_else(identity)</pre
             >
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L253" href="#L253"><pre>253</pre></a>
+            <a name="L260" href="#L260"><pre>260</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        );</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L254" href="#L254"><pre>254</pre></a>
+            <a name="L261" href="#L261"><pre>261</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L255" href="#L255"><pre>255</pre></a>
+            <a name="L262" href="#L262"><pre>262</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L256" href="#L256"><pre>256</pre></a>
+            <a name="L263" href="#L263"><pre>263</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L257" href="#L257"><pre>257</pre></a>
+            <a name="L264" href="#L264"><pre>264</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2167,7 +2224,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L258" href="#L258"><pre>258</pre></a>
+            <a name="L265" href="#L265"><pre>265</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2178,42 +2235,42 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L259" href="#L259"><pre>259</pre></a>
+            <a name="L266" href="#L266"><pre>266</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn test_naming_scheme(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L260" href="#L260"><pre>260</pre></a>
+            <a name="L267" href="#L267"><pre>267</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        #[case] src_path: &amp;str,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L261" href="#L261"><pre>261</pre></a>
+            <a name="L268" href="#L268"><pre>268</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        #[case] source: &amp;str,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L262" href="#L262"><pre>262</pre></a>
+            <a name="L269" href="#L269"><pre>269</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        #[case] scheme: NamingScheme,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L263" href="#L263"><pre>263</pre></a>
+            <a name="L270" href="#L270"><pre>270</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ) {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L264" href="#L264"><pre>264</pre></a>
+            <a name="L271" href="#L271"><pre>271</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2224,125 +2281,70 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L265" href="#L265"><pre>265</pre></a>
+            <a name="L272" href="#L272"><pre>272</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        assert_snapshot!(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L266" href="#L266"><pre>266</pre></a>
+            <a name="L273" href="#L273"><pre>273</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
             <pre>
-            generate_full_source(src_path, source, PluginConfig {</pre
+            generate_state_plugin_source(src_path, source, PluginConfig {</pre
             >
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L267" href="#L267"><pre>267</pre></a>
+            <a name="L274" href="#L274"><pre>274</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                scheme,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L268" href="#L268"><pre>268</pre></a>
+            <a name="L275" href="#L275"><pre>275</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                ..Default::default()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L269" href="#L269"><pre>269</pre></a>
+            <a name="L276" href="#L276"><pre>276</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            })</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L270" href="#L270"><pre>270</pre></a>
+            <a name="L277" href="#L277"><pre>277</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            .unwrap_or_else(identity)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L271" href="#L271"><pre>271</pre></a>
+            <a name="L278" href="#L278"><pre>278</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        );</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L272" href="#L272"><pre>272</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L273" href="#L273"><pre>273</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L274" href="#L274"><pre>274</pre></a>
-          </td>
-          <td class="covered-line"><pre>15</pre></td>
-          <td class="code"><pre>    #[fixture]</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L275" href="#L275"><pre>275</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    fn root_source_state() -&gt; SourceState {</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L276" href="#L276"><pre>276</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>        SourceState {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L277" href="#L277"><pre>277</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>            name: &quot;Game&quot;.to_string(),</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L278" href="#L278"><pre>278</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>            variant: &quot;Menu&quot;.to_string(),</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L279" href="#L279"><pre>279</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        }</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L280" href="#L280"><pre>280</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    }</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -2357,7 +2359,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>    fn nested_node() -&gt; StateNode {</pre>
+            <pre>    fn root_source_state() -&gt; SourceState {</pre>
           </td>
         </tr>
         <tr>
@@ -2365,9 +2367,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
             <a name="L283" href="#L283"><pre>283</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>        StateNode::enumeration(&quot;Menu&quot;, [</pre>
-          </td>
+          <td class="code"><pre>        SourceState {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -2375,7 +2375,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>            StateNode::singleton(&quot;Main&quot;),</pre>
+            <pre>            name: &quot;Game&quot;.to_string(),</pre>
           </td>
         </tr>
         <tr>
@@ -2384,12 +2384,69 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>            StateNode::enumeration(&quot;Options&quot;, [</pre>
+            <pre>            variant: &quot;Menu&quot;.to_string(),</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L286" href="#L286"><pre>286</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>        }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L287" href="#L287"><pre>287</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L288" href="#L288"><pre>288</pre></a>
+          </td>
+          <td class="covered-line"><pre>15</pre></td>
+          <td class="code"><pre>    #[fixture]</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L289" href="#L289"><pre>289</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>    fn nested_node() -&gt; StateNode {</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L290" href="#L290"><pre>290</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>        StateNode::enumeration(&quot;Menu&quot;, [</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L291" href="#L291"><pre>291</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            StateNode::singleton(&quot;Main&quot;),</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L292" href="#L292"><pre>292</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>            StateNode::enumeration(&quot;Options&quot;, [</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L293" href="#L293"><pre>293</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2400,7 +2457,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L287" href="#L287"><pre>287</pre></a>
+            <a name="L294" href="#L294"><pre>294</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2409,7 +2466,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L288" href="#L288"><pre>288</pre></a>
+            <a name="L295" href="#L295"><pre>295</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2420,14 +2477,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L289" href="#L289"><pre>289</pre></a>
+            <a name="L296" href="#L296"><pre>296</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L290" href="#L290"><pre>290</pre></a>
+            <a name="L297" href="#L297"><pre>297</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2438,7 +2495,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L291" href="#L291"><pre>291</pre></a>
+            <a name="L298" href="#L298"><pre>298</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2447,7 +2504,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L292" href="#L292"><pre>292</pre></a>
+            <a name="L299" href="#L299"><pre>299</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2456,42 +2513,42 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L293" href="#L293"><pre>293</pre></a>
+            <a name="L300" href="#L300"><pre>300</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L294" href="#L294"><pre>294</pre></a>
+            <a name="L301" href="#L301"><pre>301</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        ])</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L295" href="#L295"><pre>295</pre></a>
+            <a name="L302" href="#L302"><pre>302</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L296" href="#L296"><pre>296</pre></a>
+            <a name="L303" href="#L303"><pre>303</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L297" href="#L297"><pre>297</pre></a>
+            <a name="L304" href="#L304"><pre>304</pre></a>
           </td>
           <td class="covered-line"><pre>1</pre></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L298" href="#L298"><pre>298</pre></a>
+            <a name="L305" href="#L305"><pre>305</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2500,7 +2557,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L299" href="#L299"><pre>299</pre></a>
+            <a name="L306" href="#L306"><pre>306</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2509,7 +2566,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L300" href="#L300"><pre>300</pre></a>
+            <a name="L307" href="#L307"><pre>307</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2518,21 +2575,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L301" href="#L301"><pre>301</pre></a>
+            <a name="L308" href="#L308"><pre>308</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ) {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L302" href="#L302"><pre>302</pre></a>
+            <a name="L309" href="#L309"><pre>309</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        let typedef_result =</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L303" href="#L303"><pre>303</pre></a>
+            <a name="L310" href="#L310"><pre>310</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2543,7 +2600,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L304" href="#L304"><pre>304</pre></a>
+            <a name="L311" href="#L311"><pre>311</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2554,7 +2611,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L305" href="#L305"><pre>305</pre></a>
+            <a name="L312" href="#L312"><pre>312</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2565,7 +2622,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L306" href="#L306"><pre>306</pre></a>
+            <a name="L313" href="#L313"><pre>313</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2576,7 +2633,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L307" href="#L307"><pre>307</pre></a>
+            <a name="L314" href="#L314"><pre>314</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2587,28 +2644,28 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L308" href="#L308"><pre>308</pre></a>
+            <a name="L315" href="#L315"><pre>315</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L309" href="#L309"><pre>309</pre></a>
+            <a name="L316" href="#L316"><pre>316</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L310" href="#L310"><pre>310</pre></a>
+            <a name="L317" href="#L317"><pre>317</pre></a>
           </td>
           <td class="covered-line"><pre>1</pre></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L311" href="#L311"><pre>311</pre></a>
+            <a name="L318" href="#L318"><pre>318</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2617,7 +2674,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L312" href="#L312"><pre>312</pre></a>
+            <a name="L319" href="#L319"><pre>319</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2626,7 +2683,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L313" href="#L313"><pre>313</pre></a>
+            <a name="L320" href="#L320"><pre>320</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2635,21 +2692,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L314" href="#L314"><pre>314</pre></a>
+            <a name="L321" href="#L321"><pre>321</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ) {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L315" href="#L315"><pre>315</pre></a>
+            <a name="L322" href="#L322"><pre>322</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        let typedef_result =</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L316" href="#L316"><pre>316</pre></a>
+            <a name="L323" href="#L323"><pre>323</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2660,7 +2717,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L317" href="#L317"><pre>317</pre></a>
+            <a name="L324" href="#L324"><pre>324</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2671,7 +2728,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L318" href="#L318"><pre>318</pre></a>
+            <a name="L325" href="#L325"><pre>325</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2682,7 +2739,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L319" href="#L319"><pre>319</pre></a>
+            <a name="L326" href="#L326"><pre>326</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2693,7 +2750,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L320" href="#L320"><pre>320</pre></a>
+            <a name="L327" href="#L327"><pre>327</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2704,28 +2761,28 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L321" href="#L321"><pre>321</pre></a>
+            <a name="L328" href="#L328"><pre>328</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L322" href="#L322"><pre>322</pre></a>
+            <a name="L329" href="#L329"><pre>329</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L323" href="#L323"><pre>323</pre></a>
+            <a name="L330" href="#L330"><pre>330</pre></a>
           </td>
           <td class="covered-line"><pre>1</pre></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L324" href="#L324"><pre>324</pre></a>
+            <a name="L331" href="#L331"><pre>331</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2734,7 +2791,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L325" href="#L325"><pre>325</pre></a>
+            <a name="L332" href="#L332"><pre>332</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2743,7 +2800,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L326" href="#L326"><pre>326</pre></a>
+            <a name="L333" href="#L333"><pre>333</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2752,14 +2809,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L327" href="#L327"><pre>327</pre></a>
+            <a name="L334" href="#L334"><pre>334</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ) {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L328" href="#L328"><pre>328</pre></a>
+            <a name="L335" href="#L335"><pre>335</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2770,7 +2827,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L329" href="#L329"><pre>329</pre></a>
+            <a name="L336" href="#L336"><pre>336</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2781,7 +2838,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L330" href="#L330"><pre>330</pre></a>
+            <a name="L337" href="#L337"><pre>337</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2792,7 +2849,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L331" href="#L331"><pre>331</pre></a>
+            <a name="L338" href="#L338"><pre>338</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2803,7 +2860,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L332" href="#L332"><pre>332</pre></a>
+            <a name="L339" href="#L339"><pre>339</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2814,35 +2871,35 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L333" href="#L333"><pre>333</pre></a>
+            <a name="L340" href="#L340"><pre>340</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L334" href="#L334"><pre>334</pre></a>
+            <a name="L341" href="#L341"><pre>341</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L335" href="#L335"><pre>335</pre></a>
+            <a name="L342" href="#L342"><pre>342</pre></a>
           </td>
           <td class="covered-line"><pre>2</pre></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L336" href="#L336"><pre>336</pre></a>
+            <a name="L343" href="#L343"><pre>343</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn snapshots(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L337" href="#L337"><pre>337</pre></a>
+            <a name="L344" href="#L344"><pre>344</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2853,7 +2910,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L338" href="#L338"><pre>338</pre></a>
+            <a name="L345" href="#L345"><pre>345</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2862,7 +2919,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L339" href="#L339"><pre>339</pre></a>
+            <a name="L346" href="#L346"><pre>346</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2871,14 +2928,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L340" href="#L340"><pre>340</pre></a>
+            <a name="L347" href="#L347"><pre>347</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ) {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L341" href="#L341"><pre>341</pre></a>
+            <a name="L348" href="#L348"><pre>348</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2887,7 +2944,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L342" href="#L342"><pre>342</pre></a>
+            <a name="L349" href="#L349"><pre>349</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2898,35 +2955,35 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L343" href="#L343"><pre>343</pre></a>
+            <a name="L350" href="#L350"><pre>350</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L344" href="#L344"><pre>344</pre></a>
+            <a name="L351" href="#L351"><pre>351</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L345" href="#L345"><pre>345</pre></a>
+            <a name="L352" href="#L352"><pre>352</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L346" href="#L346"><pre>346</pre></a>
+            <a name="L353" href="#L353"><pre>353</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn snapshot1() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L347" href="#L347"><pre>347</pre></a>
+            <a name="L354" href="#L354"><pre>354</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2935,14 +2992,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L348" href="#L348"><pre>348</pre></a>
+            <a name="L355" href="#L355"><pre>355</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            Some(SourceState {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L349" href="#L349"><pre>349</pre></a>
+            <a name="L356" href="#L356"><pre>356</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2951,7 +3008,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L350" href="#L350"><pre>350</pre></a>
+            <a name="L357" href="#L357"><pre>357</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2960,14 +3017,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L351" href="#L351"><pre>351</pre></a>
+            <a name="L358" href="#L358"><pre>358</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L352" href="#L352"><pre>352</pre></a>
+            <a name="L359" href="#L359"><pre>359</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2976,21 +3033,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L353" href="#L353"><pre>353</pre></a>
+            <a name="L360" href="#L360"><pre>360</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            NamingScheme::Full</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L354" href="#L354"><pre>354</pre></a>
+            <a name="L361" href="#L361"><pre>361</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        ), @r&quot;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L355" href="#L355"><pre>355</pre></a>
+            <a name="L362" href="#L362"><pre>362</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3001,7 +3058,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L356" href="#L356"><pre>356</pre></a>
+            <a name="L363" href="#L363"><pre>363</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3010,49 +3067,49 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L357" href="#L357"><pre>357</pre></a>
+            <a name="L364" href="#L364"><pre>364</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        pub struct GameStateAlpha;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L358" href="#L358"><pre>358</pre></a>
+            <a name="L365" href="#L365"><pre>365</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L359" href="#L359"><pre>359</pre></a>
+            <a name="L366" href="#L366"><pre>366</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L360" href="#L360"><pre>360</pre></a>
+            <a name="L367" href="#L367"><pre>367</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L361" href="#L361"><pre>361</pre></a>
+            <a name="L368" href="#L368"><pre>368</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L362" href="#L362"><pre>362</pre></a>
+            <a name="L369" href="#L369"><pre>369</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn snapshot1a() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L363" href="#L363"><pre>363</pre></a>
+            <a name="L370" href="#L370"><pre>370</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3063,7 +3120,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L364" href="#L364"><pre>364</pre></a>
+            <a name="L371" href="#L371"><pre>371</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3074,49 +3131,49 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L365" href="#L365"><pre>365</pre></a>
+            <a name="L372" href="#L372"><pre>372</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        pub struct Alpha;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L366" href="#L366"><pre>366</pre></a>
+            <a name="L373" href="#L373"><pre>373</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L367" href="#L367"><pre>367</pre></a>
+            <a name="L374" href="#L374"><pre>374</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L368" href="#L368"><pre>368</pre></a>
+            <a name="L375" href="#L375"><pre>375</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L369" href="#L369"><pre>369</pre></a>
+            <a name="L376" href="#L376"><pre>376</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L370" href="#L370"><pre>370</pre></a>
+            <a name="L377" href="#L377"><pre>377</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn snapshot2() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L371" href="#L371"><pre>371</pre></a>
+            <a name="L378" href="#L378"><pre>378</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3125,14 +3182,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L372" href="#L372"><pre>372</pre></a>
+            <a name="L379" href="#L379"><pre>379</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            Some(SourceState {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L373" href="#L373"><pre>373</pre></a>
+            <a name="L380" href="#L380"><pre>380</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3141,7 +3198,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L374" href="#L374"><pre>374</pre></a>
+            <a name="L381" href="#L381"><pre>381</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3150,14 +3207,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L375" href="#L375"><pre>375</pre></a>
+            <a name="L382" href="#L382"><pre>382</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L376" href="#L376"><pre>376</pre></a>
+            <a name="L383" href="#L383"><pre>383</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3168,21 +3225,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L377" href="#L377"><pre>377</pre></a>
+            <a name="L384" href="#L384"><pre>384</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            NamingScheme::Full</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L378" href="#L378"><pre>378</pre></a>
+            <a name="L385" href="#L385"><pre>385</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        ), @r&quot;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L379" href="#L379"><pre>379</pre></a>
+            <a name="L386" href="#L386"><pre>386</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3193,7 +3250,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L380" href="#L380"><pre>380</pre></a>
+            <a name="L387" href="#L387"><pre>387</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3202,7 +3259,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L381" href="#L381"><pre>381</pre></a>
+            <a name="L388" href="#L388"><pre>388</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3211,14 +3268,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L382" href="#L382"><pre>382</pre></a>
+            <a name="L389" href="#L389"><pre>389</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L383" href="#L383"><pre>383</pre></a>
+            <a name="L390" href="#L390"><pre>390</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3229,7 +3286,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L384" href="#L384"><pre>384</pre></a>
+            <a name="L391" href="#L391"><pre>391</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3238,7 +3295,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L385" href="#L385"><pre>385</pre></a>
+            <a name="L392" href="#L392"><pre>392</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3247,42 +3304,42 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L386" href="#L386"><pre>386</pre></a>
+            <a name="L393" href="#L393"><pre>393</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L387" href="#L387"><pre>387</pre></a>
+            <a name="L394" href="#L394"><pre>394</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L388" href="#L388"><pre>388</pre></a>
+            <a name="L395" href="#L395"><pre>395</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L389" href="#L389"><pre>389</pre></a>
+            <a name="L396" href="#L396"><pre>396</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L390" href="#L390"><pre>390</pre></a>
+            <a name="L397" href="#L397"><pre>397</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn snapshot2a() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L391" href="#L391"><pre>391</pre></a>
+            <a name="L398" href="#L398"><pre>398</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3291,7 +3348,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L392" href="#L392"><pre>392</pre></a>
+            <a name="L399" href="#L399"><pre>399</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3302,21 +3359,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L393" href="#L393"><pre>393</pre></a>
+            <a name="L400" href="#L400"><pre>400</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            NamingScheme::Full</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L394" href="#L394"><pre>394</pre></a>
+            <a name="L401" href="#L401"><pre>401</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        ), @r&quot;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L395" href="#L395"><pre>395</pre></a>
+            <a name="L402" href="#L402"><pre>402</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3327,7 +3384,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L396" href="#L396"><pre>396</pre></a>
+            <a name="L403" href="#L403"><pre>403</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3336,14 +3393,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L397" href="#L397"><pre>397</pre></a>
+            <a name="L404" href="#L404"><pre>404</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L398" href="#L398"><pre>398</pre></a>
+            <a name="L405" href="#L405"><pre>405</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3354,7 +3411,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L399" href="#L399"><pre>399</pre></a>
+            <a name="L406" href="#L406"><pre>406</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3363,49 +3420,49 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L400" href="#L400"><pre>400</pre></a>
+            <a name="L407" href="#L407"><pre>407</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        pub struct AlphaBeta;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L401" href="#L401"><pre>401</pre></a>
+            <a name="L408" href="#L408"><pre>408</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L402" href="#L402"><pre>402</pre></a>
+            <a name="L409" href="#L409"><pre>409</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L403" href="#L403"><pre>403</pre></a>
+            <a name="L410" href="#L410"><pre>410</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L404" href="#L404"><pre>404</pre></a>
+            <a name="L411" href="#L411"><pre>411</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L405" href="#L405"><pre>405</pre></a>
+            <a name="L412" href="#L412"><pre>412</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn snapshot3() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L406" href="#L406"><pre>406</pre></a>
+            <a name="L413" href="#L413"><pre>413</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3414,14 +3471,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L407" href="#L407"><pre>407</pre></a>
+            <a name="L414" href="#L414"><pre>414</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            Some(SourceState {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L408" href="#L408"><pre>408</pre></a>
+            <a name="L415" href="#L415"><pre>415</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3430,7 +3487,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L409" href="#L409"><pre>409</pre></a>
+            <a name="L416" href="#L416"><pre>416</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3439,14 +3496,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L410" href="#L410"><pre>410</pre></a>
+            <a name="L417" href="#L417"><pre>417</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L411" href="#L411"><pre>411</pre></a>
+            <a name="L418" href="#L418"><pre>418</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3457,21 +3514,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L412" href="#L412"><pre>412</pre></a>
+            <a name="L419" href="#L419"><pre>419</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            NamingScheme::Full</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L413" href="#L413"><pre>413</pre></a>
+            <a name="L420" href="#L420"><pre>420</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        ), @r&quot;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L414" href="#L414"><pre>414</pre></a>
+            <a name="L421" href="#L421"><pre>421</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3482,7 +3539,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L415" href="#L415"><pre>415</pre></a>
+            <a name="L422" href="#L422"><pre>422</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3491,7 +3548,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L416" href="#L416"><pre>416</pre></a>
+            <a name="L423" href="#L423"><pre>423</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3500,42 +3557,42 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L417" href="#L417"><pre>417</pre></a>
+            <a name="L424" href="#L424"><pre>424</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L418" href="#L418"><pre>418</pre></a>
+            <a name="L425" href="#L425"><pre>425</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L419" href="#L419"><pre>419</pre></a>
+            <a name="L426" href="#L426"><pre>426</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L420" href="#L420"><pre>420</pre></a>
+            <a name="L427" href="#L427"><pre>427</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L421" href="#L421"><pre>421</pre></a>
+            <a name="L428" href="#L428"><pre>428</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn snapshot4() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L422" href="#L422"><pre>422</pre></a>
+            <a name="L429" href="#L429"><pre>429</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3544,14 +3601,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L423" href="#L423"><pre>423</pre></a>
+            <a name="L430" href="#L430"><pre>430</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            Some(SourceState {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L424" href="#L424"><pre>424</pre></a>
+            <a name="L431" href="#L431"><pre>431</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3560,7 +3617,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L425" href="#L425"><pre>425</pre></a>
+            <a name="L432" href="#L432"><pre>432</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3569,14 +3626,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L426" href="#L426"><pre>426</pre></a>
+            <a name="L433" href="#L433"><pre>433</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            }),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L427" href="#L427"><pre>427</pre></a>
+            <a name="L434" href="#L434"><pre>434</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3585,7 +3642,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L428" href="#L428"><pre>428</pre></a>
+            <a name="L435" href="#L435"><pre>435</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3594,7 +3651,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L429" href="#L429"><pre>429</pre></a>
+            <a name="L436" href="#L436"><pre>436</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3605,7 +3662,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L430" href="#L430"><pre>430</pre></a>
+            <a name="L437" href="#L437"><pre>437</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3614,7 +3671,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L431" href="#L431"><pre>431</pre></a>
+            <a name="L438" href="#L438"><pre>438</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3623,14 +3680,14 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L432" href="#L432"><pre>432</pre></a>
+            <a name="L439" href="#L439"><pre>439</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L433" href="#L433"><pre>433</pre></a>
+            <a name="L440" href="#L440"><pre>440</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3639,89 +3696,24 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L434" href="#L434"><pre>434</pre></a>
+            <a name="L441" href="#L441"><pre>441</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            ]),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L435" href="#L435"><pre>435</pre></a>
+            <a name="L442" href="#L442"><pre>442</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            NamingScheme::Full</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L436" href="#L436"><pre>436</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>        ), @r&quot;</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L437" href="#L437"><pre>437</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L438" href="#L438"><pre>438</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>        #[source(GameStateList = GameStateList::Item1)]</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L439" href="#L439"><pre>439</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>        pub struct GameStateListItem1;</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L440" href="#L440"><pre>440</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L441" href="#L441"><pre>441</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>        #[source(GameStateList = GameStateList::Item2)]</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L442" href="#L442"><pre>442</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>        pub enum GameStateListItem2 { #[default] A, B }</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L443" href="#L443"><pre>443</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>        ), @r&quot;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -3740,9 +3732,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>
-        #[source(GameStateListItem2 = GameStateListItem2::A)]</pre
-            >
+            <pre>        #[source(GameStateList = GameStateList::Item1)]</pre>
           </td>
         </tr>
         <tr>
@@ -3751,7 +3741,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        pub struct GameStateListItem2A;</pre>
+            <pre>        pub struct GameStateListItem1;</pre>
           </td>
         </tr>
         <tr>
@@ -3771,9 +3761,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>
-        #[source(GameStateListItem2 = GameStateListItem2::B)]</pre
-            >
+            <pre>        #[source(GameStateList = GameStateList::Item2)]</pre>
           </td>
         </tr>
         <tr>
@@ -3782,12 +3770,19 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        pub struct GameStateListItem2B;</pre>
+            <pre>        pub enum GameStateListItem2 { #[default] A, B }</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L450" href="#L450"><pre>450</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre></pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L451" href="#L451"><pre>451</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3798,7 +3793,69 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L451" href="#L451"><pre>451</pre></a>
+            <a name="L452" href="#L452"><pre>452</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>
+        #[source(GameStateListItem2 = GameStateListItem2::A)]</pre
+            >
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L453" href="#L453"><pre>453</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>        pub struct GameStateListItem2A;</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L454" href="#L454"><pre>454</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
+            >
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L455" href="#L455"><pre>455</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>
+        #[source(GameStateListItem2 = GameStateListItem2::B)]</pre
+            >
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L456" href="#L456"><pre>456</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>        pub struct GameStateListItem2B;</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L457" href="#L457"><pre>457</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code">
+            <pre>
+        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
+            >
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L458" href="#L458"><pre>458</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3807,7 +3864,7 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L452" href="#L452"><pre>452</pre></a>
+            <a name="L459" href="#L459"><pre>459</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -3816,21 +3873,21 @@ pub fn generate_full_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, S: AsRef
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L453" href="#L453"><pre>453</pre></a>
+            <a name="L460" href="#L460"><pre>460</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L454" href="#L454"><pre>454</pre></a>
+            <a name="L461" href="#L461"><pre>461</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L455" href="#L455"><pre>455</pre></a>
+            <a name="L462" href="#L462"><pre>462</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
