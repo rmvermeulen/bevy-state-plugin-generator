@@ -677,7 +677,7 @@ impl&lt;I, O1, O2&gt; MapResult&lt;&apos;_, I, O1, O2&gt; for IResult&lt;I, O1&g
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
             <pre>
-fn parse_config&lt;&apos;a&gt;(input: &amp;&apos;a str) -&gt; IResult&lt;&amp;&apos;a str, Vec&lt;ParseNode&lt;&apos;a&gt;&gt;&gt; {</pre
+fn parse_config(input: &amp;str) -&gt; IResult&lt;&amp;str, Vec&lt;ParseNode&lt;&apos;_&gt;&gt;&gt; {</pre
             >
           </td>
         </tr>
@@ -951,7 +951,7 @@ pub fn parse_singleton(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt;
           <td class="covered-line"><pre>119</pre></td>
           <td class="code">
             <pre>
-pub fn parse_enum&lt;&apos;a&gt;(input: &amp;&apos;a str) -&gt; IResult&lt;&amp;&apos;a str, ParseNode&lt;&apos;a&gt;&gt; {</pre
+pub fn parse_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&apos;_&gt;&gt; {</pre
             >
           </td>
         </tr>
@@ -2332,84 +2332,15 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
             <a name="L280" href="#L280"><pre>280</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        set_snapshot_suffix!(</pre></td>
+          <td class="code">
+            <pre>
+        set_snapshot_suffix!(&quot;{}&quot;, input.replace(&quot; &quot;, &quot;_&quot;));</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L281" href="#L281"><pre>281</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>            &quot;{}&quot;,</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L282" href="#L282"><pre>282</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>            input</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L283" href="#L283"><pre>283</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>                .replace(&quot; &quot;, &quot;_&quot;)</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L284" href="#L284"><pre>284</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>                .replace(&quot;{&quot;, &quot;bo&quot;)</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L285" href="#L285"><pre>285</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>                .replace(&quot;}&quot;, &quot;bc&quot;)</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L286" href="#L286"><pre>286</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>                .replace(&quot;[&quot;, &quot;po&quot;)</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L287" href="#L287"><pre>287</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>                .replace(&quot;]&quot;, &quot;pc&quot;)</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L288" href="#L288"><pre>288</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>        );</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L289" href="#L289"><pre>289</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L290" href="#L290"><pre>290</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2418,28 +2349,28 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L291" href="#L291"><pre>291</pre></a>
+            <a name="L282" href="#L282"><pre>282</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L292" href="#L292"><pre>292</pre></a>
+            <a name="L283" href="#L283"><pre>283</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L293" href="#L293"><pre>293</pre></a>
+            <a name="L284" href="#L284"><pre>284</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn test_parse_list_incomplete() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L294" href="#L294"><pre>294</pre></a>
+            <a name="L285" href="#L285"><pre>285</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2450,28 +2381,28 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L295" href="#L295"><pre>295</pre></a>
+            <a name="L286" href="#L286"><pre>286</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        Err(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L296" href="#L296"><pre>296</pre></a>
+            <a name="L287" href="#L287"><pre>287</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            Error(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L297" href="#L297"><pre>297</pre></a>
+            <a name="L288" href="#L288"><pre>288</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                Error {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L298" href="#L298"><pre>298</pre></a>
+            <a name="L289" href="#L289"><pre>289</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2480,70 +2411,70 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L299" href="#L299"><pre>299</pre></a>
+            <a name="L290" href="#L290"><pre>290</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                    code: Tag,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L300" href="#L300"><pre>300</pre></a>
+            <a name="L291" href="#L291"><pre>291</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                },</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L301" href="#L301"><pre>301</pre></a>
+            <a name="L292" href="#L292"><pre>292</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            ),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L302" href="#L302"><pre>302</pre></a>
+            <a name="L293" href="#L293"><pre>293</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        )</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L303" href="#L303"><pre>303</pre></a>
+            <a name="L294" href="#L294"><pre>294</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;#);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L304" href="#L304"><pre>304</pre></a>
+            <a name="L295" href="#L295"><pre>295</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L305" href="#L305"><pre>305</pre></a>
+            <a name="L296" href="#L296"><pre>296</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L306" href="#L306"><pre>306</pre></a>
+            <a name="L297" href="#L297"><pre>297</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L307" href="#L307"><pre>307</pre></a>
+            <a name="L298" href="#L298"><pre>298</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    fn test_parse_enum_incomplete() {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L308" href="#L308"><pre>308</pre></a>
+            <a name="L299" href="#L299"><pre>299</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2554,28 +2485,28 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L309" href="#L309"><pre>309</pre></a>
+            <a name="L300" href="#L300"><pre>300</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        Err(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L310" href="#L310"><pre>310</pre></a>
+            <a name="L301" href="#L301"><pre>301</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            Error(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L311" href="#L311"><pre>311</pre></a>
+            <a name="L302" href="#L302"><pre>302</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                Error {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L312" href="#L312"><pre>312</pre></a>
+            <a name="L303" href="#L303"><pre>303</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2584,49 +2515,49 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L313" href="#L313"><pre>313</pre></a>
+            <a name="L304" href="#L304"><pre>304</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                    code: Tag,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L314" href="#L314"><pre>314</pre></a>
+            <a name="L305" href="#L305"><pre>305</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>                },</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L315" href="#L315"><pre>315</pre></a>
+            <a name="L306" href="#L306"><pre>306</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>            ),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L316" href="#L316"><pre>316</pre></a>
+            <a name="L307" href="#L307"><pre>307</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        )</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L317" href="#L317"><pre>317</pre></a>
+            <a name="L308" href="#L308"><pre>308</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>        &quot;#);</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L318" href="#L318"><pre>318</pre></a>
+            <a name="L309" href="#L309"><pre>309</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L319" href="#L319"><pre>319</pre></a>
+            <a name="L310" href="#L310"><pre>310</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>

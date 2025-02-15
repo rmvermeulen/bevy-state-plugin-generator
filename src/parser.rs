@@ -78,7 +78,7 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
-fn parse_config<'a>(input: &'a str) -> IResult<&'a str, Vec<ParseNode<'a>>> {
+fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
     many0(alt((
         parse_node,
         terminated(parse_node, separator),
@@ -112,7 +112,7 @@ pub fn parse_singleton(input: &str) -> IResult<&str, ParseNode> {
         .map_result(ParseNode::singleton)
 }
 
-pub fn parse_enum<'a>(input: &'a str) -> IResult<&'a str, ParseNode<'a>> {
+pub fn parse_enum(input: &str) -> IResult<&str, ParseNode<'_>> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_enum, parse_elements_until(close_enum))).parse(input)?;
@@ -277,16 +277,7 @@ mod tests {
     #[case("Name {A}")]
     #[case("Name [ A { B, C [D E {F G}] H } I J ]")]
     fn test_parse_node(#[case] input: &str) {
-        set_snapshot_suffix!(
-            "{}",
-            input
-                .replace(" ", "_")
-                .replace("{", "bo")
-                .replace("}", "bc")
-                .replace("[", "po")
-                .replace("]", "pc")
-        );
-
+        set_snapshot_suffix!("{}", input.replace(" ", "_"));
         assert_debug_snapshot!(parse_node(input));
     }
     #[rstest]
