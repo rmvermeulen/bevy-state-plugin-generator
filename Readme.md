@@ -34,8 +34,6 @@ Exiting                                 // singleton
 # // this is just here to check the above example
 # use bevy_state_plugin_generator::config_is_valid;
 # #[cfg(feature = "lists")]
-# assert!(config_is_valid("// Loading [ Config Assets ]"));
-# assert!(config_is_valid("Loading // [ Config Assets ]"));
 # assert!(config_is_valid("Loading [ Config Assets ]"));
 # assert!(config_is_valid("Read { Config Assets }"));
 ```

@@ -14,7 +14,7 @@ name = "bspgen"
 
 [features]
 default = ["all"]
-all = ["rustfmt", "comments"] # "lists"
+all = ["rustfmt"]      # "comments", "lists"
 lists = []
 comments = []
 rustfmt = ["dep:duct"]

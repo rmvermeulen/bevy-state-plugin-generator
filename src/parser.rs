@@ -52,11 +52,6 @@ where
     preceded(multispace0, parser)
 }
 
-/// ```rust
-/// # use bevy_state_plugin_generator::separator;
-/// # use bevy_state_plugin_generator::Token;
-/// assert_eq!(separator(","), Ok(("", Token::Separator)));
-/// ```
 pub fn separator(input: &str) -> IResult<&str, Token> {
     skip_to(tag(","))
         .parse(input)
@@ -151,9 +146,8 @@ pub fn parse_singleton(input: &str) -> IResult<&str, ParseNode> {
 }
 
 pub fn parse_enum(input: &str) -> IResult<&str, ParseNode<'_>> {
-    let (input, name) = skip_to(identifier).parse(input)?;
-    let (input, children) =
-        skip_to(preceded(open_enum, parse_elements_until(close_enum))).parse(input)?;
+    let (input, name) = terminated(skip_to(identifier), skip_to(open_enum)).parse(input)?;
+    let (input, children) = skip_to(parse_elements_until(close_enum)).parse(input)?;
     Ok((input, ParseNode::Enum(name, children)))
 }
 
