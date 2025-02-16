@@ -1,0 +1,5 @@
+---
+source: src/parser/tests.rs
+expression: parse_node(input)
+---
+Ok(("", Enum(Identifier("Name"), [Singleton(Identifier("A"))])))

@@ -20,6 +20,7 @@ impl std::fmt::Display for Identifier<'_> {
     }
 }
 
+#[cfg(feature = "comments")]
 #[derive(Debug, PartialEq, From, Deref)]
 pub struct Comment<'a>(&'a str);
 
@@ -29,6 +30,8 @@ pub enum ParseNode<'a> {
     Enum(Identifier<'a>, Vec<ParseNode<'a>>),
     #[cfg(feature = "lists")]
     List(Identifier<'a>, Vec<ParseNode<'a>>),
+    #[cfg(feature = "comments")]
+    Comment(Comment<'a>),
 }
 
 impl<'a> ParseNode<'a> {
@@ -51,6 +54,10 @@ impl<'a> ParseNode<'a> {
         variants: V,
     ) -> Self {
         Self::List(name.into(), variants.into_iter().collect())
+    }
+    #[cfg(all(test, feature = "comments"))]
+    pub fn comment<C: Into<Comment<'a>>>(name: C) -> Self {
+        Self::Comment(name.into())
     }
 }
 

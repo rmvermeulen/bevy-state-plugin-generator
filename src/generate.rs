@@ -153,6 +153,7 @@ pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<
     let source = source.as_ref();
     let parse_tree =
         parse_states_file(source, plugin_config.state_name).map_err(|e| e.to_string())?;
+
     let parse_tree_size = parse_tree.get_tree_size();
 
     let root_node: Rc<StateNode> = Rc::new(parse_tree.into());

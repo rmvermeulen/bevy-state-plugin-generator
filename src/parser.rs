@@ -3,15 +3,27 @@ use nom::{
     combinator::recognize, multi::many0, sequence::*,
 };
 
+#[cfg(test)]
+mod tests;
+
+#[cfg(feature = "comments")]
+use crate::tokens::Comment;
 use crate::tokens::{Identifier, ParseNode, Token};
 
-#[cfg(test)]
-use crate::tokens::Comment;
+#[cfg(feature = "comments")]
+pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
+    comment(input).map_result(ParseNode::Comment)
+}
 
-#[cfg(test)]
+/// ```rust
+/// # use bevy_state_plugin_generator::comment;
+/// assert_eq!(comment("//comment"), Ok(("", "comment".into())));
+/// assert_eq!(comment("// comment "), Ok(("", "comment".into())));
+/// ```
+#[cfg(feature = "comments")]
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     delimited(
-        pair(tag("//"), space0),
+        pair(skip_to(tag("//")), space0),
         not_line_ending,
         pair(space0, line_ending),
     )
@@ -38,6 +50,11 @@ where
     preceded(multispace0, parser)
 }
 
+/// ```rust
+/// # use bevy_state_plugin_generator::separator;
+/// # use bevy_state_plugin_generator::Token;
+/// assert_eq!(separator(","), Ok(("", Token::Separator)));
+/// ```
 pub fn separator(input: &str) -> IResult<&str, Token> {
     skip_to(tag(","))
         .parse(input)
@@ -80,13 +97,12 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
+fn ignorables(input: &str) -> IResult<&str, &str> {
+    recognize(many0(separator)).parse(input)
+}
+
 fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
-    many0(alt((
-        parse_node,
-        terminated(parse_node, separator),
-        preceded(separator, parse_node),
-    )))
-    .parse(input)
+    many0(delimited(ignorables, parse_node, ignorables)).parse(input)
 }
 
 pub fn parse_states_file<'a>(
@@ -123,6 +139,8 @@ pub fn parse_node(input: &str) -> IResult<&str, ParseNode> {
         parse_enum,
         #[cfg(feature = "lists")]
         parse_list,
+        #[cfg(feature = "comments")]
+        parse_comment,
         parse_singleton,
     ))
     .parse(input)
@@ -157,210 +175,10 @@ pub fn parse_elements_until<'a>(
             // ignore any leading whitespace and commas
             many0(separator),
             // 0 or more elements, ignoring whitespace and commas
-            many0(terminated(parse_node, many0(separator))),
+            many0(alt((terminated(parse_node, many0(separator)),))),
             // then expect the closing token
             until,
         )
         .parse(input)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::testing::*;
-
-    #[rstest]
-    #[case("Name", "Name")]
-    #[case("Name ", "Name")]
-    #[case("Name123", "Name123")]
-    #[case("Name_123", "Name_123")]
-    fn test_identifier(#[case] input: &str, #[case] token: &str) {
-        assert_that!(identifier(input))
-            .is_ok()
-            .map(|(_, token)| token)
-            .is_equal_to(Identifier::from(token));
-    }
-
-    #[rstest]
-    #[case("//Hello\n", "Hello")]
-    #[case("// Hello\n", "Hello")]
-    #[case("// Hello \n", "Hello")]
-    #[case("// Hello, how are you? \n", "Hello, how are you?")]
-    fn test_comment(#[case] input: &str, #[case] expected: &str) {
-        assert_that!(comment(input))
-            .is_ok()
-            .map(|(_, token)| token)
-            .is_equal_to(Comment::from(expected));
-    }
-
-    #[rstest]
-    #[case("{", Token::OpenEnum)]
-    #[case("}", Token::CloseEnum)]
-    #[cfg_attr(feature = "lists", case("[", Token::OpenList))]
-    #[cfg_attr(feature = "lists", case("]", Token::CloseList))]
-    fn test_single_char_tokens(#[case] input: &str, #[case] expected: Token) {
-        let mut parser = alt((
-            open_enum,
-            close_enum,
-            #[cfg(feature = "lists")]
-            open_list,
-            #[cfg(feature = "lists")]
-            close_list,
-        ));
-
-        assert_that!(parser.parse(input))
-            .is_ok()
-            .is_equal_to(("", expected));
-    }
-
-    #[rstest]
-    #[case("Name,", ",", ParseNode::singleton("Name"))]
-    #[case("  Name,", ",", ParseNode::singleton("Name"))]
-    #[case("First, Second", ", Second", ParseNode::singleton("First"))]
-    fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: ParseNode) {
-        assert_that!(parse_singleton(input).unwrap()).is_equal_to((rest, node));
-    }
-
-    #[rstest]
-    fn test_parse_enum_empty() {
-        assert_compact_debug_snapshot!(parse_enum("Name{}").unwrap(), @r#"("", Enum(Identifier("Name"), []))"#);
-        assert_compact_debug_snapshot!(parse_enum("Name {}").unwrap(), @r#"("", Enum(Identifier("Name"), []))"#);
-    }
-
-    #[rstest]
-    #[case("Name {A}",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
-    #[case("Name { A}",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
-    #[case("Name {A }",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
-    #[case("Name { A }",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
-    fn test_parse_enum_single(#[case] input: &str, #[case] node: ParseNode) {
-        assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
-    }
-
-    #[rstest]
-    #[case("Name {A,B}", ParseNode::enumeration("Name", [
-        ParseNode::singleton("A"),
-        ParseNode::singleton("B")
-    ]))]
-    #[case("Name { A B }",  ParseNode::enumeration("Name", [
-        ParseNode::singleton("A"),
-        ParseNode::singleton("B")
-    ]))]
-    #[case("Name { A { B } }",  ParseNode::enumeration("Name", [
-        ParseNode::enumeration("A", [ParseNode::singleton("B")])
-    ]))]
-    #[case("Name { A { B }, C }",  ParseNode::enumeration("Name", [
-        ParseNode::enumeration("A", [ParseNode::singleton("B")]),
-        ParseNode::singleton("C")
-    ]))]
-    fn test_parse_enum_variants(#[case] input: &str, #[case] node: ParseNode) {
-        assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
-    }
-
-    #[rstest]
-    #[case::just_a_comma("Name {,}", ParseNode::enumeration("Name", [ ]))]
-    #[case::mora_commas("Name {,,,,}", ParseNode::enumeration("Name", [ ]))]
-    #[case::comma_after_variant("Name {A,}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-    #[case::comma_before_variant("Name {,A}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-    #[case::comma_between_variants("Name {A,B}", ParseNode::enumeration("Name", [
-        ParseNode::singleton("A"), ParseNode::singleton("B")
-    ]))]
-    fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: ParseNode) {
-        assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
-    }
-
-    #[cfg(feature = "lists")]
-    #[rstest]
-    #[case("Name []", ParseNode::list_empty("Name"))]
-    #[case("Name[]", ParseNode::list_empty("Name"))]
-    #[case("Name[A]",  ParseNode::list("Name", [ParseNode::singleton("A")]))]
-    #[case("Name[A,B]",  ParseNode::list("Name", [
-        ParseNode::singleton("A"),
-        ParseNode::singleton("B"),
-    ]))]
-    fn test_parse_list(#[case] input: &str, #[case] node: ParseNode) {
-        assert_that!(parse_list(input).unwrap()).is_equal_to(("", node));
-    }
-
-    macro_rules! set_snapshot_suffix {
-        ($($expr:expr),*) => {
-            let mut settings = insta::Settings::clone_current();
-            settings.set_snapshot_suffix(format!($($expr,)*));
-            let _guard = settings.bind_to_scope();
-        }
-    }
-
-    #[rstest]
-    #[case("Name")]
-    #[case("Name {A}")]
-    fn test_parse_node(#[case] input: &str) {
-        set_snapshot_suffix!("{}", input.replace(" ", "_"));
-        assert_compact_debug_snapshot!(parse_node(input));
-    }
-
-    #[rstest]
-    fn test_parse_node_nested() {
-        let input = "Name { A { B, C {D E {F G}} H } I J }";
-        assert_debug_snapshot!(parse_node(input));
-    }
-
-    #[cfg(feature = "lists")]
-    #[rstest]
-    fn test_parse_node_messy_example() {
-        let input = "Name [ A { B, C [D E {F G}] H } I J ]";
-        assert_debug_snapshot!(parse_node(input));
-    }
-
-    #[cfg(feature = "lists")]
-    #[rstest]
-    fn test_parse_list_incomplete() {
-        assert_compact_debug_snapshot!(parse_list("Name [ A"), @r#"Err(Error(Error { input: "", code: Tag })) "#);
-    }
-
-    #[rstest]
-    fn test_parse_enum_incomplete() {
-        assert_compact_debug_snapshot!(parse_enum("Name { A"), @r#"Err(Error(Error { input: "", code: Tag }))"#);
-    }
-
-    #[rstest]
-    #[case("A", vec![ParseNode::singleton("A")])]
-    #[case("A B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
-    #[case("A,B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
-    #[case("A, B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
-    #[case("A{B}", vec![ParseNode::enumeration("A", [ ParseNode::singleton("B") ])] )]
-    #[case("A{B,C D,}", vec![ParseNode::enumeration("A", [
-        ParseNode::singleton("B"),
-        ParseNode::singleton("C"),
-        ParseNode::singleton("D")
-    ])])]
-    #[case("A{B{C{D{E{F}}}}}", vec![ParseNode::enumeration("A", [
-        ParseNode::enumeration("B", [
-            ParseNode::enumeration("C", [
-                ParseNode::enumeration("D", [
-                    ParseNode::enumeration("E", [
-                        ParseNode::singleton("F")
-                    ])
-                ])
-            ])
-        ])
-    ])])]
-    fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
-        assert_that!(parse_config(input))
-            .is_ok()
-            .is_equal_to(("", expected));
-    }
-    #[rstest]
-    #[case("Name, Name2", "Root", ParseNode::enumeration("Root", [
-        ParseNode::singleton("Name"),
-        ParseNode::singleton("Name2"),
-    ]))]
-    fn test_parse_states_file(
-        #[case] input: &str,
-        #[case] root_state_name: &str,
-        #[case] expected: ParseNode,
-    ) {
-        assert_that!(parse_states_file(input, root_state_name))
-            .is_ok()
-            .is_equal_to(expected);
     }
 }

@@ -165,6 +165,8 @@ impl From<ParseNode<'_>> for StateNode {
             ParseNode::Enum(name, children) => StateNode::enumeration(name, map_children(children)),
             #[cfg(feature = "lists")]
             ParseNode::List(name, children) => StateNode::list(name, map_children(children)),
+            #[cfg(feature = "comments")]
+            ParseNode::Comment(_) => unreachable!(),
         }
     }
 }
@@ -199,6 +201,8 @@ impl SubTree for StateNode {
 impl SubTree for ParseNode<'_> {
     fn get_tree_size(&self) -> usize {
         match self {
+            #[cfg(feature = "comments")]
+            ParseNode::Comment(_) => 1,
             ParseNode::Singleton(_) => 1,
             ParseNode::Enum(_, children) => {
                 children
@@ -225,6 +229,7 @@ pub struct StateTree {
 }
 
 impl StateTree {
+    #[cfg(test)]
     pub fn create<N: Into<StateNode>, I: IntoIterator<Item = N>>(nodes: I) -> Self {
         Self {
             root: Rc::new(StateNode::enumeration(

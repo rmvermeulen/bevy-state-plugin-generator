@@ -6,15 +6,15 @@ use std::{fs, io, path::Path};
 
 use generate::generate_state_plugin_source;
 
+pub use model::{NamingScheme, PluginConfig};
+pub use parser::config_is_valid;
+
 pub(crate) mod generate;
 pub(crate) mod model;
 pub(crate) mod parser;
 #[cfg(test)]
 pub(crate) mod testing;
 pub(crate) mod tokens;
-
-pub use model::{NamingScheme, PluginConfig};
-pub use parser::config_is_valid;
 
 /// ```rust no_run
 /// use bevy_state_plugin_generator::*;
