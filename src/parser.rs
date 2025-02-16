@@ -109,11 +109,12 @@ pub fn parse_states_file<'a>(
 /// # use bevy_state_plugin_generator::config_is_valid;
 /// assert!(config_is_valid("Name, Name2"));
 /// assert!(config_is_valid("Name { A, B }"));
-/// assert!(!config_is_valid("Name { "));
+/// assert!(config_is_valid("Name { ,,,, }  "));
+/// assert!(!config_is_valid("{]"));
 /// ```
 pub fn config_is_valid(input: &str) -> bool {
     parse_config(input)
-        .map(|(rest, _)| rest.is_empty())
+        .map(|(rest, _)| rest.trim().is_empty())
         .unwrap_or(false)
 }
 
@@ -322,10 +323,31 @@ mod tests {
     }
 
     #[rstest]
-    fn test_parse_config() {
-        let (rest, nodes) = parse_config("Name, Name2").unwrap();
-        assert_that!(rest).is_empty();
-        assert_compact_debug_snapshot!(nodes, @r#"[Singleton(Identifier("Name")), Singleton(Identifier("Name2"))]"#);
+    #[case("A", vec![ParseNode::singleton("A")])]
+    #[case("A B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
+    #[case("A,B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
+    #[case("A, B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
+    #[case("A{B}", vec![ParseNode::enumeration("A", [ ParseNode::singleton("B") ])] )]
+    #[case("A{B,C D,}", vec![ParseNode::enumeration("A", [
+        ParseNode::singleton("B"),
+        ParseNode::singleton("C"),
+        ParseNode::singleton("D")
+    ])])]
+    #[case("A{B{C{D{E{F}}}}}", vec![ParseNode::enumeration("A", [
+        ParseNode::enumeration("B", [
+            ParseNode::enumeration("C", [
+                ParseNode::enumeration("D", [
+                    ParseNode::enumeration("E", [
+                        ParseNode::singleton("F")
+                    ])
+                ])
+            ])
+        ])
+    ])])]
+    fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
+        assert_that!(parse_config(input))
+            .is_ok()
+            .is_equal_to(("", expected));
     }
     #[rstest]
     #[case("Name, Name2", "Root", ParseNode::enumeration("Root", [
