@@ -151,9 +151,10 @@ fn test_parse_node_nested_enums() {
 
 #[cfg(feature = "comments")]
 #[rstest]
-fn test_parse_node_with_comments() {
-    let input = "Name // Comment";
-    assert_debug_snapshot!(parse_node(input), @r#"Ok(("", Comment(" Comment"))) "#);
+#[case("//Comment", ParseNode::comment("Comment"))]
+#[case("// Comment", ParseNode::comment("Comment"))]
+fn test_parse_node_with_comments(#[case] input: &str, #[case] comment: ParseNode) {
+    assert_that!(parse_node(input)).is_ok_containing(("", comment));
 }
 
 #[cfg(feature = "lists")]
@@ -196,12 +197,14 @@ fn test_parse_enum_incomplete() {
         ])
     ])
 ])])]
-#[cfg_attr(feature = "comments", case("//Loading//[ Config Assets ]", vec![
-    ParseNode::comment("Loading//[ Config Assets ]")
-]))]
-#[cfg_attr(feature = "comments", case("Loading // [ Config Assets ]", vec![
-    ParseNode::singleton("Loading"),
-    ParseNode::comment("[ Config Assets ]")
+#[cfg_attr(feature = "comments", case("A {\n // B\n C\n}", vec![ ParseNode::enumeration("A", [
+    ParseNode::comment("B"),
+    ParseNode::singleton("C")
+]) ]))]
+#[cfg_attr(feature = "comments", case("//A//[ B C ]", vec![ ParseNode::comment("A//[ B C ]") ]))]
+#[cfg_attr(feature = "comments", case("A // [ B C ]", vec![
+    ParseNode::singleton("A"),
+    ParseNode::comment("[ B C ]")
 ]))]
 fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
     assert_that!(parse_config(input))

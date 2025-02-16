@@ -22,10 +22,12 @@ pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
 /// ```
 #[cfg(feature = "comments")]
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
+    use nom::combinator::eof;
+
     delimited(
         pair(skip_to(tag("//")), space0),
-        not_line_ending,
-        pair(space0, line_ending),
+        take_while(|_| true),
+        alt((eof, line_ending)),
     )
     .parse(input)
     .map_result(|c| c.trim_end().into())
@@ -97,12 +99,8 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
-fn ignorables(input: &str) -> IResult<&str, &str> {
-    recognize(many0(separator)).parse(input)
-}
-
 fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
-    many0(delimited(ignorables, parse_node, ignorables)).parse(input)
+    many0(delimited(many0(separator), parse_node, many0(separator))).parse(input)
 }
 
 pub fn parse_states_file<'a>(

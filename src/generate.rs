@@ -156,7 +156,10 @@ pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<
 
     let parse_tree_size = parse_tree.get_tree_size();
 
-    let root_node: Rc<StateNode> = Rc::new(parse_tree.into());
+    let root_node: Rc<StateNode> = parse_tree
+        .try_into()
+        .map(Rc::new)
+        .map_err(|e| format!("{e:?}"))?;
     let state_tree_size = root_node.get_tree_size();
 
     assert_eq!(parse_tree_size, state_tree_size);

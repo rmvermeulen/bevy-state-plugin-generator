@@ -151,22 +151,25 @@ impl std::fmt::Debug for StateNode {
     }
 }
 
-impl From<ParseNode<'_>> for StateNode {
-    fn from(node: ParseNode) -> Self {
+impl TryFrom<ParseNode<'_>> for StateNode {
+    type Error = ();
+    fn try_from(node: ParseNode) -> Result<Self, Self::Error> {
         let map_children = |children: Vec<ParseNode>| {
             children
                 .into_iter()
-                .map(Into::into)
+                .flat_map(StateNode::try_from)
                 .map(Rc::new)
                 .collect_vec()
         };
         match node {
-            ParseNode::Singleton(name) => StateNode::singleton(name),
-            ParseNode::Enum(name, children) => StateNode::enumeration(name, map_children(children)),
+            ParseNode::Singleton(name) => Ok(StateNode::singleton(name)),
+            ParseNode::Enum(name, children) => {
+                Ok(StateNode::enumeration(name, map_children(children)))
+            }
             #[cfg(feature = "lists")]
-            ParseNode::List(name, children) => StateNode::list(name, map_children(children)),
+            ParseNode::List(name, children) => Ok(StateNode::list(name, map_children(children))),
             #[cfg(feature = "comments")]
-            ParseNode::Comment(_) => unreachable!(),
+            ParseNode::Comment(_) => Err(()),
         }
     }
 }
@@ -230,11 +233,15 @@ pub struct StateTree {
 
 impl StateTree {
     #[cfg(test)]
-    pub fn create<N: Into<StateNode>, I: IntoIterator<Item = N>>(nodes: I) -> Self {
+    pub fn create<N: TryInto<StateNode>, I: IntoIterator<Item = N>>(nodes: I) -> Self {
         Self {
             root: Rc::new(StateNode::enumeration(
                 ":root:",
-                nodes.into_iter().map(Into::into).map(Rc::new).collect_vec(),
+                nodes
+                    .into_iter()
+                    .flat_map(TryInto::try_into)
+                    .map(Rc::new)
+                    .collect_vec(),
             )),
         }
     }
