@@ -23,9 +23,16 @@ Create a `states.txt` in `src/`:
 ```txt
 // the root is implicit
 // commas are optional
-Loading [ Configs Assets ]              // list state
+// Loading [ Config Assets ]            // list state
 Ready { Menu Game }                     // enum state
 Exiting                                 // singleton
+```
+
+```rust
+# use bevy_state_plugin_generator::validate_states_file;
+# #[cfg(feature = "lists")]
+# assert!(validate_states_file("Loading [ Config Assets ]"));
+# assert!(validate_states_file("Read { Config Assets }"));
 ```
 
 Set up your `build.rs` like this:

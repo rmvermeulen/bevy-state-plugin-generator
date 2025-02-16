@@ -104,6 +104,12 @@ pub fn parse_states_file<'a>(
         })
 }
 
+pub fn validate_states_file<'a>(input: &'a str) -> bool {
+    parse_config(input)
+        .map(|(rest, _)| rest.is_empty())
+        .unwrap_or(false)
+}
+
 pub fn parse_node(input: &str) -> IResult<&str, ParseNode> {
     alt((
         parse_enum,

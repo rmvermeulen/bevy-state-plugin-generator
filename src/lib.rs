@@ -14,6 +14,7 @@ pub(crate) mod testing;
 pub(crate) mod tokens;
 
 pub use model::{NamingScheme, PluginConfig};
+pub use parser::validate_states_file;
 
 /// ```rust no_run
 /// use bevy_state_plugin_generator::*;
