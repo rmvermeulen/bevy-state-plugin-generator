@@ -212,28 +212,8 @@ mod tests {
 
     #[rstest]
     fn test_parse_enum_empty() {
-        assert_debug_snapshot!(parse_enum("Name{}").unwrap(), @r#"
-        (
-            "",
-            Enum(
-                Identifier(
-                    "Name",
-                ),
-                [],
-            ),
-        )
-        "#);
-        assert_debug_snapshot!(parse_enum("Name {}").unwrap(), @r#"
-        (
-            "",
-            Enum(
-                Identifier(
-                    "Name",
-                ),
-                [],
-            ),
-        )
-        "#);
+        assert_compact_debug_snapshot!(parse_enum("Name{}").unwrap(), @r#"("", Enum(Identifier("Name"), []))"#);
+        assert_compact_debug_snapshot!(parse_enum("Name {}").unwrap(), @r#"("", Enum(Identifier("Name"), []))"#);
     }
 
     #[rstest]
@@ -289,16 +269,21 @@ mod tests {
     #[rstest]
     #[case("Name")]
     #[case("Name {A}")]
-    #[case("Name [ A { B, C [D E {F G}] H } I J ]")]
     fn test_parse_node(#[case] input: &str) {
         set_snapshot_suffix!("{}", input.replace(" ", "_"));
-        assert_debug_snapshot!(parse_node(input));
+        assert_compact_debug_snapshot!(parse_node(input));
+    }
+
+    #[rstest]
+    fn test_parse_node_messy_example() {
+        let input = "Name [ A { B, C [D E {F G}] H } I J ]";
+        assert_compact_debug_snapshot!(parse_node(input), @r#"Ok((" [ A { B, C [D E {F G}] H } I J ]", Singleton(Identifier("Name"))))"#);
     }
 
     #[cfg(feature = "lists")]
     #[rstest]
     fn test_parse_list_incomplete() {
-        assert_debug_snapshot!(parse_list("Name [ A"), @r#"
+        assert_compact_debug_snapshot!(parse_list("Name [ A"), @r#"
         Err(
             Error(
                 Error {
@@ -312,16 +297,7 @@ mod tests {
 
     #[rstest]
     fn test_parse_enum_incomplete() {
-        assert_debug_snapshot!(parse_enum("Name { A"), @r#"
-        Err(
-            Error(
-                Error {
-                    input: "",
-                    code: Tag,
-                },
-            ),
-        )
-        "#);
+        assert_compact_debug_snapshot!(parse_enum("Name { A"), @r#"Err(Error(Error { input: "", code: Tag }))"#);
     }
 
     #[rstest]

@@ -274,6 +274,6 @@ mod tests {
         let b: ParseNode = "PartB".try_into().unwrap();
         let tree = StateTree::create([a, b]);
         assert_that!(tree.get_tree_size()).is_equal_to(2);
-        assert_debug_snapshot!(tree, @"StateTree { :root: { [PartA, PartB] } }");
+        assert_compact_debug_snapshot!(tree, @"StateTree { :root: { [PartA, PartB] } }");
     }
 }

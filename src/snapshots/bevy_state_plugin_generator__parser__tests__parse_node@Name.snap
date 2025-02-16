@@ -2,13 +2,4 @@
 source: src/parser.rs
 expression: parse_node(input)
 ---
-Ok(
-    (
-        "",
-        Singleton(
-            Identifier(
-                "Name",
-            ),
-        ),
-    ),
-)
+Ok(("", Singleton(Identifier("Name"))))

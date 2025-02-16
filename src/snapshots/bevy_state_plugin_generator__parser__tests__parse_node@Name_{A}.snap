@@ -2,20 +2,4 @@
 source: src/parser.rs
 expression: parse_node(input)
 ---
-Ok(
-    (
-        "",
-        Enum(
-            Identifier(
-                "Name",
-            ),
-            [
-                Singleton(
-                    Identifier(
-                        "A",
-                    ),
-                ),
-            ],
-        ),
-    ),
-)
+Ok(("", Enum(Identifier("Name"), [Singleton(Identifier("A"))])))
