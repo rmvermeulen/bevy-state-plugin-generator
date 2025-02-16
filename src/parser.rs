@@ -104,7 +104,14 @@ pub fn parse_states_file<'a>(
         })
 }
 
-pub fn validate_states_file<'a>(input: &'a str) -> bool {
+/// Validate that the input is a valid states file
+/// ```rust
+/// # use bevy_state_plugin_generator::config_is_valid;
+/// assert!(config_is_valid("Name, Name2"));
+/// assert!(config_is_valid("Name { A, B }"));
+/// assert!(!config_is_valid("Name { "));
+/// ```
+pub fn config_is_valid(input: &str) -> bool {
     parse_config(input)
         .map(|(rest, _)| rest.is_empty())
         .unwrap_or(false)
@@ -145,14 +152,12 @@ pub fn parse_elements_until<'a>(
     until: impl Fn(&'a str) -> IResult<&'a str, Token> + Copy,
 ) -> impl Fn(&'a str) -> IResult<&'a str, Vec<ParseNode<'a>>> {
     move |input: &'a str| {
-        terminated(
-            // 0 or more elements, separated by whitespace or a comma
-            many0(alt((
-                parse_node,
-                terminated(parse_node, separator),
-                preceded(separator, parse_node),
-            ))),
-            // then the closing token
+        delimited(
+            // ignore any leading whitespace and commas
+            many0(separator),
+            // 0 or more elements, ignoring whitespace and commas
+            many0(terminated(parse_node, many0(separator))),
+            // then expect the closing token
             until,
         )
         .parse(input)
@@ -251,6 +256,18 @@ mod tests {
         assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
     }
 
+    #[rstest]
+    #[case::just_a_comma("Name {,}", ParseNode::enumeration("Name", [ ]))]
+    #[case::mora_commas("Name {,,,,}", ParseNode::enumeration("Name", [ ]))]
+    #[case::comma_after_variant("Name {A,}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
+    #[case::comma_before_variant("Name {,A}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
+    #[case::comma_between_variants("Name {A,B}", ParseNode::enumeration("Name", [
+        ParseNode::singleton("A"), ParseNode::singleton("B")
+    ]))]
+    fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: ParseNode) {
+        assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
+    }
+
     #[cfg(feature = "lists")]
     #[rstest]
     #[case("Name []", ParseNode::list_empty("Name"))]
@@ -309,5 +326,19 @@ mod tests {
         let (rest, nodes) = parse_config("Name, Name2").unwrap();
         assert_that!(rest).is_empty();
         assert_compact_debug_snapshot!(nodes, @r#"[Singleton(Identifier("Name")), Singleton(Identifier("Name2"))]"#);
+    }
+    #[rstest]
+    #[case("Name, Name2", "Root", ParseNode::enumeration("Root", [
+        ParseNode::singleton("Name"),
+        ParseNode::singleton("Name2"),
+    ]))]
+    fn test_parse_states_file(
+        #[case] input: &str,
+        #[case] root_state_name: &str,
+        #[case] expected: ParseNode,
+    ) {
+        assert_that!(parse_states_file(input, root_state_name))
+            .is_ok()
+            .is_equal_to(expected);
     }
 }
