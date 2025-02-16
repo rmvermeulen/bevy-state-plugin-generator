@@ -10,11 +10,14 @@ in a `Plugin`.
 | ------ | ---------- |
 | 0.15.2 | 1.0.0      |
 
-## to-do
+## bugs
 
-- Fix the many bugs.
-  - generator leaves stuff out
-  - any naming-scheme can collide
+```rust
+// TODO: generator leaves stuff out
+// TODO: any naming-scheme can collide
+// TODO: comments in states.txt
+// TODO: list state fix
+```
 
 ## usage
 
@@ -31,6 +34,8 @@ Exiting                                 // singleton
 # // this is just here to check the above example
 # use bevy_state_plugin_generator::config_is_valid;
 # #[cfg(feature = "lists")]
+# assert!(config_is_valid("// Loading [ Config Assets ]"));
+# assert!(config_is_valid("Loading // [ Config Assets ]"));
 # assert!(config_is_valid("Loading [ Config Assets ]"));
 # assert!(config_is_valid("Read { Config Assets }"));
 ```
