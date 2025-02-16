@@ -275,24 +275,22 @@ mod tests {
     }
 
     #[rstest]
+    fn test_parse_node_nested() {
+        let input = "Name { A { B, C {D E {F G}} H } I J }";
+        assert_debug_snapshot!(parse_node(input));
+    }
+
+    #[cfg(feature = "lists")]
+    #[rstest]
     fn test_parse_node_messy_example() {
         let input = "Name [ A { B, C [D E {F G}] H } I J ]";
-        assert_compact_debug_snapshot!(parse_node(input), @r#"Ok((" [ A { B, C [D E {F G}] H } I J ]", Singleton(Identifier("Name"))))"#);
+        assert_debug_snapshot!(parse_node(input));
     }
 
     #[cfg(feature = "lists")]
     #[rstest]
     fn test_parse_list_incomplete() {
-        assert_compact_debug_snapshot!(parse_list("Name [ A"), @r#"
-        Err(
-            Error(
-                Error {
-                    input: "",
-                    code: Tag,
-                },
-            ),
-        )
-        "#);
+        assert_compact_debug_snapshot!(parse_list("Name [ A"), @r#"Err(Error(Error { input: "", code: Tag })) "#);
     }
 
     #[rstest]
