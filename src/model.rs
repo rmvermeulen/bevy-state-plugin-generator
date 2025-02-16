@@ -19,6 +19,15 @@ impl SourceState {
     }
 }
 
+impl<N: ToString, V: ToString> From<(N, V)> for SourceState {
+    fn from((name, variant): (N, V)) -> Self {
+        Self {
+            name: name.to_string(),
+            variant: variant.to_string(),
+        }
+    }
+}
+
 /// How state-names are determined
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NamingScheme {

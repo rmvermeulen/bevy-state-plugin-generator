@@ -1,9 +1,8 @@
 use std::{convert::identity, time::Duration};
 
 use super::*;
-use insta::assert_snapshot;
+use insta::{assert_debug_snapshot, assert_snapshot};
 use rstest::{fixture, rstest};
-use speculoos::prelude::*;
 
 use crate::set_snapshot_suffix;
 use crate::{NamingScheme, PluginConfig};
@@ -135,12 +134,28 @@ fn test_generate_all_type_definitions_full(
     #[from(root_source_state)] source: SourceState,
     #[from(nested_node)] node: StateNode,
 ) {
-    let typedef_result =
-        generate_all_type_definitions(Some(source.clone()), &node, NamingScheme::Full);
-    assert_that!(typedef_result).contains(" GameMenu");
-    assert_that!(typedef_result).contains(" GameMenuMain");
-    assert_that!(typedef_result).contains(" GameMenuOptions");
-    assert_that!(typedef_result).contains(" GameMenuOptionsGraphics");
+    let typenames = generate_all_type_definitions(&node, Context {
+        source_state: Some(source.clone()),
+        naming_scheme: NamingScheme::Full,
+        ..Default::default()
+    })
+    .take()
+    .into_iter()
+    .map(|td| td.typename)
+    .collect_vec();
+    assert_debug_snapshot!(typenames, @r#"
+    [
+        "GameMenu",
+        "GameMenuMain",
+        "GameMenuOptions",
+        "GameMenuOptionsGraphics",
+        "GameMenuOptionsAudio",
+        "GameMenuOptionsGameplay",
+        "GameMenuContinue",
+        "GameMenuContinueSave",
+        "GameMenuContinueLoad",
+    ]
+    "#);
 }
 
 #[rstest]
@@ -148,11 +163,22 @@ fn test_generate_all_type_definitions_shortened(
     #[from(root_source_state)] source: SourceState,
     #[from(nested_node)] node: StateNode,
 ) {
-    let typedef_result = generate_all_type_definitions(Some(source), &node, NamingScheme::Short);
-    assert_that!(typedef_result).contains(" GameMenu");
-    assert_that!(typedef_result).contains(" MenuMain");
-    assert_that!(typedef_result).contains(" MenuOptions");
-    assert_that!(typedef_result).contains(" OptionsGraphics");
+    assert_debug_snapshot!(
+        generate_all_type_definitions(&node, (source, NamingScheme::Short).into())
+            .take().into_iter().map(|td| td.typename).collect_vec(),
+        @r#"
+    [
+        "GameMenu",
+        "MenuMain",
+        "MenuOptions",
+        "OptionsGraphics",
+        "OptionsAudio",
+        "OptionsGameplay",
+        "MenuContinue",
+        "ContinueSave",
+        "ContinueLoad",
+    ]
+    "#);
 }
 
 #[rstest]
@@ -160,11 +186,22 @@ fn test_generate_all_type_definitions_none(
     #[from(root_source_state)] source: SourceState,
     #[from(nested_node)] node: StateNode,
 ) {
-    let typedef_result = generate_all_type_definitions(Some(source), &node, NamingScheme::None);
-    assert_that!(typedef_result).contains(" Menu");
-    assert_that!(typedef_result).contains(" Main");
-    assert_that!(typedef_result).contains(" Options");
-    assert_that!(typedef_result).contains(" Graphics");
+    assert_debug_snapshot!(
+        generate_all_type_definitions(&node, (source, NamingScheme::None).into())
+            .take().into_iter().map(|td| td.typename).collect_vec(),
+        @r#"
+    [
+        "Menu",
+        "Main",
+        "Options",
+        "Graphics",
+        "Audio",
+        "Gameplay",
+        "Continue",
+        "Save",
+        "Load",
+    ]
+    "#);
 }
 
 #[rstest]
@@ -174,28 +211,30 @@ fn snapshots(
     #[from(nested_node)] node: StateNode,
 ) {
     set_snapshot_suffix!("{scheme:?}");
-    assert_snapshot!(generate_all_type_definitions(Some(source), &node, scheme));
+    assert_snapshot!(generate_all_type_definitions(
+        &node,
+        (source, scheme).into()
+    ));
 }
 
 #[rstest]
 fn snapshot1() {
     assert_snapshot!(generate_all_type_definitions(
-        Some(SourceState {
+        &StateNode::singleton("Alpha"),
+        SourceState {
             name: "GameState".to_string(),
             variant: "Alpha".to_string()
-        }),
-        &StateNode::singleton("Alpha"),
-        NamingScheme::Full
+        }.into()
     ), @r"
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameState = GameState::Alpha)]
-        pub struct GameStateAlpha;
-        ");
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Alpha)]
+    pub struct Alpha;
+    ");
 }
 
 #[rstest]
 fn snapshot1a() {
-    assert_snapshot!(generate_all_type_definitions(None, &StateNode::singleton("Alpha"), NamingScheme::Full), @r"
+    assert_snapshot!(generate_all_type_definitions( &StateNode::singleton("Alpha"), NamingScheme::Full.into()), @r"
         #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
         pub struct Alpha;
         ");
@@ -204,12 +243,12 @@ fn snapshot1a() {
 #[rstest]
 fn snapshot2() {
     assert_snapshot!(generate_all_type_definitions(
-        Some(SourceState {
+        &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
+        (SourceState {
             name: "GameState".to_string(),
             variant: "Alpha".to_string()
-        }),
-        &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
-        NamingScheme::Full
+        },
+        NamingScheme::Full).into()
     ), @r"
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(GameState = GameState::Alpha)]
@@ -224,8 +263,8 @@ fn snapshot2() {
 #[rstest]
 fn snapshot2a() {
     assert_snapshot!(generate_all_type_definitions(
-        None, &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
-        NamingScheme::Full
+        &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
+        NamingScheme::Full.into()
     ), @r"
         #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
         pub enum Alpha { #[default] Beta }
@@ -240,13 +279,8 @@ fn snapshot2a() {
 #[rstest]
 fn snapshot3() {
     assert_snapshot!(generate_all_type_definitions(
-        Some(SourceState {
-            name: "GameState".to_string(),
-            variant: "Alpha".to_string()
-        }),
         &StateNode::list("Alpha", [StateNode::singleton("Beta")]),
-        NamingScheme::Full
-    ), @r"
+        (SourceState::from(("GameState", "Alpha")), NamingScheme::Full).into()), @r"
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(GameStateAlpha = GameStateAlpha::Beta)]
         pub struct GameStateAlphaBeta;
@@ -257,10 +291,6 @@ fn snapshot3() {
 #[rstest]
 fn snapshot4() {
     assert_snapshot!(generate_all_type_definitions(
-        Some(SourceState {
-            name: "GameState".to_string(),
-            variant: "Alpha".to_string()
-        }),
         &StateNode::list("List", [
             StateNode::singleton("Item1"),
             StateNode::enumeration("Item2", [
@@ -269,8 +299,7 @@ fn snapshot4() {
             ]),
             StateNode::singleton("Item3"),
         ]),
-        NamingScheme::Full
-    ), @r"
+        (SourceState::from(("GameState", "Alpha")), NamingScheme::Full).into()), @r"
         #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
         #[source(GameStateList = GameStateList::Item1)]
         pub struct GameStateListItem1;
