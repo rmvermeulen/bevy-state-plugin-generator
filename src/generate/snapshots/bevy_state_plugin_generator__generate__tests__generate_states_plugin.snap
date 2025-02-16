@@ -1,5 +1,5 @@
 ---
-source: src/generate.rs
+source: src/generate/tests.rs
 expression: "generate_plugin_source(Rc::new(states), Default::default())"
 ---
         #![allow(missing_docs)]
