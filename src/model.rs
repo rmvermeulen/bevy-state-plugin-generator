@@ -213,7 +213,16 @@ pub struct StateTree {
     root: Rc<StateNode>,
 }
 
-impl StateTree {}
+impl StateTree {
+    pub fn create<N: Into<StateNode>, I: IntoIterator<Item = N>>(nodes: I) -> Self {
+        Self {
+            root: Rc::new(StateNode::enumeration(
+                "[root]",
+                nodes.into_iter().map(Into::into).map(Rc::new).collect_vec(),
+            )),
+        }
+    }
+}
 
 impl SubTree for StateTree {
     fn get_tree_size(&self) -> usize {

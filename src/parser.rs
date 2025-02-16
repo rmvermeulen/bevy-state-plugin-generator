@@ -156,8 +156,11 @@ pub fn parse_elements_until<'a>(
 #[cfg(test)]
 mod tests {
     use insta::assert_debug_snapshot;
+    use iter_tools::Itertools;
     use rstest::rstest;
     use speculoos::prelude::*;
+
+    use crate::model::{StateTree, SubTree};
 
     use super::*;
 
@@ -329,6 +332,12 @@ mod tests {
 
     #[rstest]
     fn test_parse_config() {
-        assert_debug_snapshot!(parse_config("Name, Name2").unwrap());
+        assert_that!({
+            let (rest, nodes) = parse_config("Name, Name2").unwrap();
+            assert_that!(rest).is_equal_to("");
+            let tree = StateTree::create(nodes);
+            tree.get_tree_size()
+        })
+        .is_equal_to(3);
     }
 }
