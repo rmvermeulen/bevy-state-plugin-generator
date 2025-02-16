@@ -8,12 +8,11 @@ in a `Plugin`.
 
 | bevy   | this thing |
 | ------ | ---------- |
-| 0.15.2 | 1.0.0      |
+| 0.15.2 | 1.1.0      |
 
 ## bugs
 
 ```rust
-// TODO: generator leaves stuff out
 // TODO: any naming-scheme can collide
 // TODO: comments in states.txt
 // TODO: list state fix
@@ -25,7 +24,7 @@ Create a `states.txt` in `src/`:
 
 ```txt
 // the root is implicit
-// Loading [ Config Assets ]            // TODO: list state
+Loading
 Ready { Menu Game }                     // enum state
 Exiting                                 // singleton
 ```
