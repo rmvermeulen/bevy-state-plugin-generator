@@ -2099,16 +2099,14 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
             <a name="L257" href="#L257"><pre>257</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    use crate::tokens::ParseNode;</pre></td>
+          <td class="code"><pre>    use crate::testing::*;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L258" href="#L258"><pre>258</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    use crate::{set_snapshot_suffix, testing::*};</pre>
-          </td>
+          <td class="code"><pre>    use crate::tokens::ParseNode;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -2121,7 +2119,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L260" href="#L260"><pre>260</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
@@ -2129,14 +2127,22 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
             <a name="L261" href="#L261"><pre>261</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    #[case(&quot;Main&quot;)]</pre></td>
+          <td class="code">
+            <pre>
+    #[case(&quot;Main&quot;, ParseNode::singleton(&quot;Main&quot;))]</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L262" href="#L262"><pre>262</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    #[case(&quot;Main{A,B}&quot;)]</pre></td>
+          <td class="code">
+            <pre>
+    #[case(&quot;Main{}&quot;, ParseNode::Enum(&quot;Main&quot;.into(), Default::default()))]</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -2144,7 +2150,9 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>    #[case(&quot;Main { A, B }&quot;)]</pre>
+            <pre>
+    #[case(&quot;Main{A}&quot;, ParseNode::enumeration(&quot;Main&quot;, [ParseNode::singleton(&quot;A&quot;)]))]</pre
+            >
           </td>
         </tr>
         <tr>
@@ -2154,7 +2162,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="skipped-line"></td>
           <td class="code">
             <pre>
-    fn test_parse_node_try_from_str(#[case] input: &amp;str) {</pre
+    #[case(&quot;Main{A,B}&quot;, ParseNode::enumeration(&quot;Main&quot;, [</pre
             >
           </td>
         </tr>
@@ -2164,7 +2172,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        set_snapshot_suffix!(&quot;{}&quot;, input);</pre>
+            <pre>        ParseNode::singleton(&quot;A&quot;),</pre>
           </td>
         </tr>
         <tr>
@@ -2173,9 +2181,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>
-        assert_compact_debug_snapshot!(ParseNode::try_from(input));</pre
-            >
+            <pre>        ParseNode::singleton(&quot;B&quot;),</pre>
           </td>
         </tr>
         <tr>
@@ -2183,25 +2189,54 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
             <a name="L267" href="#L267"><pre>267</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    }</pre></td>
+          <td class="code"><pre>    ]))]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L268" href="#L268"><pre>268</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    #[rstest]</pre></td>
+          <td class="code">
+            <pre>
+    fn test_parse_node_try_from_str(#[case] input: &amp;str, #[case] expected: ParseNode) {</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L269" href="#L269"><pre>269</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    fn test_state_tree() {</pre></td>
+          <td class="code">
+            <pre>
+        assert_that!(ParseNode::try_from(input)).is_ok_containing(expected);</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L270" href="#L270"><pre>270</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    }</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L271" href="#L271"><pre>271</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    #[rstest]</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L272" href="#L272"><pre>272</pre></a>
+          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    fn test_state_tree() {</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L273" href="#L273"><pre>273</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2212,7 +2247,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L271" href="#L271"><pre>271</pre></a>
+            <a name="L274" href="#L274"><pre>274</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2223,7 +2258,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L272" href="#L272"><pre>272</pre></a>
+            <a name="L275" href="#L275"><pre>275</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2232,7 +2267,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L273" href="#L273"><pre>273</pre></a>
+            <a name="L276" href="#L276"><pre>276</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2243,7 +2278,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L274" href="#L274"><pre>274</pre></a>
+            <a name="L277" href="#L277"><pre>277</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -2254,14 +2289,14 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L275" href="#L275"><pre>275</pre></a>
+            <a name="L278" href="#L278"><pre>278</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L276" href="#L276"><pre>276</pre></a>
+            <a name="L279" href="#L279"><pre>279</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>

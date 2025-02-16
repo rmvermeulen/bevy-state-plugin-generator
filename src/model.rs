@@ -254,16 +254,19 @@ impl SubTree for StateTree {
 #[cfg(test)]
 mod tests {
     use crate::model::{StateTree, SubTree};
+    use crate::testing::*;
     use crate::tokens::ParseNode;
-    use crate::{set_snapshot_suffix, testing::*};
 
     #[rstest]
-    #[case("Main")]
-    #[case("Main{A,B}")]
-    #[case("Main { A, B }")]
-    fn test_parse_node_try_from_str(#[case] input: &str) {
-        set_snapshot_suffix!("{}", input);
-        assert_compact_debug_snapshot!(ParseNode::try_from(input));
+    #[case("Main", ParseNode::singleton("Main"))]
+    #[case("Main{}", ParseNode::Enum("Main".into(), Default::default()))]
+    #[case("Main{A}", ParseNode::enumeration("Main", [ParseNode::singleton("A")]))]
+    #[case("Main{A,B}", ParseNode::enumeration("Main", [
+        ParseNode::singleton("A"),
+        ParseNode::singleton("B"),
+    ]))]
+    fn test_parse_node_try_from_str(#[case] input: &str, #[case] expected: ParseNode) {
+        assert_that!(ParseNode::try_from(input)).is_ok_containing(expected);
     }
     #[rstest]
     fn test_state_tree() {

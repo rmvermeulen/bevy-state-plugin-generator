@@ -1,5 +1,0 @@
----
-source: src/model.rs
-expression: "ParseNode::try_from(input)"
----
-Ok(Enum(Identifier("Main"), [Singleton(Identifier("A")), Singleton(Identifier("B"))]))
