@@ -125,7 +125,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
     [header, &states_module, &plugin].join("\n")
 }
 
-#[cfg(feature = "format")]
+#[cfg(feature = "rustfmt")]
 pub fn try_format_source(source: &str) -> io::Result<String> {
     duct::cmd!("rustfmt")
         .stdin_bytes(source)
@@ -135,11 +135,11 @@ pub fn try_format_source(source: &str) -> io::Result<String> {
 
 pub fn format_source<S: AsRef<str>>(source: S) -> String {
     let source = source.as_ref();
-    #[cfg(feature = "format")]
+    #[cfg(feature = "rustfmt")]
     {
         try_format_source(source).unwrap_or_else(|_| source.to_owned())
     }
-    #[cfg(not(feature = "format"))]
+    #[cfg(not(feature = "rustfmt"))]
     {
         source.to_owned()
     }

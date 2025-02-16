@@ -13,12 +13,10 @@ name = "bspgen"
 
 
 [features]
-default = ["full"]
-full = ["parse", "generate", "format"]
-lists = ["parse", "generate"]
-parse = []
-generate = []
-format = ["dep:duct"]
+default = ["all"]
+all = ["rustfmt"] # "lists"
+lists = []
+rustfmt = ["dep:duct"]
 
 [dependencies]
 derive_more = { version = "2.0.1", features = [
