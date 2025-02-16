@@ -176,15 +176,8 @@ mod tests {
     use rstest::{fixture, rstest};
     use speculoos::prelude::*;
 
+    use crate::set_snapshot_suffix;
     use crate::{NamingScheme, PluginConfig};
-
-    macro_rules! set_snapshot_suffix {
-        ($($expr:expr),*) => {
-            let mut settings = insta::Settings::clone_current();
-            settings.set_snapshot_suffix(format!($($expr,)*));
-            let _guard = settings.bind_to_scope();
-        }
-    }
 
     #[rstest]
     #[timeout(Duration::from_millis(250))]

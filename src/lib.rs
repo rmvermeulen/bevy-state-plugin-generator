@@ -9,6 +9,8 @@ use generate::generate_state_plugin_source;
 pub(crate) mod generate;
 pub(crate) mod model;
 pub(crate) mod parser;
+#[cfg(test)]
+pub(crate) mod testing;
 pub(crate) mod tokens;
 
 pub use model::{NamingScheme, PluginConfig};

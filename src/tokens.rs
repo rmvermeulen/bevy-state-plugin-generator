@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use derive_more::{Deref, From};
 
 #[derive(Debug, PartialEq)]
@@ -16,7 +14,7 @@ pub enum Token {
 #[derive(Debug, PartialEq, From, Deref)]
 pub struct Identifier<'a>(&'a str);
 
-impl Display for Identifier<'_> {
+impl std::fmt::Display for Identifier<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
@@ -53,5 +51,14 @@ impl<'a> ParseNode<'a> {
         variants: V,
     ) -> Self {
         Self::List(name.into(), variants.into_iter().collect())
+    }
+}
+
+impl<'a> TryFrom<&'a str> for ParseNode<'a> {
+    type Error = nom::Err<nom::error::Error<&'a str>>;
+
+    fn try_from(s: &'a str) -> Result<Self, Self::Error> {
+        use crate::parser::parse_node;
+        parse_node(s).map(|(_, node)| node)
     }
 }

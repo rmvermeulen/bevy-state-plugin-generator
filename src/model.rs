@@ -100,7 +100,7 @@ impl From<NamingScheme> for PluginConfig<'_> {
     }
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(PartialEq, Clone)]
 pub enum StateNode {
     Singleton(String),
     Enum(String, Vec<Rc<StateNode>>),
@@ -136,6 +136,17 @@ impl StateNode {
             #[cfg(feature = "lists")]
             StateNode::List(name, _) => name,
             StateNode::Singleton(name) | StateNode::Enum(name, _) => name,
+        }
+    }
+}
+
+impl std::fmt::Debug for StateNode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            StateNode::Singleton(name) => write!(f, "{}", name),
+            StateNode::Enum(name, children) => write!(f, "{} {{ {:?} }}", name, children),
+            #[cfg(feature = "lists")]
+            StateNode::List(name, children) => write!(f, "{} [ {:?} ]", name, children),
         }
     }
 }
@@ -208,7 +219,7 @@ impl SubTree for ParseNode<'_> {
     }
 }
 
-#[derive(Debug, PartialEq, Clone, From)]
+#[derive(PartialEq, Clone, From)]
 pub struct StateTree {
     root: Rc<StateNode>,
 }
@@ -217,15 +228,49 @@ impl StateTree {
     pub fn create<N: Into<StateNode>, I: IntoIterator<Item = N>>(nodes: I) -> Self {
         Self {
             root: Rc::new(StateNode::enumeration(
-                "[root]",
+                ":root:",
                 nodes.into_iter().map(Into::into).map(Rc::new).collect_vec(),
             )),
         }
+    }
+    pub fn get_size(&self) -> usize {
+        let subsize = self.root.get_tree_size();
+        assert!(subsize > 0);
+        subsize - 1
+    }
+}
+
+impl std::fmt::Debug for StateTree {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "StateTree {{ {:?} }}", self.root)
     }
 }
 
 impl SubTree for StateTree {
     fn get_tree_size(&self) -> usize {
-        self.root.get_tree_size()
+        self.get_size()
+    }
+}
+#[cfg(test)]
+mod tests {
+    use crate::model::{StateTree, SubTree};
+    use crate::tokens::ParseNode;
+    use crate::{set_snapshot_suffix, testing::*};
+
+    #[rstest]
+    #[case("Main")]
+    #[case("Main{A,B}")]
+    #[case("Main { A, B }")]
+    fn test_parse_node_try_from_str(#[case] input: &str) {
+        set_snapshot_suffix!("{}", input);
+        assert_compact_debug_snapshot!(ParseNode::try_from(input));
+    }
+    #[rstest]
+    fn test_state_tree() {
+        let a: ParseNode = "PartA".try_into().unwrap();
+        let b: ParseNode = "PartB".try_into().unwrap();
+        let tree = StateTree::create([a, b]);
+        assert_that!(tree.get_tree_size()).is_equal_to(2);
+        assert_debug_snapshot!(tree, @"StateTree { :root: { [PartA, PartB] } }");
     }
 }
