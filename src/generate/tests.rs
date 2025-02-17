@@ -242,9 +242,9 @@ fn snapshot1() {
 #[rstest]
 fn snapshot1a() {
     assert_snapshot!(generate_all_type_definitions( &StateNode::singleton("Alpha"), NamingScheme::Full.into()), @r"
-        #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        pub struct Alpha;
-        ");
+    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    pub struct Alpha;
+    ");
 }
 
 #[rstest]
@@ -260,9 +260,9 @@ fn snapshot2() {
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Alpha)]
     pub enum GameStateAlpha {
-        #[default] Beta
+        #[default]
+        Beta
     }
-
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameStateAlpha = GameStateAlpha::Beta)]
@@ -278,9 +278,9 @@ fn snapshot2a() {
     ), @r"
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum Alpha {
-        #[default] Beta
+        #[default]
+        Beta
     }
-
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Alpha = Alpha::Beta)]
@@ -297,7 +297,6 @@ fn snapshot3() {
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Alpha)]
     pub struct GameStateAlpha;
-
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Alpha)]
@@ -322,29 +321,25 @@ fn snapshot4() {
     #[source(GameState = GameState::Alpha)]
     pub struct GameStateList;
 
-
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Alpha)]
     pub struct GameStateItem1;
 
-
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Alpha)]
     pub enum GameStateItem2 {
-        #[default] A,
-    B
+        #[default]
+        A,
+          B
     }
-
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameStateItem2 = GameStateItem2::A)]
     pub struct GameStateItem2A;
 
-
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameStateItem2 = GameStateItem2::B)]
     pub struct GameStateItem2B;
-
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Alpha)]

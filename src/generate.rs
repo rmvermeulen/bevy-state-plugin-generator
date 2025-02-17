@@ -69,6 +69,9 @@ impl From<(NamingScheme, ParentState)> for Context {
         }
     }
 }
+pub trait ToStringWith {
+    fn to_string_with<S: AsRef<str>>(&self, join: S) -> String;
+}
 
 #[derive(Debug, Clone, From, Deref)]
 struct TypeDefinitions(Vec<TypeDef>);
@@ -77,14 +80,22 @@ impl TypeDefinitions {
     fn take(self) -> Vec<TypeDef> {
         self.0
     }
-    fn to_string_with(&self, join: &str) -> String {
-        self.0.iter().join(join)
+}
+
+impl ToStringWith for TypeDefinitions {
+    fn to_string_with<S: AsRef<str>>(&self, join: S) -> String {
+        let inner = format!("\n{}", join.as_ref());
+        let outer = format!("\n{}", inner);
+        self.0
+            .iter()
+            .map(|td| td.to_string().lines().join(&inner))
+            .join(&outer)
     }
 }
 
 impl Display for TypeDefinitions {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_string_with("\n\n"))
+        write!(f, "{}", self.to_string_with(""))
     }
 }
 
@@ -97,6 +108,12 @@ struct TypeDef {
 impl Display for TypeDef {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.source)
+    }
+}
+
+impl ToStringWith for TypeDef {
+    fn to_string_with<S: AsRef<str>>(&self, join: S) -> String {
+        self.source.lines().join(join.as_ref())
     }
 }
 
@@ -136,11 +153,15 @@ fn get_typedef(
         "}
     };
     let source_for_enum = |variants: &Vec<Rc<StateNode>>| {
-        let variants = variants.iter().map(|variant| variant.name()).join(",\n");
+        let variants = variants
+            .iter()
+            .map(|variant| variant.name())
+            .join(",\n      ");
         formatdoc! {"
             {derives}
             pub enum {typename} {{
-                #[default] {variants}
+                #[default]
+                {variants}
             }}
         "}
     };
@@ -236,19 +257,33 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         scheme: _,
     } = config;
 
-    let type_definitions = generate_all_type_definitions(&root_state, Context::from(config.scheme))
-        .to_string_with("\t\t\t\n");
+    let type_definitions = generate_all_type_definitions(&root_state, Context::from(config.scheme));
+    let definitions_source = type_definitions.to_string_with("    ");
+    let init_states = {
+        let typenames = type_definitions
+            .take()
+            .into_iter()
+            .map(|typedef| typedef.typename);
+        let mut init_states = vec![state_name.to_string()];
+        init_states.extend(typenames);
+        init_states
+            .into_iter()
+            .map(|state_name| format!(".init_state::<{states_module_name}::{state_name}>()"))
+            .join("\n            ")
+    };
     formatdoc! {"
         #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
         pub mod {states_module_name} {{
             use bevy::prelude::StateSet;
-            {type_definitions}
+            {definitions_source}
         }}
         pub struct {plugin_name};
         impl bevy::app::Plugin for {plugin_name} {{
             fn build(&self, app: &mut bevy::app::App) {{ 
-                app.init_state::<{states_module_name}::{state_name}>();
+                app
+                    {init_states}
+                ;
             }}
         }}
     "}

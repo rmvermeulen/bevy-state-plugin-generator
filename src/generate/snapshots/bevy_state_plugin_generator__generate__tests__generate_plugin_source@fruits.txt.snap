@@ -1,6 +1,6 @@
 ---
 source: src/generate/tests.rs
-expression: "test_plugin_formatted(root_node, plugin_config)"
+expression: "test_plugin_formatted(root_node, Default::default())"
 ---
 #![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
@@ -65,6 +65,16 @@ pub mod states {
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>();
+        app.init_state::<states::GameState>()
+            .init_state::<states::GameState>()
+            .init_state::<states::GameStateLoading>()
+            .init_state::<states::GameStateReady>()
+            .init_state::<states::GameStateReadyMenu>()
+            .init_state::<states::GameStateReadyMenuMain>()
+            .init_state::<states::GameStateReadyMenuOptions>()
+            .init_state::<states::GameStateReadyGame>()
+            .init_state::<states::GameStateReadyGamePlaying>()
+            .init_state::<states::GameStateReadyGamePaused>()
+            .init_state::<states::GameStateReadyGameGameOver>();
     }
 }

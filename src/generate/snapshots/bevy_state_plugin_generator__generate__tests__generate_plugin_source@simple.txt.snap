@@ -36,6 +36,11 @@ pub mod states {
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>();
+        app.init_state::<states::GameState>()
+            .init_state::<states::GameState>()
+            .init_state::<states::GameStateLoading>()
+            .init_state::<states::GameStateReady>()
+            .init_state::<states::GameStateReadyMenu>()
+            .init_state::<states::GameStateReadyGame>();
     }
 }
