@@ -195,21 +195,33 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
             }
         }
         #[cfg(feature = "lists")]
-        StateNode::List(_, _variants) => unimplemented!(),
-        // variants
-        //     .iter()
-        //     .map(|child_node| {
-        //         generate_all_type_definitions(
-        //             Some(SourceState {
-        //                 name: typename.clone(),
-        //                 variant: child_node.name().to_string(),
-        //             }),
-        //             child_node,
-        //             scheme,
-        //         )
-        //     })
-        //     .flatten()
-        //     .collect_vec(),
+        StateNode::List(_, variants) => {
+            let parent_state = context
+                .parent_state
+                .expect("StateNode::List but no SourceState!");
+            let mut variants = variants
+                .iter()
+                .flat_map({
+                    let parent_state = parent_state.clone();
+                    move |child_node| {
+                        generate_all_type_definitions(child_node, Context {
+                            parent_state: Some(ParentState {
+                                name: parent_state.name().to_string(),
+                                variant: child_node.name().to_string(),
+                            }),
+                            naming_scheme: context.naming_scheme,
+                            derives: context.derives.clone(),
+                        })
+                        .take()
+                    }
+                })
+                .collect_vec();
+            {
+                let mut typedefs = vec![root_typedef];
+                typedefs.append(&mut variants);
+                typedefs.into()
+            }
+        }
     }
 }
 
