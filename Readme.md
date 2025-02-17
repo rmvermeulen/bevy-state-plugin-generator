@@ -13,8 +13,9 @@ in a `Plugin`.
 ## bugs
 
 ```rust
-// TODO: init_state for all states
-// TODO: any naming-scheme can collide
+// TODO: fix naming-scheme collision detection
+// TODO: allow customizing derived traits
+// TODO: allow specifying naming-scheme in states.txt per-node
 ```
 
 ## usage
