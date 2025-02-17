@@ -788,21 +788,21 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L93" href="#L93"><pre>93</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>    fn default() -&gt; Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L94" href="#L94"><pre>94</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>        Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L95" href="#L95"><pre>95</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code">
             <pre>
             plugin_name: &quot;GeneratedStatesPlugin&quot;,</pre
@@ -813,7 +813,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L96" href="#L96"><pre>96</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code">
             <pre>            state_name: &quot;GameState&quot;,</pre>
           </td>
@@ -822,7 +822,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L97" href="#L97"><pre>97</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code">
             <pre>            states_module_name: &quot;states&quot;,</pre>
           </td>
@@ -831,7 +831,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L98" href="#L98"><pre>98</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code">
             <pre>            scheme: Default::default(),</pre>
           </td>
@@ -840,14 +840,14 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L99" href="#L99"><pre>99</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L100" href="#L100"><pre>100</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>9</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -1016,7 +1016,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L121" href="#L121"><pre>121</pre></a>
           </td>
-          <td class="covered-line"><pre>64</pre></td>
+          <td class="covered-line"><pre>63</pre></td>
           <td class="code">
             <pre>
     pub fn singleton&lt;S: ToString&gt;(name: S) -&gt; Self {</pre
@@ -1027,7 +1027,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L122" href="#L122"><pre>122</pre></a>
           </td>
-          <td class="covered-line"><pre>64</pre></td>
+          <td class="covered-line"><pre>63</pre></td>
           <td class="code">
             <pre>        Self::Singleton(name.to_string())</pre>
           </td>
@@ -1036,7 +1036,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L123" href="#L123"><pre>123</pre></a>
           </td>
-          <td class="covered-line"><pre>64</pre></td>
+          <td class="covered-line"><pre>63</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -1228,7 +1228,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L147" href="#L147"><pre>147</pre></a>
           </td>
-          <td class="covered-line"><pre>259</pre></td>
+          <td class="covered-line"><pre>258</pre></td>
           <td class="code">
             <pre>    pub fn name(&amp;self) -&gt; &amp;str {</pre>
           </td>
@@ -1237,7 +1237,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L148" href="#L148"><pre>148</pre></a>
           </td>
-          <td class="covered-line"><pre>259</pre></td>
+          <td class="covered-line"><pre>258</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
@@ -1262,9 +1262,9 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L151" href="#L151"><pre>151</pre></a>
           </td>
-          <td class="covered-line"><pre>257</pre></td>
+          <td class="covered-line"><pre>256</pre></td>
           <td class="code">
-            <pre>            StateNode::Singleton(<div class='tooltip'>name<span class='tooltip-content'>165</span></div>) | StateNode::Enum(<div class='tooltip'>name<span class='tooltip-content'>92</span></div>, _) =&gt; name,</pre>
+            <pre>            StateNode::Singleton(<div class='tooltip'>name<span class='tooltip-content'>164</span></div>) | StateNode::Enum(<div class='tooltip'>name<span class='tooltip-content'>92</span></div>, _) =&gt; name,</pre>
           </td>
         </tr>
         <tr>
@@ -1278,7 +1278,7 @@ impl From&lt;NamingScheme&gt; for PluginConfig&lt;&apos;_&gt; {</pre
           <td class="line-number">
             <a name="L153" href="#L153"><pre>153</pre></a>
           </td>
-          <td class="covered-line"><pre>259</pre></td>
+          <td class="covered-line"><pre>258</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -1473,7 +1473,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L176" href="#L176"><pre>176</pre></a>
           </td>
-          <td class="covered-line"><pre>11</pre></td>
+          <td class="covered-line"><pre>10</pre></td>
           <td class="code">
             <pre>
     fn try_from(node: ParseNode) -&gt; Result&lt;Self, Self::Error&gt; {</pre
@@ -1484,7 +1484,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L177" href="#L177"><pre>177</pre></a>
           </td>
-          <td class="covered-line"><pre>11</pre></td>
+          <td class="covered-line"><pre>10</pre></td>
           <td class="code">
             <pre>
         let map_children = |children: Vec&lt;ParseNode&gt;| {</pre
@@ -1539,14 +1539,14 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L184" href="#L184"><pre>184</pre></a>
           </td>
-          <td class="covered-line"><pre>11</pre></td>
+          <td class="covered-line"><pre>10</pre></td>
           <td class="code"><pre>        match node {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L185" href="#L185"><pre>185</pre></a>
           </td>
-          <td class="covered-line"><pre>7</pre></td>
+          <td class="covered-line"><pre>6</pre></td>
           <td class="code">
             <pre>
             ParseNode::Singleton(name) =&gt; Ok(StateNode::singleton(name)),</pre
@@ -1627,7 +1627,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L194" href="#L194"><pre>194</pre></a>
           </td>
-          <td class="covered-line"><pre>11</pre></td>
+          <td class="covered-line"><pre>10</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -1685,7 +1685,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L202" href="#L202"><pre>202</pre></a>
           </td>
-          <td class="covered-line"><pre>12</pre></td>
+          <td class="covered-line"><pre>11</pre></td>
           <td class="code">
             <pre>    fn get_tree_size(&amp;self) -&gt; usize {</pre>
           </td>
@@ -1694,14 +1694,14 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L203" href="#L203"><pre>203</pre></a>
           </td>
-          <td class="covered-line"><pre>12</pre></td>
+          <td class="covered-line"><pre>11</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L204" href="#L204"><pre>204</pre></a>
           </td>
-          <td class="covered-line"><pre>7</pre></td>
+          <td class="covered-line"><pre>6</pre></td>
           <td class="code">
             <pre>            StateNode::Singleton(_) =&gt; 1,</pre>
           </td>
@@ -1842,7 +1842,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L221" href="#L221"><pre>221</pre></a>
           </td>
-          <td class="covered-line"><pre>12</pre></td>
+          <td class="covered-line"><pre>11</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -1872,7 +1872,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L225" href="#L225"><pre>225</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code">
             <pre>    fn get_tree_size(&amp;self) -&gt; usize {</pre>
           </td>
@@ -1881,7 +1881,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L226" href="#L226"><pre>226</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
@@ -1906,7 +1906,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L229" href="#L229"><pre>229</pre></a>
           </td>
-          <td class="covered-line"><pre>5</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>            ParseNode::Singleton(_) =&gt; 1,</pre>
           </td>
@@ -2047,7 +2047,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L246" href="#L246"><pre>246</pre></a>
           </td>
-          <td class="covered-line"><pre>9</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>

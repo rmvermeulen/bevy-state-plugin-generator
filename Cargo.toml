@@ -8,9 +8,6 @@ repository = "https://github.com/rmvermeulen/bevy-state-plugin-generator.git"
 
 [lib]
 
-[[bin]]
-name = "bspgen"
-
 
 [features]
 default = ["rustfmt", "comments", "lists"]
