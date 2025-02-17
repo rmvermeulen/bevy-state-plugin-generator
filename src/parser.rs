@@ -16,21 +16,21 @@ pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
 }
 
 /// ```rust
+/// # #[cfg(feature = "comments")] {
 /// # use bevy_state_plugin_generator::comment;
 /// assert_eq!(comment("//comment"), Ok(("", "comment".into())));
 /// assert_eq!(comment("// comment "), Ok(("", "comment".into())));
+/// assert_eq!(comment(" // comment "), Ok(("", "comment".into())));
+/// assert_eq!(comment("//\ncomment "), Ok(("comment ", "".into())));
+/// # }
 /// ```
 #[cfg(feature = "comments")]
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     use nom::combinator::eof;
 
-    delimited(
-        pair(skip_to(tag("//")), space0),
-        take_while(|_| true),
-        alt((eof, line_ending)),
-    )
-    .parse(input)
-    .map_result(|c| c.trim_end().into())
+    delimited(skip_to(tag("//")), not_line_ending, alt((eof, line_ending)))
+        .parse(input)
+        .map_result(|c| c.trim().into())
 }
 
 pub fn identifier(input: &str) -> IResult<&str, Identifier<'_>> {

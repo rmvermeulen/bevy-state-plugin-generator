@@ -7,6 +7,8 @@ use std::{fs, io, path::Path};
 use generate::generate_state_plugin_source;
 
 pub use model::{NamingScheme, PluginConfig};
+#[cfg(feature = "comments")]
+pub use parser::comment;
 pub use parser::config_is_valid;
 
 pub(crate) mod generate;

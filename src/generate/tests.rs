@@ -50,27 +50,34 @@ fn test_plugin_formatted(root_node: Rc<StateNode>, plugin_config: PluginConfig) 
 }
 
 #[rstest]
+#[cfg_attr(
+    feature = "comments",
+    case("comments.txt", Rc::new(StateNode::enum_empty("GameState")),)
+)]
+#[case("simple.txt", Rc::new(StateNode::enumeration("GameState", [
+    StateNode::singleton("Loading"),
+    StateNode::enumeration("Ready", [
+        StateNode::singleton("Menu"),
+        StateNode::singleton("Game"),
+    ]),
+])))]
 #[case("fruits.txt", Rc::new(StateNode::enumeration("GameState", [
-        StateNode::singleton("Loading"),
-        StateNode::enumeration("Ready", [
-            StateNode::enumeration("Menu", [
-                StateNode::singleton("Main"),
-                StateNode::singleton("Options"),
-            ]),
-            StateNode::enumeration("Game", [
-                StateNode::singleton("Playing"),
-                StateNode::singleton("Paused"),
-                StateNode::singleton("GameOver"),
-            ]),
+    StateNode::singleton("Loading"),
+    StateNode::enumeration("Ready", [
+        StateNode::enumeration("Menu", [
+            StateNode::singleton("Main"),
+            StateNode::singleton("Options"),
         ]),
-    ])), PluginConfig::default())]
-fn test_generate_plugin_source(
-    #[case] src_path: &str,
-    #[case] root_node: Rc<StateNode>,
-    #[case] plugin_config: PluginConfig,
-) {
+        StateNode::enumeration("Game", [
+            StateNode::singleton("Playing"),
+            StateNode::singleton("Paused"),
+            StateNode::singleton("GameOver"),
+        ]),
+    ]),
+])))]
+fn test_generate_plugin_source(#[case] src_path: &str, #[case] root_node: Rc<StateNode>) {
     set_snapshot_suffix!("{src_path}");
-    assert_snapshot!(test_plugin_formatted(root_node, plugin_config));
+    assert_snapshot!(test_plugin_formatted(root_node, Default::default()));
 }
 
 #[cfg(feature = "lists")]
@@ -250,14 +257,17 @@ fn snapshot2() {
         },
         NamingScheme::Full).into()
     ), @r"
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameState = GameState::Alpha)]
-        pub enum GameStateAlpha { #[default] Beta }
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Alpha)]
+    pub enum GameStateAlpha {
+        #[default] Beta
+    }
 
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateAlpha = GameStateAlpha::Beta)]
-        pub struct GameStateAlphaBeta;
-        ");
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameStateAlpha = GameStateAlpha::Beta)]
+    pub struct GameStateAlphaBeta;
+    ");
 }
 
 #[rstest]
@@ -266,13 +276,16 @@ fn snapshot2a() {
         &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
         NamingScheme::Full.into()
     ), @r"
-        #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        pub enum Alpha { #[default] Beta }
+    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    pub enum Alpha {
+        #[default] Beta
+    }
 
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Alpha = Alpha::Beta)]
-        pub struct AlphaBeta;
-        ");
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Alpha = Alpha::Beta)]
+    pub struct AlphaBeta;
+    ");
 }
 
 #[cfg(feature = "lists")]

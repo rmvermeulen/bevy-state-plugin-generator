@@ -15,6 +15,7 @@ fn test_identifier(#[case] input: &str, #[case] token: &str) {
 
 #[cfg(feature = "comments")]
 #[rstest]
+#[case("//\nHello\n", "")]
 #[case("//Hello\n", "Hello")]
 #[case("// Hello\n", "Hello")]
 #[case("// Hello// \n", "Hello//")]
@@ -197,20 +198,39 @@ fn test_parse_enum_incomplete() {
         ])
     ])
 ])])]
-#[cfg_attr(feature = "comments", case("A {\n // B\n C\n}", vec![ ParseNode::enumeration("A", [
-    ParseNode::comment("B"),
-    ParseNode::singleton("C")
-]) ]))]
-#[cfg_attr(feature = "comments", case("//A//[ B C ]", vec![ ParseNode::comment("A//[ B C ]") ]))]
-#[cfg_attr(feature = "comments", case("A // [ B C ]", vec![
+#[cfg_attr(feature = "comments", case("//A//{ B C }", vec![ ParseNode::comment("A//{ B C }") ]))]
+#[cfg_attr(feature = "comments", case("A//{ B C }", vec![
     ParseNode::singleton("A"),
-    ParseNode::comment("[ B C ]")
+    ParseNode::comment("{ B C }")
 ]))]
 fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
     assert_that!(parse_config(input))
+        .named(&format!("\"{input}\""))
         .is_ok()
         .is_equal_to(("", expected));
 }
+
+#[cfg(feature = "comments")]
+#[rstest]
+#[case("A//\n{ B C }", vec![
+    ParseNode::singleton("A"),
+    ParseNode::comment("")
+], "{ B C }")]
+#[case("A {\n // B\n C\n}...", vec![ ParseNode::enumeration("A", [
+    ParseNode::comment("B"),
+    ParseNode::singleton("C")
+]) ], "...")]
+fn test_parse_config_incomplete(
+    #[case] input: &str,
+    #[case] expected: Vec<ParseNode>,
+    #[case] rest: &str,
+) {
+    assert_that!(parse_config(input))
+        .named(&format!("\"{input}\""))
+        .is_ok()
+        .is_equal_to((rest, expected));
+}
+
 #[rstest]
 #[case("Name, Name2", "Root", ParseNode::enumeration("Root", [
     ParseNode::singleton("Name"),

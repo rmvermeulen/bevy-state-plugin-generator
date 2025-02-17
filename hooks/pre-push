@@ -4,9 +4,15 @@ set -exu
 echo "Pre-push hook"
 cargo fmt --check
 
+branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$branch" != "main" ]; then
+	cargo test
+	exit 0
+fi
+
 cargo make report
 status=$(git status -s)
 if [ -n "$status" ]; then
-    echo "You have uncommitted changes; aborting push"
-    exit 1
+	echo "You have uncommitted changes; aborting push"
+	exit 1
 fi
