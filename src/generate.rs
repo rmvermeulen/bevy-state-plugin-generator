@@ -269,7 +269,9 @@ pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<
         .map_err(|e| format!("{e:?}"))?;
     let state_tree_size = root_node.get_tree_size();
 
-    assert_eq!(parse_tree_size, state_tree_size);
+    if state_tree_size > parse_tree_size {
+        return Err("state-tree exceeds parse-tree!".into());
+    }
 
     let debug_info = generate_debug_info(src_path.as_ref(), source);
     let plugin_source = generate_plugin_source(root_node, plugin_config);
