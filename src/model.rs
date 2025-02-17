@@ -78,6 +78,8 @@ pub struct PluginConfig<'a> {
     pub states_module_name: &'a str,
     /// naming scheme for the generated states
     pub scheme: NamingScheme,
+    /// add additional traits to the derive list
+    pub additional_derives: &'a [&'a str],
 }
 
 /// Default configuration for the generated plugin
@@ -96,6 +98,7 @@ impl Default for PluginConfig<'_> {
             state_name: "GameState",
             states_module_name: "states",
             scheme: Default::default(),
+            additional_derives: &[],
         }
     }
 }

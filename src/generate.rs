@@ -13,7 +13,7 @@ use crate::{NamingScheme, PluginConfig};
 #[cfg(test)]
 mod tests;
 
-const DERIVES: &str = "Hash, Default, Debug, Clone, PartialEq, Eq";
+const REQUIRED_DERIVES: &[&str] = &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
 
 #[derive(Debug, Clone)]
 struct Context {
@@ -27,7 +27,7 @@ impl Default for Context {
         Self {
             parent_state: None,
             naming_scheme: NamingScheme::None,
-            derives: DERIVES.to_string(),
+            derives: REQUIRED_DERIVES.join(", "),
         }
     }
 }
@@ -70,7 +70,7 @@ impl From<(NamingScheme, ParentState)> for Context {
     }
 }
 pub trait ToStringWith {
-    fn to_string_with<S: AsRef<str>>(&self, join: S) -> String;
+    fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String;
 }
 
 #[derive(Debug, Clone, From, Deref)]
@@ -83,7 +83,7 @@ impl TypeDefinitions {
 }
 
 impl ToStringWith for TypeDefinitions {
-    fn to_string_with<S: AsRef<str>>(&self, join: S) -> String {
+    fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String {
         let inner = format!("\n{}", join.as_ref());
         let outer = format!("\n{}", inner);
         self.0
@@ -95,7 +95,7 @@ impl ToStringWith for TypeDefinitions {
 
 impl Display for TypeDefinitions {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_string_with(""))
+        write!(f, "{}", self.to_string_indented(""))
     }
 }
 
@@ -112,7 +112,7 @@ impl Display for TypeDef {
 }
 
 impl ToStringWith for TypeDef {
-    fn to_string_with<S: AsRef<str>>(&self, join: S) -> String {
+    fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String {
         self.source.lines().join(join.as_ref())
     }
 }
@@ -255,10 +255,21 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         state_name,
         states_module_name,
         scheme: _,
+        additional_derives,
     } = config;
 
-    let type_definitions = generate_all_type_definitions(&root_state, Context::from(config.scheme));
-    let definitions_source = type_definitions.to_string_with("    ");
+    let context = Context::from(config.scheme);
+    let context = if additional_derives.is_empty() {
+        context
+    } else {
+        Context {
+            derives: [context.derives, additional_derives.join(", ")].join(", "),
+            ..context
+        }
+    };
+
+    let type_definitions = generate_all_type_definitions(&root_state, context);
+    let definitions_source = type_definitions.to_string_indented("    ");
     let init_states = {
         let typenames = type_definitions
             .take()
