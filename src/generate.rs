@@ -164,7 +164,6 @@ fn get_typedef(
 
 fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> TypeDefinitions {
     let root_typedef = get_typedef(root_node, context.clone());
-
     match root_node {
         StateNode::Singleton(_) => vec![root_typedef].into(),
         StateNode::Enum(_, variants) => {
@@ -196,23 +195,13 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
         }
         #[cfg(feature = "lists")]
         StateNode::List(_, variants) => {
-            let parent_state = context
-                .parent_state
-                .expect("StateNode::List but no SourceState!");
             let mut variants = variants
                 .iter()
                 .flat_map({
-                    let parent_state = parent_state.clone();
-                    move |child_node| {
-                        generate_all_type_definitions(child_node, Context {
-                            parent_state: Some(ParentState {
-                                name: parent_state.name().to_string(),
-                                variant: child_node.name().to_string(),
-                            }),
-                            naming_scheme: context.naming_scheme,
-                            derives: context.derives.clone(),
-                        })
-                        .take()
+                    |child_node| {
+                        // NOTE: pass along current Context since List does not actually render
+                        // into a struct, but refers to it's parent
+                        generate_all_type_definitions(child_node, context.clone()).take()
                     }
                 })
                 .collect_vec();

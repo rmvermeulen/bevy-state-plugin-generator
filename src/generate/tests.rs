@@ -300,7 +300,7 @@ fn snapshot3() {
 
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Beta)]
+    #[source(GameState = GameState::Alpha)]
     pub struct GameStateBeta;
     ");
 }
@@ -324,12 +324,12 @@ fn snapshot4() {
 
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Item1)]
+    #[source(GameState = GameState::Alpha)]
     pub struct GameStateItem1;
 
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Item2)]
+    #[source(GameState = GameState::Alpha)]
     pub enum GameStateItem2 {
         #[default] A,
     B
@@ -347,7 +347,7 @@ fn snapshot4() {
 
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Item3)]
+    #[source(GameState = GameState::Alpha)]
     pub struct GameStateItem3;
     ");
 }

@@ -452,7 +452,7 @@ dependencies = [
 
 [[package]]
 name = "bevy_state_plugin_generator"
-version = "1.1.0"
+version = "1.2.0-alpha-l"
 dependencies = [
  "async-std",
  "bevy",
