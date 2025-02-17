@@ -13,6 +13,7 @@ in a `Plugin`.
 ## bugs
 
 ```rust
+// TODO: init_state for all states
 // TODO: any naming-scheme can collide
 ```
 

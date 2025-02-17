@@ -77,11 +77,14 @@ impl TypeDefinitions {
     fn take(self) -> Vec<TypeDef> {
         self.0
     }
+    fn to_string_with(&self, join: &str) -> String {
+        self.0.iter().join(join)
+    }
 }
 
 impl Display for TypeDefinitions {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.0.iter().join("\n\n"))
+        write!(f, "{}", self.to_string_with("\n\n"))
     }
 }
 
@@ -233,7 +236,8 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         scheme: _,
     } = config;
 
-    let type_definitions = generate_all_type_definitions(&root_state, Context::from(config.scheme));
+    let type_definitions = generate_all_type_definitions(&root_state, Context::from(config.scheme))
+        .to_string_with("\t\t\t\n");
     formatdoc! {"
         #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
