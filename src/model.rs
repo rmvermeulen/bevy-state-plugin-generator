@@ -5,12 +5,12 @@ use std::rc::Rc;
 use crate::tokens::ParseNode;
 
 #[derive(PartialEq, Debug, Clone)]
-pub struct SourceState {
+pub struct ParentState {
     pub name: String,
     pub variant: String,
 }
 
-impl SourceState {
+impl ParentState {
     pub fn name(&self) -> String {
         self.name.clone()
     }
@@ -19,7 +19,7 @@ impl SourceState {
     }
 }
 
-impl<N: ToString, V: ToString> From<(N, V)> for SourceState {
+impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
     fn from((name, variant): (N, V)) -> Self {
         Self {
             name: name.to_string(),

@@ -6,7 +6,7 @@ use std::{io, rc::Rc};
 
 use iter_tools::Itertools;
 
-use crate::model::{SourceState, StateNode, SubTree};
+use crate::model::{ParentState, StateNode, SubTree};
 use crate::parser::parse_states_file;
 use crate::{NamingScheme, PluginConfig};
 
@@ -19,23 +19,23 @@ const DERIVES: &str = "Hash, Default, Debug, Clone, PartialEq, Eq";
 struct Context {
     derives: String,
     naming_scheme: NamingScheme,
-    source_state: Option<SourceState>,
+    parent_state: Option<ParentState>,
 }
 
 impl Default for Context {
     fn default() -> Self {
         Self {
-            source_state: None,
+            parent_state: None,
             naming_scheme: NamingScheme::None,
             derives: DERIVES.to_string(),
         }
     }
 }
 
-impl From<SourceState> for Context {
-    fn from(source_state: SourceState) -> Self {
+impl From<ParentState> for Context {
+    fn from(parent_state: ParentState) -> Self {
         Self {
-            source_state: Some(source_state),
+            parent_state: Some(parent_state),
             ..Default::default()
         }
     }
@@ -50,21 +50,21 @@ impl From<NamingScheme> for Context {
     }
 }
 
-impl From<(SourceState, NamingScheme)> for Context {
-    fn from((source_state, naming_scheme): (SourceState, NamingScheme)) -> Self {
+impl From<(ParentState, NamingScheme)> for Context {
+    fn from((parent_state, naming_scheme): (ParentState, NamingScheme)) -> Self {
         Self {
             naming_scheme,
-            source_state: Some(source_state),
+            parent_state: Some(parent_state),
             ..Default::default()
         }
     }
 }
 
-impl From<(NamingScheme, SourceState)> for Context {
-    fn from((naming_scheme, source_state): (NamingScheme, SourceState)) -> Self {
+impl From<(NamingScheme, ParentState)> for Context {
+    fn from((naming_scheme, parent_state): (NamingScheme, ParentState)) -> Self {
         Self {
             naming_scheme,
-            source_state: Some(source_state),
+            parent_state: Some(parent_state),
             ..Default::default()
         }
     }
@@ -101,15 +101,15 @@ fn get_typedef(
     node: &StateNode,
     Context {
         naming_scheme,
-        source_state,
+        parent_state,
         derives,
     }: Context,
 ) -> TypeDef {
-    let derives = source_state
+    let derives = parent_state
         .clone()
-        .map(|source_state| {
-            let source = source_state.name();
-            let variant = source_state.name_and_variant();
+        .map(|parent_state| {
+            let source = parent_state.name();
+            let variant = parent_state.name_and_variant();
             formatdoc! {"
                 #[derive(bevy::prelude::SubStates, {derives})]
                 #[source({source} = {variant})]
@@ -121,9 +121,9 @@ fn get_typedef(
     let typename = if naming_scheme == NamingScheme::None {
         node.name().to_string()
     } else {
-        source_state
+        parent_state
             .clone()
-            .map(|source_state| format!("{}{}", source_state.name(), node.name()))
+            .map(|parent_state| format!("{}{}", parent_state.name(), node.name()))
             .unwrap_or_else(|| node.name().to_string())
     };
     let source_for_struct = || {
@@ -171,7 +171,7 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
             let mut variants = variants
                 .iter()
                 .flat_map(|child_node| {
-                    let source_state = SourceState {
+                    let parent_state = ParentState {
                         name: match context.naming_scheme {
                             NamingScheme::Short | NamingScheme::None => {
                                 root_node.name().to_string()
@@ -181,7 +181,7 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                         variant: child_node.name().to_string(),
                     };
                     generate_all_type_definitions(child_node, Context {
-                        source_state: Some(source_state),
+                        parent_state: Some(parent_state),
                         derives: context.derives.clone(),
                         naming_scheme: context.naming_scheme,
                     })

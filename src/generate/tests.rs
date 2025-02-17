@@ -114,8 +114,8 @@ fn test_naming_scheme(#[case] src_path: &str, #[case] source: &str, #[case] sche
 }
 
 #[fixture]
-fn root_source_state() -> SourceState {
-    SourceState {
+fn root_parent_state() -> ParentState {
+    ParentState {
         name: "Game".to_string(),
         variant: "Menu".to_string(),
     }
@@ -138,11 +138,11 @@ fn nested_node() -> StateNode {
 
 #[rstest]
 fn test_generate_all_type_definitions_full(
-    #[from(root_source_state)] source: SourceState,
+    #[from(root_parent_state)] source: ParentState,
     #[from(nested_node)] node: StateNode,
 ) {
     let typenames = generate_all_type_definitions(&node, Context {
-        source_state: Some(source.clone()),
+        parent_state: Some(source.clone()),
         naming_scheme: NamingScheme::Full,
         ..Default::default()
     })
@@ -167,7 +167,7 @@ fn test_generate_all_type_definitions_full(
 
 #[rstest]
 fn test_generate_all_type_definitions_shortened(
-    #[from(root_source_state)] source: SourceState,
+    #[from(root_parent_state)] source: ParentState,
     #[from(nested_node)] node: StateNode,
 ) {
     assert_debug_snapshot!(
@@ -190,7 +190,7 @@ fn test_generate_all_type_definitions_shortened(
 
 #[rstest]
 fn test_generate_all_type_definitions_none(
-    #[from(root_source_state)] source: SourceState,
+    #[from(root_parent_state)] source: ParentState,
     #[from(nested_node)] node: StateNode,
 ) {
     assert_debug_snapshot!(
@@ -214,7 +214,7 @@ fn test_generate_all_type_definitions_none(
 #[rstest]
 fn snapshots(
     #[values(NamingScheme::Full, NamingScheme::Short)] scheme: NamingScheme,
-    #[from(root_source_state)] source: SourceState,
+    #[from(root_parent_state)] source: ParentState,
     #[from(nested_node)] node: StateNode,
 ) {
     set_snapshot_suffix!("{scheme:?}");
@@ -228,7 +228,7 @@ fn snapshots(
 fn snapshot1() {
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::singleton("Alpha"),
-        SourceState {
+        ParentState {
             name: "GameState".to_string(),
             variant: "Alpha".to_string()
         }.into()
@@ -251,7 +251,7 @@ fn snapshot1a() {
 fn snapshot2() {
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
-        (SourceState {
+        (ParentState {
             name: "GameState".to_string(),
             variant: "Alpha".to_string()
         },
@@ -293,11 +293,16 @@ fn snapshot2a() {
 fn snapshot3() {
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::list("Alpha", [StateNode::singleton("Beta")]),
-        (SourceState::from(("GameState", "Alpha")), NamingScheme::Full).into()), @r"
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateAlpha = GameStateAlpha::Beta)]
-        pub struct GameStateAlphaBeta;
-        ");
+        (ParentState::from(("GameState", "Alpha")), NamingScheme::Full).into()), @r"
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Alpha)]
+    pub struct GameStateAlpha;
+
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Beta)]
+    pub struct GameStateBeta;
+    ");
 }
 
 #[cfg(feature = "lists")]
@@ -312,22 +317,37 @@ fn snapshot4() {
             ]),
             StateNode::singleton("Item3"),
         ]),
-        (SourceState::from(("GameState", "Alpha")), NamingScheme::Full).into()), @r"
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateList = GameStateList::Item1)]
-        pub struct GameStateListItem1;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateList = GameStateList::Item2)]
-        pub enum GameStateListItem2 { #[default] A, B }
+        (ParentState::from(("GameState", "Alpha")), NamingScheme::Full).into()), @r"
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Alpha)]
+    pub struct GameStateList;
 
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateListItem2 = GameStateListItem2::A)]
-        pub struct GameStateListItem2A;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateListItem2 = GameStateListItem2::B)]
-        pub struct GameStateListItem2B;
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateList = GameStateList::Item3)]
-        pub struct GameStateListItem3;
-        ");
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Item1)]
+    pub struct GameStateItem1;
+
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Item2)]
+    pub enum GameStateItem2 {
+        #[default] A,
+    B
+    }
+
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameStateItem2 = GameStateItem2::A)]
+    pub struct GameStateItem2A;
+
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameStateItem2 = GameStateItem2::B)]
+    pub struct GameStateItem2B;
+
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Item3)]
+    pub struct GameStateItem3;
+    ");
 }
