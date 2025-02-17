@@ -364,7 +364,7 @@ const DERIVES: &amp;str = &quot;Hash, Default, Debug, Clone, PartialEq, Eq&quot;
           <td class="line-number">
             <a name="L45" href="#L45"><pre>45</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>7</pre></td>
           <td class="code">
             <pre>    fn from(naming_scheme: NamingScheme) -&gt; Self {</pre>
           </td>
@@ -373,35 +373,35 @@ const DERIVES: &amp;str = &quot;Hash, Default, Debug, Clone, PartialEq, Eq&quot;
           <td class="line-number">
             <a name="L46" href="#L46"><pre>46</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>7</pre></td>
           <td class="code"><pre>        Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L47" href="#L47"><pre>47</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>7</pre></td>
           <td class="code"><pre>            naming_scheme,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L48" href="#L48"><pre>48</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>7</pre></td>
           <td class="code"><pre>            ..Default::default()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L49" href="#L49"><pre>49</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>7</pre></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L50" href="#L50"><pre>50</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>7</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -1762,18 +1762,29 @@ pub(crate) fn generate_plugin_source(root_state: Rc&lt;StateNode&gt;, config: Pl
             <a name="L218" href="#L218"><pre>218</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    let header = r#&quot;</pre></td>
+          <td class="code">
+            <pre>
+    let type_definitions = generate_all_type_definitions(&amp;root_state, Context::from(config.scheme));</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L219" href="#L219"><pre>219</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>        #![allow(missing_docs)]</pre></td>
+          <td class="code"><pre>    formatdoc! {&quot;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L220" href="#L220"><pre>220</pre></a>
+          </td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code"><pre>        #![allow(missing_docs)]</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L221" href="#L221"><pre>221</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
@@ -1782,17 +1793,12 @@ pub(crate) fn generate_plugin_source(root_state: Rc&lt;StateNode&gt;, config: Pl
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L221" href="#L221"><pre>221</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    &quot;#;</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
             <a name="L222" href="#L222"><pre>222</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    let plugin = {</pre></td>
+          <td class="code">
+            <pre>        pub mod {states_module_name} {{</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1800,9 +1806,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc&lt;StateNode&gt;, config: Pl
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
-            <pre>
-        let struct_decl = format!(&quot;pub struct {plugin_name};&quot;);</pre
-            >
+            <pre>            use bevy::prelude::StateSet;</pre>
           </td>
         </tr>
         <tr>
@@ -1810,33 +1814,21 @@ pub(crate) fn generate_plugin_source(root_state: Rc&lt;StateNode&gt;, config: Pl
             <a name="L224" href="#L224"><pre>224</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>
-        let impl_block = format!(&quot;impl bevy::app::Plugin for {plugin_name}&quot;);</pre
-            >
-          </td>
+          <td class="code"><pre>            {type_definitions}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L225" href="#L225"><pre>225</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>
-        let init = format!(&quot;app.init_state::&lt;{states_module_name}::{state_name}&gt;();&quot;);</pre
-            >
-          </td>
+          <td class="code"><pre>        }}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L226" href="#L226"><pre>226</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>
-        let build_fn = format!(&quot;fn build(&amp;self, app: &amp;mut bevy::app::App) {{ {init} }}&quot;);</pre
-            >
-          </td>
+          <td class="code"><pre>        pub struct {plugin_name};</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1844,9 +1836,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc&lt;StateNode&gt;, config: Pl
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
-            <pre>
-        format!(&quot;{struct_decl}\n{impl_block} {{ {build_fn} }}&quot;)</pre
-            >
+            <pre>        impl bevy::app::Plugin for {plugin_name} {{</pre>
           </td>
         </tr>
         <tr>
@@ -1854,102 +1844,68 @@ pub(crate) fn generate_plugin_source(root_state: Rc&lt;StateNode&gt;, config: Pl
             <a name="L228" href="#L228"><pre>228</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    };</pre></td>
+          <td class="code">
+            <pre>
+            fn build(&amp;self, app: &amp;mut bevy::app::App) {{ </pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L229" href="#L229"><pre>229</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    let states_module = format!(</pre></td>
+          <td class="code">
+            <pre>
+                app.init_state::&lt;{states_module_name}::{state_name}&gt;();</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L230" href="#L230"><pre>230</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>
-        &quot;pub mod {states_module_name} {{ use bevy::prelude::StateSet; {type_definitions} }}&quot;,</pre
-            >
-          </td>
+          <td class="code"><pre>            }}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L231" href="#L231"><pre>231</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>
-        type_definitions = generate_all_type_definitions(&amp;root_state, Context {</pre
-            >
-          </td>
+          <td class="code"><pre>        }}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L232" href="#L232"><pre>232</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>            naming_scheme: config.scheme,</pre>
-          </td>
+          <td class="code"><pre>    &quot;}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L233" href="#L233"><pre>233</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>            ..Default::default()</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L234" href="#L234"><pre>234</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>        })</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L235" href="#L235"><pre>235</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    );</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L236" href="#L236"><pre>236</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>
-    [header, &amp;states_module, &amp;plugin].join(&quot;\n&quot;)</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L237" href="#L237"><pre>237</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L238" href="#L238"><pre>238</pre></a>
+            <a name="L234" href="#L234"><pre>234</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L239" href="#L239"><pre>239</pre></a>
+            <a name="L235" href="#L235"><pre>235</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>#[cfg(feature = &quot;rustfmt&quot;)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L240" href="#L240"><pre>240</pre></a>
+            <a name="L236" href="#L236"><pre>236</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
@@ -1960,49 +1916,49 @@ pub fn try_format_source(source: &amp;str) -&gt; io::Result&lt;String&gt; {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L241" href="#L241"><pre>241</pre></a>
+            <a name="L237" href="#L237"><pre>237</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>    duct::cmd!(&quot;rustfmt&quot;)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L242" href="#L242"><pre>242</pre></a>
+            <a name="L238" href="#L238"><pre>238</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>        .stdin_bytes(source)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L243" href="#L243"><pre>243</pre></a>
+            <a name="L239" href="#L239"><pre>239</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>        .stderr_to_stdout()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L244" href="#L244"><pre>244</pre></a>
+            <a name="L240" href="#L240"><pre>240</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>        .read()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L245" href="#L245"><pre>245</pre></a>
+            <a name="L241" href="#L241"><pre>241</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L246" href="#L246"><pre>246</pre></a>
+            <a name="L242" href="#L242"><pre>242</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L247" href="#L247"><pre>247</pre></a>
+            <a name="L243" href="#L243"><pre>243</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
@@ -2013,10 +1969,42 @@ pub fn format_source&lt;S: AsRef&lt;str&gt;&gt;(source: S) -&gt; String {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L248" href="#L248"><pre>248</pre></a>
+            <a name="L244" href="#L244"><pre>244</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>    let source = source.as_ref();</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L245" href="#L245"><pre>245</pre></a>
+          </td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code">
+            <pre>    #[cfg(feature = &quot;rustfmt&quot;)]</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L246" href="#L246"><pre>246</pre></a>
+          </td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code"><pre>    {</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L247" href="#L247"><pre>247</pre></a>
+          </td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code">
+            <pre>        try_format_source(source).unwrap_or_else(|_| <div class='tooltip'><span class='region red'>source.to_owned()</span><span class='tooltip-content'>0</span></div>)</pre>
+          </td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L248" href="#L248"><pre>248</pre></a>
+          </td>
+          <td class="covered-line"><pre>5</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -2024,7 +2012,7 @@ pub fn format_source&lt;S: AsRef&lt;str&gt;&gt;(source: S) -&gt; String {</pre
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
-            <pre>    #[cfg(feature = &quot;rustfmt&quot;)]</pre>
+            <pre>    #[cfg(not(feature = &quot;rustfmt&quot;))]</pre>
           </td>
         </tr>
         <tr>
@@ -2039,9 +2027,7 @@ pub fn format_source&lt;S: AsRef&lt;str&gt;&gt;(source: S) -&gt; String {</pre
             <a name="L251" href="#L251"><pre>251</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>        try_format_source(source).unwrap_or_else(|_| <div class='tooltip'><span class='region red'>source.to_owned()</span><span class='tooltip-content'>0</span></div>)</pre>
-          </td>
+          <td class="code"><pre>        source.to_owned()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -2055,48 +2041,18 @@ pub fn format_source&lt;S: AsRef&lt;str&gt;&gt;(source: S) -&gt; String {</pre
             <a name="L253" href="#L253"><pre>253</pre></a>
           </td>
           <td class="covered-line"><pre>5</pre></td>
-          <td class="code">
-            <pre>    #[cfg(not(feature = &quot;rustfmt&quot;))]</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L254" href="#L254"><pre>254</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L255" href="#L255"><pre>255</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>        source.to_owned()</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L256" href="#L256"><pre>256</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L257" href="#L257"><pre>257</pre></a>
-          </td>
-          <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L258" href="#L258"><pre>258</pre></a>
+            <a name="L254" href="#L254"><pre>254</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L259" href="#L259"><pre>259</pre></a>
+            <a name="L255" href="#L255"><pre>255</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2107,28 +2063,28 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L260" href="#L260"><pre>260</pre></a>
+            <a name="L256" href="#L256"><pre>256</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>    src_path: P,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L261" href="#L261"><pre>261</pre></a>
+            <a name="L257" href="#L257"><pre>257</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>    source: S,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L262" href="#L262"><pre>262</pre></a>
+            <a name="L258" href="#L258"><pre>258</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>    plugin_config: PluginConfig,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L263" href="#L263"><pre>263</pre></a>
+            <a name="L259" href="#L259"><pre>259</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2137,21 +2093,21 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L264" href="#L264"><pre>264</pre></a>
+            <a name="L260" href="#L260"><pre>260</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>    let source = source.as_ref();</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L265" href="#L265"><pre>265</pre></a>
+            <a name="L261" href="#L261"><pre>261</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>    let parse_tree =</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L266" href="#L266"><pre>266</pre></a>
+            <a name="L262" href="#L262"><pre>262</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2160,14 +2116,14 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L267" href="#L267"><pre>267</pre></a>
+            <a name="L263" href="#L263"><pre>263</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L268" href="#L268"><pre>268</pre></a>
+            <a name="L264" href="#L264"><pre>264</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2176,14 +2132,14 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L269" href="#L269"><pre>269</pre></a>
+            <a name="L265" href="#L265"><pre>265</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L270" href="#L270"><pre>270</pre></a>
+            <a name="L266" href="#L266"><pre>266</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2192,21 +2148,21 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L271" href="#L271"><pre>271</pre></a>
+            <a name="L267" href="#L267"><pre>267</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>        .try_into()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L272" href="#L272"><pre>272</pre></a>
+            <a name="L268" href="#L268"><pre>268</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>        .map(Rc::new)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L273" href="#L273"><pre>273</pre></a>
+            <a name="L269" href="#L269"><pre>269</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2215,7 +2171,7 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L274" href="#L274"><pre>274</pre></a>
+            <a name="L270" href="#L270"><pre>270</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2224,14 +2180,14 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L275" href="#L275"><pre>275</pre></a>
+            <a name="L271" href="#L271"><pre>271</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L276" href="#L276"><pre>276</pre></a>
+            <a name="L272" href="#L272"><pre>272</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2240,14 +2196,14 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L277" href="#L277"><pre>277</pre></a>
+            <a name="L273" href="#L273"><pre>273</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L278" href="#L278"><pre>278</pre></a>
+            <a name="L274" href="#L274"><pre>274</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2258,7 +2214,7 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L279" href="#L279"><pre>279</pre></a>
+            <a name="L275" href="#L275"><pre>275</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2269,7 +2225,7 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L280" href="#L280"><pre>280</pre></a>
+            <a name="L276" href="#L276"><pre>276</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code">
@@ -2280,21 +2236,21 @@ pub fn generate_state_plugin_source&lt;P: AsRef&lt;str&gt; + std::fmt::Display, 
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L281" href="#L281"><pre>281</pre></a>
+            <a name="L277" href="#L277"><pre>277</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L282" href="#L282"><pre>282</pre></a>
+            <a name="L278" href="#L278"><pre>278</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>    Ok(format_source(source))</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L283" href="#L283"><pre>283</pre></a>
+            <a name="L279" href="#L279"><pre>279</pre></a>
           </td>
           <td class="covered-line"><pre>3</pre></td>
           <td class="code"><pre>}</pre></td>

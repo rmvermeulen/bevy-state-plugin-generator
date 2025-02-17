@@ -2,10 +2,11 @@
 source: src/generate/tests.rs
 expression: "generate_plugin_source(Rc::new(states), Default::default())"
 ---
-        #![allow(missing_docs)]
-        use bevy::prelude::AppExtStates;
-    
-pub mod states { use bevy::prelude::StateSet; #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#![allow(missing_docs)]
+use bevy::prelude::AppExtStates;
+pub mod states {
+    use bevy::prelude::StateSet;
+    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
 pub enum GameState { #[default] Loading, Ready }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -42,6 +43,11 @@ pub struct GameStateReadyGamePaused;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameStateReadyGame = GameStateReadyGame::GameOver)]
-pub struct GameStateReadyGameGameOver; }
+pub struct GameStateReadyGameGameOver;
+}
 pub struct GeneratedStatesPlugin;
-impl bevy::app::Plugin for GeneratedStatesPlugin { fn build(&self, app: &mut bevy::app::App) { app.init_state::<states::GameState>(); } }
+impl bevy::app::Plugin for GeneratedStatesPlugin {
+    fn build(&self, app: &mut bevy::app::App) { 
+        app.init_state::<states::GameState>();
+    }
+}

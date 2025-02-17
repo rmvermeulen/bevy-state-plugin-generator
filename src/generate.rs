@@ -215,25 +215,21 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         scheme: _,
     } = config;
 
-    let header = r#"
+    let type_definitions = generate_all_type_definitions(&root_state, Context::from(config.scheme));
+    formatdoc! {"
         #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
-    "#;
-    let plugin = {
-        let struct_decl = format!("pub struct {plugin_name};");
-        let impl_block = format!("impl bevy::app::Plugin for {plugin_name}");
-        let init = format!("app.init_state::<{states_module_name}::{state_name}>();");
-        let build_fn = format!("fn build(&self, app: &mut bevy::app::App) {{ {init} }}");
-        format!("{struct_decl}\n{impl_block} {{ {build_fn} }}")
-    };
-    let states_module = format!(
-        "pub mod {states_module_name} {{ use bevy::prelude::StateSet; {type_definitions} }}",
-        type_definitions = generate_all_type_definitions(&root_state, Context {
-            naming_scheme: config.scheme,
-            ..Default::default()
-        })
-    );
-    [header, &states_module, &plugin].join("\n")
+        pub mod {states_module_name} {{
+            use bevy::prelude::StateSet;
+            {type_definitions}
+        }}
+        pub struct {plugin_name};
+        impl bevy::app::Plugin for {plugin_name} {{
+            fn build(&self, app: &mut bevy::app::App) {{ 
+                app.init_state::<{states_module_name}::{state_name}>();
+            }}
+        }}
+    "}
 }
 
 #[cfg(feature = "rustfmt")]

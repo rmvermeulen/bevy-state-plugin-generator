@@ -8,7 +8,6 @@ expression: "generate_state_plugin_source(src_path, source, PluginConfig\n{ sche
 
 #![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
-
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
