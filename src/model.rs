@@ -155,11 +155,18 @@ impl StateNode {
 
 impl std::fmt::Debug for StateNode {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        fn format_children(children: &[Rc<StateNode>]) -> String {
+            children.iter().map(|c| format!("{c:?}")).join(", ")
+        }
         match self {
             StateNode::Singleton(name) => write!(f, "{}", name),
-            StateNode::Enum(name, children) => write!(f, "{} {{ {:?} }}", name, children),
+            StateNode::Enum(name, children) => {
+                write!(f, "{} {{ {} }}", name, format_children(children))
+            }
             #[cfg(feature = "lists")]
-            StateNode::List(name, children) => write!(f, "{} [ {:?} ]", name, children),
+            StateNode::List(name, children) => {
+                write!(f, "{} [ {} ]", name, format_children(children))
+            }
         }
     }
 }
@@ -278,7 +285,7 @@ impl SubTree for StateTree {
 }
 #[cfg(test)]
 mod tests {
-    use crate::model::{StateTree, SubTree};
+    use crate::model::{StateNode, StateTree, SubTree};
     use crate::testing::*;
     use crate::tokens::ParseNode;
 
@@ -299,6 +306,14 @@ mod tests {
         let b: ParseNode = "PartB".try_into().unwrap();
         let tree = StateTree::create([a, b]);
         assert_that!(tree.get_tree_size()).is_equal_to(2);
-        assert_compact_debug_snapshot!(tree, @"StateTree { :root: { [PartA, PartB] } }");
+        assert_compact_debug_snapshot!(tree, @"StateTree { :root: { PartA, PartB } }");
+    }
+
+    #[rstest]
+    #[case(StateNode::singleton("A"), "A")]
+    #[case(StateNode::enumeration("A", [StateNode::singleton("B")]), "A { B }")]
+    #[case(StateNode::list("A", [StateNode::singleton("B")]), "A [ B ]")]
+    fn test_state_node_debug(#[case] node: StateNode, #[case] expected: &str) {
+        assert_eq!(format!("{:?}", node), expected);
     }
 }
