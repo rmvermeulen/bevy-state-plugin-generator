@@ -130,6 +130,10 @@ impl StateNode {
             variants.into_iter().map(Into::into).collect_vec(),
         )
     }
+    #[cfg(test)]
+    pub fn enum_empty<S: ToString>(name: S) -> Self {
+        Self::Enum(name.to_string(), vec![])
+    }
     #[cfg(feature = "lists")]
     pub fn list<N: Into<Rc<StateNode>>, V: IntoIterator<Item = N>, S: ToString>(
         name: S,
@@ -139,6 +143,10 @@ impl StateNode {
             name.to_string(),
             variants.into_iter().map(Into::into).collect_vec(),
         )
+    }
+    #[cfg(all(test, feature = "lists"))]
+    pub fn list_empty<S: ToString>(name: S) -> Self {
+        Self::List(name.to_string(), vec![])
     }
     pub fn name(&self) -> &str {
         match self {
