@@ -144,10 +144,6 @@ impl StateNode {
             variants.into_iter().map(Into::into).collect_vec(),
         )
     }
-    #[cfg(all(test, feature = "lists"))]
-    pub fn list_empty<S: ToString>(name: S) -> Self {
-        Self::List(name.to_string(), vec![])
-    }
     pub fn name(&self) -> &str {
         match self {
             #[cfg(feature = "lists")]

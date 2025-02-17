@@ -14,8 +14,6 @@ in a `Plugin`.
 
 ```rust
 // TODO: any naming-scheme can collide
-// TODO: comments in states.txt
-// TODO: list state fix
 ```
 
 ## usage
