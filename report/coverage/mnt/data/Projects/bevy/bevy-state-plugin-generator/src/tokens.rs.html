@@ -331,7 +331,7 @@
           <td class="line-number">
             <a name="L38" href="#L38"><pre>38</pre></a>
           </td>
-          <td class="covered-line"><pre>93</pre></td>
+          <td class="covered-line"><pre>100</pre></td>
           <td class="code">
             <pre>
     pub fn singleton&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;&gt;(name: I) -&gt; Self {</pre
@@ -342,21 +342,21 @@
           <td class="line-number">
             <a name="L39" href="#L39"><pre>39</pre></a>
           </td>
-          <td class="covered-line"><pre>93</pre></td>
+          <td class="covered-line"><pre>100</pre></td>
           <td class="code"><pre>        Self::Singleton(name.into())</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L40" href="#L40"><pre>40</pre></a>
           </td>
-          <td class="covered-line"><pre>93</pre></td>
+          <td class="covered-line"><pre>100</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L41" href="#L41"><pre>41</pre></a>
           </td>
-          <td class="covered-line"><pre>28</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code">
             <pre>
     pub fn enumeration&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;, V: IntoIterator&lt;Item = ParseNode&lt;&apos;a&gt;&gt;&gt;(</pre
@@ -367,28 +367,28 @@
           <td class="line-number">
             <a name="L42" href="#L42"><pre>42</pre></a>
           </td>
-          <td class="covered-line"><pre>28</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code"><pre>        name: I,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L43" href="#L43"><pre>43</pre></a>
           </td>
-          <td class="covered-line"><pre>28</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code"><pre>        variants: V,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L44" href="#L44"><pre>44</pre></a>
           </td>
-          <td class="covered-line"><pre>28</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code"><pre>    ) -&gt; Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L45" href="#L45"><pre>45</pre></a>
           </td>
-          <td class="covered-line"><pre>28</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code">
             <pre>
         Self::Enum(name.into(), variants.into_iter().collect())</pre
@@ -399,7 +399,7 @@
           <td class="line-number">
             <a name="L46" href="#L46"><pre>46</pre></a>
           </td>
-          <td class="covered-line"><pre>28</pre></td>
+          <td class="covered-line"><pre>29</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -510,7 +510,7 @@
           <td class="line-number">
             <a name="L59" href="#L59"><pre>59</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>10</pre></td>
           <td class="code">
             <pre>
     pub fn comment&lt;C: Into&lt;Comment&lt;&apos;a&gt;&gt;&gt;(name: C) -&gt; Self {</pre
@@ -521,14 +521,14 @@
           <td class="line-number">
             <a name="L60" href="#L60"><pre>60</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>10</pre></td>
           <td class="code"><pre>        Self::Comment(name.into())</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L61" href="#L61"><pre>61</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>10</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
