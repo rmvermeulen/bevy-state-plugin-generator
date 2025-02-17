@@ -257,14 +257,17 @@ fn snapshot2() {
         },
         NamingScheme::Full).into()
     ), @r"
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameState = GameState::Alpha)]
-        pub enum GameStateAlpha { #[default] Beta }
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Alpha)]
+    pub enum GameStateAlpha {
+        #[default] Beta
+    }
 
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(GameStateAlpha = GameStateAlpha::Beta)]
-        pub struct GameStateAlphaBeta;
-        ");
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameStateAlpha = GameStateAlpha::Beta)]
+    pub struct GameStateAlphaBeta;
+    ");
 }
 
 #[rstest]
@@ -273,13 +276,16 @@ fn snapshot2a() {
         &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
         NamingScheme::Full.into()
     ), @r"
-        #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        pub enum Alpha { #[default] Beta }
+    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    pub enum Alpha {
+        #[default] Beta
+    }
 
-        #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-        #[source(Alpha = Alpha::Beta)]
-        pub struct AlphaBeta;
-        ");
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Alpha = Alpha::Beta)]
+    pub struct AlphaBeta;
+    ");
 }
 
 #[cfg(feature = "lists")]

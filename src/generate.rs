@@ -110,13 +110,14 @@ fn get_typedef(
         .map(|source_state| {
             let source = source_state.name();
             let variant = source_state.name_and_variant();
-            [
-                format!("#[derive(bevy::prelude::SubStates, {derives})]"),
-                format!("#[source({source} = {variant})]"),
-            ]
-            .join("\n")
+            formatdoc! {"
+                #[derive(bevy::prelude::SubStates, {derives})]
+                #[source({source} = {variant})]
+            "}
         })
-        .unwrap_or(format!("#[derive(bevy::prelude::States, {derives})]"));
+        .unwrap_or_else(|| formatdoc! {"#[derive(bevy::prelude::States, {derives})]"})
+        .trim()
+        .to_string();
     let typename = if naming_scheme == NamingScheme::None {
         node.name().to_string()
     } else {
@@ -125,20 +126,36 @@ fn get_typedef(
             .map(|source_state| format!("{}{}", source_state.name(), node.name()))
             .unwrap_or_else(|| node.name().to_string())
     };
+    let source_for_struct = || {
+        formatdoc! {"
+            {derives}
+            pub struct {typename};
+        "}
+    };
+    let source_for_enum = |variants: &Vec<Rc<StateNode>>| {
+        let variants = variants.iter().map(|variant| variant.name()).join(",\n");
+        formatdoc! {"
+            {derives}
+            pub enum {typename} {{
+                #[default] {variants}
+            }}
+        "}
+    };
     match node {
         #[cfg(feature = "lists")]
         StateNode::List(_, _) => TypeDef {
-            source: format!("{derives}\npub struct {typename};"),
+            source: source_for_struct(),
             typename,
         },
         StateNode::Singleton(_) => TypeDef {
-            source: format!("{derives}\npub struct {typename};"),
+            source: source_for_struct(),
             typename,
         },
         StateNode::Enum(_, variants) => TypeDef {
-            source: {
-                let variants = variants.iter().map(|variant| variant.name()).join(", ");
-                format!("{derives}\npub enum {typename} {{ #[default] {variants} }}")
+            source: if variants.is_empty() {
+                source_for_struct()
+            } else {
+                source_for_enum(variants)
             },
             typename,
         },
