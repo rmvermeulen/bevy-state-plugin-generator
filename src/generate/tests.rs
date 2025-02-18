@@ -20,20 +20,32 @@ async fn test_format_source() {
 
 #[rstest]
 fn test_generate_states_plugin() {
-    let states = StateNode::enumeration("GameState", [
-        StateNode::singleton("Loading"),
-        StateNode::enumeration("Ready", [
-            StateNode::enumeration("Menu", [
-                StateNode::singleton("Main"),
-                StateNode::singleton("Options"),
-            ]),
-            StateNode::enumeration("Game", [
-                StateNode::singleton("Playing"),
-                StateNode::singleton("Paused"),
-                StateNode::singleton("GameOver"),
-            ]),
-        ]),
-    ]);
+    let states = StateNode::enumeration(
+        "GameState",
+        [
+            StateNode::singleton("Loading"),
+            StateNode::enumeration(
+                "Ready",
+                [
+                    StateNode::enumeration(
+                        "Menu",
+                        [
+                            StateNode::singleton("Main"),
+                            StateNode::singleton("Options"),
+                        ],
+                    ),
+                    StateNode::enumeration(
+                        "Game",
+                        [
+                            StateNode::singleton("Playing"),
+                            StateNode::singleton("Paused"),
+                            StateNode::singleton("GameOver"),
+                        ],
+                    ),
+                ],
+            ),
+        ],
+    );
     assert_snapshot!(generate_plugin_source(Rc::new(states), Default::default()));
 }
 
@@ -105,10 +117,14 @@ fn test_generate_full_source(
 fn test_naming_scheme(#[case] src_path: &str, #[case] source: &str, #[case] scheme: NamingScheme) {
     set_snapshot_suffix!("{src_path}_{scheme:?}");
     assert_snapshot!(
-        generate_state_plugin_source(src_path, source, PluginConfig {
-            scheme,
-            ..Default::default()
-        })
+        generate_state_plugin_source(
+            src_path,
+            source,
+            PluginConfig {
+                scheme,
+                ..Default::default()
+            }
+        )
         .unwrap_or_else(identity)
     );
 }
@@ -122,18 +138,24 @@ fn root_parent_state() -> ParentState {
 }
 #[fixture]
 fn nested_node() -> StateNode {
-    StateNode::enumeration("Menu", [
-        StateNode::singleton("Main"),
-        StateNode::enumeration("Options", [
-            StateNode::singleton("Graphics"),
-            StateNode::singleton("Audio"),
-            StateNode::singleton("Gameplay"),
-        ]),
-        StateNode::enumeration("Continue", [
-            StateNode::singleton("Save"),
-            StateNode::singleton("Load"),
-        ]),
-    ])
+    StateNode::enumeration(
+        "Menu",
+        [
+            StateNode::singleton("Main"),
+            StateNode::enumeration(
+                "Options",
+                [
+                    StateNode::singleton("Graphics"),
+                    StateNode::singleton("Audio"),
+                    StateNode::singleton("Gameplay"),
+                ],
+            ),
+            StateNode::enumeration(
+                "Continue",
+                [StateNode::singleton("Save"), StateNode::singleton("Load")],
+            ),
+        ],
+    )
 }
 
 #[rstest]
@@ -141,11 +163,14 @@ fn test_generate_all_type_definitions_full(
     #[from(root_parent_state)] source: ParentState,
     #[from(nested_node)] node: StateNode,
 ) {
-    let typenames = generate_all_type_definitions(&node, Context {
-        parent_state: Some(source.clone()),
-        naming_scheme: NamingScheme::Full,
-        ..Default::default()
-    })
+    let typenames = generate_all_type_definitions(
+        &node,
+        Context {
+            parent_state: Some(source.clone()),
+            naming_scheme: NamingScheme::Full,
+            ..Default::default()
+        },
+    )
     .take()
     .into_iter()
     .map(|td| td.typename)

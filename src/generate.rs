@@ -203,11 +203,14 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                         },
                         variant: child_node.name().to_string(),
                     };
-                    generate_all_type_definitions(child_node, Context {
-                        parent_state: Some(parent_state),
-                        derives: context.derives.clone(),
-                        naming_scheme: context.naming_scheme,
-                    })
+                    generate_all_type_definitions(
+                        child_node,
+                        Context {
+                            parent_state: Some(parent_state),
+                            derives: context.derives.clone(),
+                            naming_scheme: context.naming_scheme,
+                        },
+                    )
                     .take()
                 })
                 .collect_vec();
