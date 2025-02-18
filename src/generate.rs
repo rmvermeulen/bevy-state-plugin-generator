@@ -279,6 +279,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
     let sub_states = type_definitions
         .take()
         .into_iter()
+        .skip(1) // skip the root
         .map(|typedef| typedef.typename)
         .map(|state_name| format!(".add_sub_state::<{states_module_name}::{state_name}>()"))
         .join("\n            ");
