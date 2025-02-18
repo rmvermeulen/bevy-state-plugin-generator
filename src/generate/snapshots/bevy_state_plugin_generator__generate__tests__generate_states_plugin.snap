@@ -65,18 +65,17 @@ pub mod states {
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) { 
-        app
-            .init_state::<states::GameState>()
-            .init_state::<states::GameState>()
-            .init_state::<states::GameStateLoading>()
-            .init_state::<states::GameStateReady>()
-            .init_state::<states::GameStateReadyMenu>()
-            .init_state::<states::GameStateReadyMenuMain>()
-            .init_state::<states::GameStateReadyMenuOptions>()
-            .init_state::<states::GameStateReadyGame>()
-            .init_state::<states::GameStateReadyGamePlaying>()
-            .init_state::<states::GameStateReadyGamePaused>()
-            .init_state::<states::GameStateReadyGameGameOver>()
+        app.init_state::<states::GameState>()
+            .add_sub_state::<states::GameState>()
+            .add_sub_state::<states::GameStateLoading>()
+            .add_sub_state::<states::GameStateReady>()
+            .add_sub_state::<states::GameStateReadyMenu>()
+            .add_sub_state::<states::GameStateReadyMenuMain>()
+            .add_sub_state::<states::GameStateReadyMenuOptions>()
+            .add_sub_state::<states::GameStateReadyGame>()
+            .add_sub_state::<states::GameStateReadyGamePlaying>()
+            .add_sub_state::<states::GameStateReadyGamePaused>()
+            .add_sub_state::<states::GameStateReadyGameGameOver>();
         ;
     }
 }

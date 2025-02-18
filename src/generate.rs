@@ -273,18 +273,12 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
 
     let type_definitions = generate_all_type_definitions(&root_state, context);
     let definitions_source = type_definitions.to_string_indented("    ");
-    let init_states = {
-        let typenames = type_definitions
-            .take()
-            .into_iter()
-            .map(|typedef| typedef.typename);
-        let mut init_states = vec![state_name.to_string()];
-        init_states.extend(typenames);
-        init_states
-            .into_iter()
-            .map(|state_name| format!(".init_state::<{states_module_name}::{state_name}>()"))
-            .join("\n            ")
-    };
+    let sub_states = type_definitions
+        .take()
+        .into_iter()
+        .map(|typedef| typedef.typename)
+        .map(|state_name| format!(".add_sub_state::<{states_module_name}::{state_name}>()"))
+        .join("\n            ");
     formatdoc! {"
         #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
@@ -295,8 +289,8 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         pub struct {plugin_name};
         impl bevy::app::Plugin for {plugin_name} {{
             fn build(&self, app: &mut bevy::app::App) {{ 
-                app
-                    {init_states}
+                app.init_state::<{states_module_name}::{state_name}>()
+                    {sub_states};
                 ;
             }}
         }}
