@@ -6,13 +6,15 @@ use std::{fs, io, path::Path};
 
 use generate::generate_state_plugin_source;
 
-pub use model::{NamingScheme, PluginConfig};
+pub use config::{NamingScheme, PluginConfig};
 #[cfg(feature = "comments")]
 pub use parser::comment;
 pub use parser::config_is_valid;
 
+/// config structs
+pub mod config;
 pub(crate) mod generate;
-pub(crate) mod model;
+pub(crate) mod models;
 pub(crate) mod parser;
 #[cfg(test)]
 pub(crate) mod testing;
