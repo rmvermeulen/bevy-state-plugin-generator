@@ -4,16 +4,16 @@
 
 use std::{fs, io, path::Path};
 
-use generate::generate_state_plugin_source;
+use generator::generate_state_plugin_source;
 
-pub use model::{NamingScheme, PluginConfig};
+pub use models::{NamingScheme, PluginConfig};
 #[cfg(feature = "comments")]
-pub use parser::comment;
-pub use parser::config_is_valid;
+pub use parsers::comment;
+pub use parsers::config_is_valid;
 
-pub(crate) mod generate;
-pub(crate) mod model;
-pub(crate) mod parser;
+pub(crate) mod generator;
+pub(crate) mod models;
+pub(crate) mod parsers;
 #[cfg(test)]
 pub(crate) mod testing;
 pub(crate) mod tokens;

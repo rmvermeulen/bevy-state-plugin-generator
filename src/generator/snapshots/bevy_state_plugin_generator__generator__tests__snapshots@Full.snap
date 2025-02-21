@@ -1,5 +1,5 @@
 ---
-source: src/generate/tests.rs
+source: src/generator/tests.rs
 expression: "generate_all_type_definitions(&node, (source, scheme).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -12,12 +12,12 @@ pub enum GameMenu {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Main)]
-pub struct MenuMain;
+#[source(GameMenu = GameMenu::Main)]
+pub struct GameMenuMain;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Options)]
-pub enum MenuOptions {
+#[source(GameMenu = GameMenu::Options)]
+pub enum GameMenuOptions {
     #[default]
     Graphics,
       Audio,
@@ -25,29 +25,29 @@ pub enum MenuOptions {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Options = Options::Graphics)]
-pub struct OptionsGraphics;
+#[source(GameMenuOptions = GameMenuOptions::Graphics)]
+pub struct GameMenuOptionsGraphics;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Options = Options::Audio)]
-pub struct OptionsAudio;
+#[source(GameMenuOptions = GameMenuOptions::Audio)]
+pub struct GameMenuOptionsAudio;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Options = Options::Gameplay)]
-pub struct OptionsGameplay;
+#[source(GameMenuOptions = GameMenuOptions::Gameplay)]
+pub struct GameMenuOptionsGameplay;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Continue)]
-pub enum MenuContinue {
+#[source(GameMenu = GameMenu::Continue)]
+pub enum GameMenuContinue {
     #[default]
     Save,
       Load
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Continue = Continue::Save)]
-pub struct ContinueSave;
+#[source(GameMenuContinue = GameMenuContinue::Save)]
+pub struct GameMenuContinueSave;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Continue = Continue::Load)]
-pub struct ContinueLoad;
+#[source(GameMenuContinue = GameMenuContinue::Load)]
+pub struct GameMenuContinueLoad;

@@ -3,6 +3,10 @@ use nom::{
     combinator::recognize, multi::many0, sequence::*,
 };
 
+// TODO: add #directives to the format to configure the parser
+// TODO: replace PluginConfig with something like ParserOverrides and GeneratorOverrides
+// TODO: add the parent-name-prefix operator to the format (e.g. '$' or '^')
+
 #[cfg(test)]
 mod tests;
 

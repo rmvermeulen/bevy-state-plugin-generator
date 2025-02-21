@@ -288,7 +288,7 @@ impl SubTree for StateTree {
 }
 #[cfg(test)]
 mod tests {
-    use crate::model::{StateNode, StateTree, SubTree};
+    use crate::models::{StateNode, StateTree, SubTree};
     use crate::testing::*;
     use crate::tokens::ParseNode;
 

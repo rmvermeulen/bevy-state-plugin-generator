@@ -1,11 +1,11 @@
 ---
-source: src/parser/tests.rs
+source: src/parsers/tests.rs
 expression: parse_node(input)
 ---
 Ok(
     (
         "",
-        Enum(
+        List(
             Identifier(
                 "Name",
             ),
@@ -20,7 +20,7 @@ Ok(
                                 "B",
                             ),
                         ),
-                        Enum(
+                        List(
                             Identifier(
                                 "C",
                             ),
