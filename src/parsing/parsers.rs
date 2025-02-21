@@ -1,12 +1,17 @@
 use nom::branch::alt;
 use nom::bytes::complete::*;
 use nom::character::complete::*;
-use nom::combinator::recognize;
+use nom::combinator::{eof, recognize};
 use nom::multi::many0;
 use nom::sequence::*;
 use nom::{IResult, Parser};
 
 use crate::parsing::tokens::{Comment, Identifier, ParseNode, Token};
+
+// TODO: add #directives to the format to configure the parser
+// TODO: replace PluginConfig with something like ParserOverrides and GeneratorOverrides
+// TODO: add the parent-name-prefix operator to the format (e.g. '$' or '^')
+// TODO: #[cfg(feature = "directives")] pub struct Directive;
 
 pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
     comment(input).map_result(ParseNode::Comment)
@@ -20,8 +25,6 @@ pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
 /// assert_eq!(comment("//\ncomment "), Ok(("comment ", "".into())));
 /// ```
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
-    use nom::combinator::eof;
-
     delimited(skip_to(tag("//")), not_line_ending, alt((eof, line_ending)))
         .parse(input)
         .map_result(|c| c.trim().into())
