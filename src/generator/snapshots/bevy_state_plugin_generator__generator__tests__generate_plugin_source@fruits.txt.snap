@@ -1,5 +1,5 @@
 ---
-source: src/generate/tests.rs
+source: src/generator/tests.rs
 expression: "test_plugin_formatted(root_node, Default::default())"
 ---
 #![allow(missing_docs)]
