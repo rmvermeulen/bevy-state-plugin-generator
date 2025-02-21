@@ -7,11 +7,12 @@ use context::Context;
 use indoc::formatdoc;
 use std::{io, rc::Rc};
 
+use crate::{
+    NamingScheme, PluginConfig,
+    models::{ParentState, StateNode, SubTree},
+    parsing::parse_states_file,
+};
 use iter_tools::Itertools;
-
-use crate::models::{ParentState, StateNode, SubTree};
-use crate::parsing::parse_states_file;
-use crate::{NamingScheme, PluginConfig};
 
 use models::{TypeDef, TypeDefinitions};
 

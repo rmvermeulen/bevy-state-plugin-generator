@@ -65,7 +65,6 @@ impl<'a> TryFrom<&'a str> for ParseNode<'a> {
     type Error = nom::Err<nom::error::Error<&'a str>>;
 
     fn try_from(s: &'a str) -> Result<Self, Self::Error> {
-        use crate::parsing::parse_node;
-        parse_node(s).map(|(_, node)| node)
+        crate::parsing::parse_node(s).map(|(_, node)| node)
     }
 }

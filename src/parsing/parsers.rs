@@ -3,9 +3,6 @@ use nom::{
     combinator::recognize, multi::many0, sequence::*,
 };
 
-#[cfg(test)]
-mod tests;
-
 #[cfg(feature = "comments")]
 use crate::tokens::Comment;
 use crate::tokens::{Identifier, ParseNode, Token};
@@ -94,7 +91,7 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
-fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
+pub(super) fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
     many0(delimited(many0(separator), parse_node, many0(separator))).parse(input)
 }
 
