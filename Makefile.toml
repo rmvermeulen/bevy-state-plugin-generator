@@ -44,3 +44,17 @@ script = """
 
 [tasks.report]
 run_task = [{ name = ["generate-report", "replace-report"] }]
+
+[tasks.test-app-build]
+cwd = "test-app/"
+command = "cargo"
+args = ["build", "--release"]
+
+[tasks.test-app-test]
+install_crate = "cargo-insta"
+cwd = "test-app/"
+command = "cargo"
+args = ["insta", "test", "--unreferenced=warn"]
+
+[tasks.test-app]
+run_task = [{ name = ["test-app-build", "test-app-test"] }]
