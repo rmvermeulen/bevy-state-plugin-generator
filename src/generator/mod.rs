@@ -1,7 +1,10 @@
-use derive_more::Deref;
-use derive_more::From;
+mod context;
+mod models;
+#[cfg(test)]
+mod tests;
+
+use context::Context;
 use indoc::formatdoc;
-use std::fmt::{self, Display};
 use std::{io, rc::Rc};
 
 use iter_tools::Itertools;
@@ -10,113 +13,14 @@ use crate::models::{ParentState, StateNode, SubTree};
 use crate::parser::parse_states_file;
 use crate::{NamingScheme, PluginConfig};
 
-#[cfg(test)]
-mod tests;
+use models::{TypeDef, TypeDefinitions};
 
-const REQUIRED_DERIVES: &[&str] = &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
+pub(super) const REQUIRED_DERIVES: &[&str] =
+    &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
 
-#[derive(Debug, Clone)]
-struct Context {
-    derives: String,
-    naming_scheme: NamingScheme,
-    parent_state: Option<ParentState>,
-}
-
-impl Default for Context {
-    fn default() -> Self {
-        Self {
-            parent_state: None,
-            naming_scheme: NamingScheme::None,
-            derives: REQUIRED_DERIVES.join(", "),
-        }
-    }
-}
-
-impl From<ParentState> for Context {
-    fn from(parent_state: ParentState) -> Self {
-        Self {
-            parent_state: Some(parent_state),
-            ..Default::default()
-        }
-    }
-}
-
-impl From<NamingScheme> for Context {
-    fn from(naming_scheme: NamingScheme) -> Self {
-        Self {
-            naming_scheme,
-            ..Default::default()
-        }
-    }
-}
-
-impl From<(ParentState, NamingScheme)> for Context {
-    fn from((parent_state, naming_scheme): (ParentState, NamingScheme)) -> Self {
-        Self {
-            naming_scheme,
-            parent_state: Some(parent_state),
-            ..Default::default()
-        }
-    }
-}
-
-impl From<(NamingScheme, ParentState)> for Context {
-    fn from((naming_scheme, parent_state): (NamingScheme, ParentState)) -> Self {
-        Self {
-            naming_scheme,
-            parent_state: Some(parent_state),
-            ..Default::default()
-        }
-    }
-}
 pub trait ToStringWith {
     fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String;
 }
-
-#[derive(Debug, Clone, From, Deref)]
-struct TypeDefinitions(Vec<TypeDef>);
-
-impl TypeDefinitions {
-    fn take(self) -> Vec<TypeDef> {
-        self.0
-    }
-}
-
-impl ToStringWith for TypeDefinitions {
-    fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String {
-        let inner = format!("\n{}", join.as_ref());
-        let outer = format!("\n{}", inner);
-        self.0
-            .iter()
-            .map(|td| td.to_string().lines().join(&inner))
-            .join(&outer)
-    }
-}
-
-impl Display for TypeDefinitions {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_string_indented(""))
-    }
-}
-
-#[derive(Debug, Clone)]
-struct TypeDef {
-    typename: String,
-    source: String,
-}
-
-impl Display for TypeDef {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.source)
-    }
-}
-
-impl ToStringWith for TypeDef {
-    fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String {
-        self.source.lines().join(join.as_ref())
-    }
-}
-
 fn get_typedef(
     node: &StateNode,
     Context {
