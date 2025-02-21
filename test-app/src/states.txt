@@ -1,0 +1,9 @@
+Loading {
+    Configs
+    Assets
+}
+Ready {
+    Playing
+    Paused
+}
+Exiting
