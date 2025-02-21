@@ -8,14 +8,14 @@ use generator::generate_state_plugin_source;
 
 pub use config::{NamingScheme, PluginConfig};
 #[cfg(feature = "comments")]
-pub use parser::comment;
-pub use parser::config_is_valid;
+pub use parsing::comment;
+pub use parsing::config_is_valid;
 
 /// config structs
 pub mod config;
 pub(crate) mod generator;
 pub(crate) mod models;
-pub(crate) mod parser;
+pub(crate) mod parsing;
 #[cfg(test)]
 pub(crate) mod testing;
 pub(crate) mod tokens;
