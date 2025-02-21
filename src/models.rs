@@ -3,7 +3,7 @@ use std::rc::Rc;
 use itertools::Itertools;
 
 use crate::generator::ToStateName;
-use crate::tokens::ParseNode;
+use crate::parsing::ParseNode;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParentState {
@@ -168,8 +168,8 @@ impl SubTree for ParseNode<'_> {
 #[cfg(test)]
 mod tests {
     use crate::models::StateNode;
+    use crate::parsing::ParseNode;
     use crate::testing::*;
-    use crate::tokens::ParseNode;
 
     #[rstest]
     #[case("Main", ParseNode::singleton("Main"))]

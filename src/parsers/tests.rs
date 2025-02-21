@@ -1,9 +1,8 @@
-use nom::Parser;
-use nom::branch::alt;
+use nom::{Parser, branch::alt};
 
 use super::parsers::*;
-use super::tokens::*;
 use crate::testing::*;
+use crate::tokens::*;
 
 #[rstest]
 #[case("Name", "Name")]
@@ -17,6 +16,7 @@ fn test_identifier(#[case] input: &str, #[case] token: &str) {
         .is_equal_to(Identifier::from(token));
 }
 
+#[cfg(feature = "comments")]
 #[rstest]
 #[case("//\nHello\n", "")]
 #[case("//Hello\n", "Hello")]
@@ -30,6 +30,7 @@ fn test_comment(#[case] input: &str, #[case] expected: &str) {
         .is_equal_to(Comment::from(expected));
 }
 
+#[cfg(feature = "comments")]
 #[rstest]
 #[case("//Hello\n", "Hello")]
 #[case("// Hello\n", "Hello")]
@@ -45,10 +46,17 @@ fn test_parse_comment(#[case] input: &str, #[case] expected: &str) {
 #[rstest]
 #[case("{", Token::OpenEnum)]
 #[case("}", Token::CloseEnum)]
-#[case("[", Token::OpenList)]
-#[case("]", Token::CloseList)]
+#[cfg_attr(feature = "lists", case("[", Token::OpenList))]
+#[cfg_attr(feature = "lists", case("]", Token::CloseList))]
 fn test_single_char_tokens(#[case] input: &str, #[case] expected: Token) {
-    let mut parser = alt((open_enum, close_enum, open_list, close_list));
+    let mut parser = alt((
+        open_enum,
+        close_enum,
+        #[cfg(feature = "lists")]
+        open_list,
+        #[cfg(feature = "lists")]
+        close_list,
+    ));
 
     assert_that!(parser.parse(input))
         .is_ok()
@@ -101,20 +109,16 @@ fn test_parse_enum_variants(#[case] input: &str, #[case] node: ParseNode) {
 #[rstest]
 #[case::just_a_comma("Name {,}", ParseNode::enumeration("Name", [ ]))]
 #[case::mora_commas("Name {,,,,}", ParseNode::enumeration("Name", [ ]))]
-#[case::comma_after_variant("Name {A,}",
-    ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-#[case::comma_before_variant("Name {,A}",
-    ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-#[case::comma_between_variants("Name {A,B}",
-    ParseNode::enumeration("Name", [
-        ParseNode::singleton("A"),
-        ParseNode::singleton("B")
-    ])
-)]
+#[case::comma_after_variant("Name {A,}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
+#[case::comma_before_variant("Name {,A}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
+#[case::comma_between_variants("Name {A,B}", ParseNode::enumeration("Name", [
+    ParseNode::singleton("A"), ParseNode::singleton("B")
+]))]
 fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: ParseNode) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
+#[cfg(feature = "lists")]
 #[rstest]
 #[case("Name []", ParseNode::list_empty("Name"))]
 #[case("Name[]", ParseNode::list_empty("Name"))]
@@ -149,6 +153,7 @@ fn test_parse_node_nested_enums() {
     assert_debug_snapshot!(parse_node(input));
 }
 
+#[cfg(feature = "comments")]
 #[rstest]
 #[case("//Comment", ParseNode::comment("Comment"))]
 #[case("// Comment", ParseNode::comment("Comment"))]
@@ -156,12 +161,14 @@ fn test_parse_node_with_comments(#[case] input: &str, #[case] comment: ParseNode
     assert_that!(parse_node(input)).is_ok_containing(("", comment));
 }
 
+#[cfg(feature = "lists")]
 #[rstest]
 fn test_parse_node_messy_example() {
     let input = "Name [ A { B, C [D E {F G}] H } I J ]";
     assert_debug_snapshot!(parse_node(input));
 }
 
+#[cfg(feature = "lists")]
 #[rstest]
 fn test_parse_list_incomplete() {
     assert_compact_debug_snapshot!(parse_list("Name [ A"), @r#"Err(Error(Error { input: "", code: Tag })) "#);
@@ -194,11 +201,11 @@ fn test_parse_enum_incomplete() {
         ])
     ])
 ])])]
-#[ case("//A//{ B C }", vec![ ParseNode::comment("A//{ B C }") ])]
-#[ case("A//{ B C }", vec![
+#[cfg_attr(feature = "comments", case("//A//{ B C }", vec![ ParseNode::comment("A//{ B C }") ]))]
+#[cfg_attr(feature = "comments", case("A//{ B C }", vec![
     ParseNode::singleton("A"),
     ParseNode::comment("{ B C }")
-])]
+]))]
 fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
     assert_that!(parse_config(input))
         .named(&format!("\"{input}\""))
@@ -206,6 +213,7 @@ fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
         .is_equal_to(("", expected));
 }
 
+#[cfg(feature = "comments")]
 #[rstest]
 #[case("A//\n{ B C }", vec![
     ParseNode::singleton("A"),
