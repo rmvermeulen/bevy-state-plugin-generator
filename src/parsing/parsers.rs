@@ -1,7 +1,17 @@
 use nom::{
-    IResult, Parser, branch::alt, bytes::complete::*, character::complete::*,
-    combinator::recognize, multi::many0, sequence::*,
+    IResult, Parser,
+    branch::alt,
+    bytes::complete::*,
+    character::complete::*,
+    combinator::{eof, recognize},
+    multi::many0,
+    sequence::*,
 };
+
+// TODO: add #directives to the format to configure the parser
+// TODO: replace PluginConfig with something like ParserOverrides and GeneratorOverrides
+// TODO: add the parent-name-prefix operator to the format (e.g. '$' or '^')
+// TODO: #[cfg(feature = "directives")] pub struct Directive;
 
 #[cfg(feature = "comments")]
 use super::tokens::Comment;
@@ -23,8 +33,6 @@ pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
 /// ```
 #[cfg(feature = "comments")]
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
-    use nom::combinator::eof;
-
     delimited(skip_to(tag("//")), not_line_ending, alt((eof, line_ending)))
         .parse(input)
         .map_result(|c| c.trim().into())

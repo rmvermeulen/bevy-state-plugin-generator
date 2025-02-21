@@ -10,10 +10,11 @@ repository = "https://github.com/rmvermeulen/bevy-state-plugin-generator.git"
 
 
 [features]
-default = ["rustfmt", "comments", "lists"]
+default = ["rustfmt", "comments", "lists", "directives"]
 lists = []
 comments = []
 rustfmt = ["dep:duct"]
+directives = []
 
 [dependencies]
 derive_more = { version = "2.0.1", features = [
