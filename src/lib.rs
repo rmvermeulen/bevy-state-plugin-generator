@@ -18,7 +18,6 @@ pub(crate) mod models;
 pub(crate) mod parsing;
 #[cfg(test)]
 pub(crate) mod testing;
-pub(crate) mod tokens;
 
 /// ```rust no_run
 /// use bevy_state_plugin_generator::*;

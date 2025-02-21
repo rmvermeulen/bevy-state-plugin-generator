@@ -4,8 +4,8 @@ use nom::{
 };
 
 #[cfg(feature = "comments")]
-use crate::tokens::Comment;
-use crate::tokens::{Identifier, ParseNode, Token};
+use super::tokens::Comment;
+use super::tokens::{Identifier, ParseNode, Token};
 
 #[cfg(feature = "comments")]
 pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {

@@ -1,18 +1,19 @@
+mod builders;
 mod context;
 mod models;
-#[cfg(test)]
-mod tests;
-
-use context::Context;
-use indoc::formatdoc;
-use std::{io, rc::Rc};
 
 use crate::{
     NamingScheme, PluginConfig,
     models::{ParentState, StateNode, SubTree},
     parsing::parse_states_file,
 };
+use context::Context;
+use indoc::formatdoc;
 use iter_tools::Itertools;
+use std::{io, rc::Rc};
+
+#[cfg(test)]
+mod tests;
 
 use models::{TypeDef, TypeDefinitions};
 

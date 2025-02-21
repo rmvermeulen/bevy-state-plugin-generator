@@ -2,7 +2,7 @@ use derive_more::From;
 use iter_tools::Itertools;
 use std::rc::Rc;
 
-use crate::tokens::ParseNode;
+use crate::parsing::ParseNode;
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct ParentState {
@@ -204,9 +204,11 @@ impl SubTree for StateTree {
 }
 #[cfg(test)]
 mod tests {
-    use crate::models::{StateNode, StateTree, SubTree};
-    use crate::testing::*;
-    use crate::tokens::ParseNode;
+    use crate::{
+        models::{StateNode, StateTree, SubTree},
+        parsing::ParseNode,
+        testing::*,
+    };
 
     #[rstest]
     #[case("Main", ParseNode::singleton("Main"))]
