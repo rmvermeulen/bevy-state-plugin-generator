@@ -1,3 +1,5 @@
+use partially::Partial;
+
 /// How state-names are determined
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NamingScheme {
@@ -38,6 +40,15 @@ impl NamingScheme {
 }
 
 /// Configuration for the generated plugin
+/// ```rust
+/// # use bevy_state_plugin_generator::{NamingScheme, PluginConfig};
+/// # #[cfg(feature = "directives")]
+/// # use bevy_state_plugin_generator::config::PartialPluginConfig;
+/// let config = PluginConfig::default();
+/// # #[cfg(feature = "directives")]
+/// let partial = PartialPluginConfig::default();
+/// ```
+#[cfg_attr(feature = "directives", derive(Partial), partially(derive(Default)))]
 #[derive(Debug, Clone, Copy)]
 pub struct PluginConfig<'a> {
     /// name of the struct that implements [bevy::plugin::Plugin]

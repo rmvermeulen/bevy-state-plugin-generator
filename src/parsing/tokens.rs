@@ -10,6 +10,22 @@ pub enum Token {
     #[cfg(feature = "lists")]
     CloseList,
 }
+#[cfg(feature = "directives")]
+pub struct Directive<'a>(ConfigProperty, &'a str);
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum ConfigProperty {
+    /// name of the struct that implements [bevy::plugin::Plugin]
+    PluginName,
+    /// name of the root enum/struct that represents the game state
+    StateName,
+    /// name of the module that contains sub-states
+    StatesModuleName,
+    /// naming scheme for the generated states
+    Scheme,
+    /// add additional traits to the derive list
+    AdditionDerives,
+}
 
 #[derive(Debug, PartialEq, From, Deref)]
 pub struct Identifier<'a>(&'a str);
