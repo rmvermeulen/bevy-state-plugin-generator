@@ -28,6 +28,11 @@ impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
     }
 }
 
+pub struct GeneratorContext {
+    pub parent: Option<ParentState>,
+    pub state: Rc<StateNode>,
+}
+
 #[derive(PartialEq, Clone)]
 pub enum StateNode {
     Singleton(String),
@@ -109,6 +114,8 @@ impl TryFrom<ParseNode<'_>> for StateNode {
             ParseNode::List(name, children) => Ok(StateNode::list(name, map_children(children))),
             #[cfg(feature = "comments")]
             ParseNode::Comment(_) => Err(()),
+            #[cfg(feature = "directives")]
+            ParseNode::Directive
         }
     }
 }
