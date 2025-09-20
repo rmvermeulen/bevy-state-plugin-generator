@@ -30,16 +30,6 @@ Ready { Menu Game }                     // enum state
 Exiting                                 // singleton
 ```
 
-```rust
-# // this is just here to check the above example
-# use bevy_state_plugin_generator::config_is_valid;
-# assert!(config_is_valid("Read { Config Assets }"));
-# #[cfg(feature = "lists")]
-# assert!(config_is_valid("Loading [ Config Assets ]"));
-# #[cfg(feature = "comments")]
-# assert!(config_is_valid("Loading // Comments"));
-```
-
 Set up your `build.rs` like this:
 
 ```rust no_run
@@ -85,4 +75,11 @@ impl bevy::app::Plugin for GeneratedStatesPlugin {
         app.init_state::<states::GameState>();
     }
 }
+```
+
+```rust
+# use bevy_state_plugin_generator::config_is_valid;
+# assert!(config_is_valid("Read { Config Assets }"));
+# assert!(config_is_valid("Loading [ Config Assets ]"));
+# assert!(config_is_valid("Loading // Comments"));
 ```
