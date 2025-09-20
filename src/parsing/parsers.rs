@@ -100,7 +100,7 @@ pub fn parse_states_file<'a>(
     root_state_name: &'a str,
 ) -> Result<ParseNode<'a>, String> {
     parse_config(input)
-        .map_err(|e| format!("{:?}", e))
+        .map_err(|e| format!("{e:?}"))
         .map(|(_, nodes)| {
             if nodes.is_empty() {
                 ParseNode::singleton(root_state_name)

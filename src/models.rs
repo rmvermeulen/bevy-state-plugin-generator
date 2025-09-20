@@ -78,7 +78,7 @@ impl std::fmt::Debug for StateNode {
             children.iter().map(|c| format!("{c:?}")).join(", ")
         }
         match self {
-            StateNode::Singleton(name) => write!(f, "{}", name),
+            StateNode::Singleton(name) => write!(f, "{name}"),
             StateNode::Enum(name, children) => {
                 write!(f, "{} {{ {} }}", name, format_children(children))
             }

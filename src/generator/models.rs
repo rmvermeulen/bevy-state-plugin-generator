@@ -17,7 +17,7 @@ impl TypeDefinitions {
 impl ToStringWith for TypeDefinitions {
     fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String {
         let inner = format!("\n{}", join.as_ref());
-        let outer = format!("\n{}", inner);
+        let outer = format!("\n{inner}");
         self.0
             .iter()
             .map(|td| td.to_string().lines().join(&inner))
