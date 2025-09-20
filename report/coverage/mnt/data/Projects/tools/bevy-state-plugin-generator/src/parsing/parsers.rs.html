@@ -22,7 +22,7 @@
       <table>
         <div class="source-name-title">
           <pre>
-/mnt/data/Projects/bevy/bevy-state-plugin-generator/src/parsing/parsers.rs</pre
+/mnt/data/Projects/tools/bevy-state-plugin-generator/src/parsing/parsers.rs</pre
           >
         </div>
         <tr>
@@ -116,7 +116,7 @@
           <td class="line-number">
             <a name="L11" href="#L11"><pre>11</pre></a>
           </td>
-          <td class="covered-line"><pre>158</pre></td>
+          <td class="covered-line"><pre>156</pre></td>
           <td class="code">
             <pre>
 pub fn parse_comment(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&apos;_&gt;&gt; {</pre
@@ -127,7 +127,7 @@ pub fn parse_comment(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&a
           <td class="line-number">
             <a name="L12" href="#L12"><pre>12</pre></a>
           </td>
-          <td class="covered-line"><pre>158</pre></td>
+          <td class="covered-line"><pre>156</pre></td>
           <td class="code">
             <pre>    comment(input).map_result(ParseNode::Comment)</pre>
           </td>
@@ -136,7 +136,7 @@ pub fn parse_comment(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&a
           <td class="line-number">
             <a name="L13" href="#L13"><pre>13</pre></a>
           </td>
-          <td class="covered-line"><pre>158</pre></td>
+          <td class="covered-line"><pre>156</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -242,7 +242,7 @@ pub fn parse_comment(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&a
           <td class="line-number">
             <a name="L25" href="#L25"><pre>25</pre></a>
           </td>
-          <td class="covered-line"><pre>167</pre></td>
+          <td class="covered-line"><pre>165</pre></td>
           <td class="code">
             <pre>
 pub fn comment(input: &amp;str) -&gt; IResult&lt;&amp;str, Comment&lt;&apos;_&gt;&gt; {</pre
@@ -267,7 +267,7 @@ pub fn comment(input: &amp;str) -&gt; IResult&lt;&amp;str, Comment&lt;&apos;_&gt
           <td class="line-number">
             <a name="L28" href="#L28"><pre>28</pre></a>
           </td>
-          <td class="covered-line"><pre>167</pre></td>
+          <td class="covered-line"><pre>165</pre></td>
           <td class="code">
             <pre>
     delimited(skip_to(tag(&quot;//&quot;)), not_line_ending, alt((eof, line_ending)))</pre
@@ -278,23 +278,23 @@ pub fn comment(input: &amp;str) -&gt; IResult&lt;&amp;str, Comment&lt;&apos;_&gt
           <td class="line-number">
             <a name="L29" href="#L29"><pre>29</pre></a>
           </td>
-          <td class="covered-line"><pre>167</pre></td>
+          <td class="covered-line"><pre>165</pre></td>
           <td class="code"><pre>        .parse(input)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L30" href="#L30"><pre>30</pre></a>
           </td>
-          <td class="covered-line"><pre>167</pre></td>
+          <td class="covered-line"><pre>165</pre></td>
           <td class="code">
-            <pre>        .map_result(|c| <div class='tooltip'>c.trim().into()<span class='tooltip-content'>20</span></div>)</pre>
+            <pre>        .map_result(|c| <div class='tooltip'>c.trim()<span class='tooltip-content'>20</span></div>.<div class='tooltip'>into<span class='tooltip-content'>20</span></div>())</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L31" href="#L31"><pre>31</pre></a>
           </td>
-          <td class="covered-line"><pre>167</pre></td>
+          <td class="covered-line"><pre>165</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -308,7 +308,7 @@ pub fn comment(input: &amp;str) -&gt; IResult&lt;&amp;str, Comment&lt;&apos;_&gt
           <td class="line-number">
             <a name="L33" href="#L33"><pre>33</pre></a>
           </td>
-          <td class="covered-line"><pre>512</pre></td>
+          <td class="covered-line"><pre>506</pre></td>
           <td class="code">
             <pre>
 pub fn identifier(input: &amp;str) -&gt; IResult&lt;&amp;str, Identifier&lt;&apos;_&gt;&gt; {</pre
@@ -319,53 +319,53 @@ pub fn identifier(input: &amp;str) -&gt; IResult&lt;&amp;str, Identifier&lt;&apo
           <td class="line-number">
             <a name="L34" href="#L34"><pre>34</pre></a>
           </td>
-          <td class="covered-line"><pre>512</pre></td>
+          <td class="covered-line"><pre>506</pre></td>
           <td class="code"><pre>    recognize(pair(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L35" href="#L35"><pre>35</pre></a>
           </td>
-          <td class="covered-line"><pre>710</pre></td>
+          <td class="covered-line"><pre>698</pre></td>
           <td class="code">
-            <pre>        take_till1(|c: char| !c.is_uppercase()),</pre>
+            <pre>        <div class='tooltip'>take_till1<span class='tooltip-content'>506</span></div>(|c: char| !c.is_uppercase()),</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L36" href="#L36"><pre>36</pre></a>
           </td>
-          <td class="covered-line"><pre>599</pre></td>
+          <td class="covered-line"><pre>575</pre></td>
           <td class="code">
-            <pre>        take_while(|c: char| c.is_alphanumeric() || <div class='tooltip'>c == &apos;_&apos;<span class='tooltip-content'>232</span></div>),</pre>
+            <pre>        <div class='tooltip'>take_while<span class='tooltip-content'>506</span></div>(|c: char| c.is_alphanumeric() || <div class='tooltip'>c == &apos;_&apos;<span class='tooltip-content'>232</span></div>),</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L37" href="#L37"><pre>37</pre></a>
           </td>
-          <td class="covered-line"><pre>512</pre></td>
+          <td class="skipped-line"></td>
           <td class="code"><pre>    ))</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L38" href="#L38"><pre>38</pre></a>
           </td>
-          <td class="covered-line"><pre>512</pre></td>
+          <td class="covered-line"><pre>506</pre></td>
           <td class="code"><pre>    .parse(input)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L39" href="#L39"><pre>39</pre></a>
           </td>
-          <td class="covered-line"><pre>512</pre></td>
+          <td class="covered-line"><pre>506</pre></td>
           <td class="code"><pre>    .map_result(Identifier::from)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L40" href="#L40"><pre>40</pre></a>
           </td>
-          <td class="covered-line"><pre>512</pre></td>
+          <td class="covered-line"><pre>506</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -379,7 +379,7 @@ pub fn identifier(input: &amp;str) -&gt; IResult&lt;&amp;str, Identifier&lt;&apo
           <td class="line-number">
             <a name="L42" href="#L42"><pre>42</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code">
             <pre>
 fn skip_to&lt;P, T, O, E&gt;(parser: P) -&gt; impl Parser&lt;T, Output = O, Error = E&gt;</pre
@@ -390,21 +390,21 @@ fn skip_to&lt;P, T, O, E&gt;(parser: P) -&gt; impl Parser&lt;T, Output = O, Erro
           <td class="line-number">
             <a name="L43" href="#L43"><pre>43</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code"><pre>where</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L44" href="#L44"><pre>44</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code"><pre>    T: nom::Input,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L45" href="#L45"><pre>45</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code">
             <pre>    P: Parser&lt;T, Output = O, Error = E&gt;,</pre>
           </td>
@@ -413,7 +413,7 @@ fn skip_to&lt;P, T, O, E&gt;(parser: P) -&gt; impl Parser&lt;T, Output = O, Erro
           <td class="line-number">
             <a name="L46" href="#L46"><pre>46</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code">
             <pre>    &lt;T as nom::Input&gt;::Item: nom::AsChar,</pre>
           </td>
@@ -422,7 +422,7 @@ fn skip_to&lt;P, T, O, E&gt;(parser: P) -&gt; impl Parser&lt;T, Output = O, Erro
           <td class="line-number">
             <a name="L47" href="#L47"><pre>47</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code">
             <pre>    E: nom::error::ParseError&lt;T&gt;,</pre>
           </td>
@@ -431,21 +431,21 @@ fn skip_to&lt;P, T, O, E&gt;(parser: P) -&gt; impl Parser&lt;T, Output = O, Erro
           <td class="line-number">
             <a name="L48" href="#L48"><pre>48</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="skipped-line"></td>
           <td class="code"><pre>{</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L49" href="#L49"><pre>49</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code"><pre>    preceded(multispace0, parser)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L50" href="#L50"><pre>50</pre></a>
           </td>
-          <td class="covered-line"><pre>1.47k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -486,7 +486,7 @@ pub fn separator(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
           </td>
           <td class="covered-line"><pre>223</pre></td>
           <td class="code">
-            <pre>        .map_result(|_| <div class='tooltip'>Token::Separator<span class='tooltip-content'>25</span></div>)</pre>
+            <pre>        .map_result(|_| Token::Separator)</pre>
           </td>
         </tr>
         <tr>
@@ -507,7 +507,7 @@ pub fn separator(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
           <td class="line-number">
             <a name="L58" href="#L58"><pre>58</pre></a>
           </td>
-          <td class="covered-line"><pre>120</pre></td>
+          <td class="covered-line"><pre>118</pre></td>
           <td class="code">
             <pre>
 pub fn open_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
@@ -518,30 +518,30 @@ pub fn open_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
           <td class="line-number">
             <a name="L59" href="#L59"><pre>59</pre></a>
           </td>
-          <td class="covered-line"><pre>120</pre></td>
+          <td class="covered-line"><pre>118</pre></td>
           <td class="code"><pre>    skip_to(tag(&quot;{&quot;))</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L60" href="#L60"><pre>60</pre></a>
           </td>
-          <td class="covered-line"><pre>120</pre></td>
+          <td class="covered-line"><pre>118</pre></td>
           <td class="code"><pre>        .parse(input)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L61" href="#L61"><pre>61</pre></a>
           </td>
-          <td class="covered-line"><pre>120</pre></td>
+          <td class="covered-line"><pre>118</pre></td>
           <td class="code">
-            <pre>        .map_result(|_| <div class='tooltip'>Token::OpenEnum<span class='tooltip-content'>41</span></div>)</pre>
+            <pre>        .map_result(|_| Token::OpenEnum)</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L62" href="#L62"><pre>62</pre></a>
           </td>
-          <td class="covered-line"><pre>120</pre></td>
+          <td class="covered-line"><pre>118</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -582,7 +582,7 @@ pub fn close_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
           </td>
           <td class="covered-line"><pre>43</pre></td>
           <td class="code">
-            <pre>        .map_result(|_| <div class='tooltip'>Token::CloseEnum<span class='tooltip-content'>39</span></div>)</pre>
+            <pre>        .map_result(|_| Token::CloseEnum)</pre>
           </td>
         </tr>
         <tr>
@@ -610,7 +610,7 @@ pub fn close_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
           <td class="line-number">
             <a name="L71" href="#L71"><pre>71</pre></a>
           </td>
-          <td class="covered-line"><pre>84</pre></td>
+          <td class="covered-line"><pre>82</pre></td>
           <td class="code">
             <pre>
 pub fn open_list(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
@@ -621,30 +621,30 @@ pub fn open_list(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
           <td class="line-number">
             <a name="L72" href="#L72"><pre>72</pre></a>
           </td>
-          <td class="covered-line"><pre>84</pre></td>
+          <td class="covered-line"><pre>82</pre></td>
           <td class="code"><pre>    skip_to(tag(&quot;[&quot;))</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L73" href="#L73"><pre>73</pre></a>
           </td>
-          <td class="covered-line"><pre>84</pre></td>
+          <td class="covered-line"><pre>82</pre></td>
           <td class="code"><pre>        .parse(input)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L74" href="#L74"><pre>74</pre></a>
           </td>
-          <td class="covered-line"><pre>84</pre></td>
+          <td class="covered-line"><pre>82</pre></td>
           <td class="code">
-            <pre>        .map_result(|_| <div class='tooltip'>Token::OpenList<span class='tooltip-content'>11</span></div>)</pre>
+            <pre>        .map_result(|_| Token::OpenList)</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L75" href="#L75"><pre>75</pre></a>
           </td>
-          <td class="covered-line"><pre>84</pre></td>
+          <td class="covered-line"><pre>82</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -692,7 +692,7 @@ pub fn close_list(input: &amp;str) -&gt; IResult&lt;&amp;str, Token&gt; {</pre
           </td>
           <td class="covered-line"><pre>11</pre></td>
           <td class="code">
-            <pre>        .map_result(|_| <div class='tooltip'>Token::CloseList<span class='tooltip-content'>8</span></div>)</pre>
+            <pre>        .map_result(|_| Token::CloseList)</pre>
           </td>
         </tr>
         <tr>
@@ -758,7 +758,7 @@ impl&lt;I, O1, O2&gt; MapResult&lt;&apos;_, I, O1, O2&gt; for IResult&lt;I, O1&g
           <td class="line-number">
             <a name="L89" href="#L89"><pre>89</pre></a>
           </td>
-          <td class="covered-line"><pre>1.46k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code">
             <pre>
     fn map_result(self, callback: impl Fn(O1) -&gt; O2) -&gt; IResult&lt;I, O2&gt; {</pre
@@ -769,16 +769,16 @@ impl&lt;I, O1, O2&gt; MapResult&lt;&apos;_, I, O1, O2&gt; for IResult&lt;I, O1&g
           <td class="line-number">
             <a name="L90" href="#L90"><pre>90</pre></a>
           </td>
-          <td class="covered-line"><pre>1.46k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code">
-            <pre>        self.map(|(rest, result)| <div class='tooltip'>(rest, callback(result))<span class='tooltip-content'>511</span></div>)</pre>
+            <pre>        self.map(|(rest, result)| (<div class='tooltip'>rest<span class='tooltip-content'>503</span></div>, <div class='tooltip'>callback(result)<span class='tooltip-content'>503</span></div>))</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L91" href="#L91"><pre>91</pre></a>
           </td>
-          <td class="covered-line"><pre>1.46k</pre></td>
+          <td class="covered-line"><pre>1.45k</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -878,7 +878,7 @@ pub(super) fn parse_config(input: &amp;str) -&gt; IResult&lt;&amp;str, Vec&lt;Pa
           </td>
           <td class="covered-line"><pre>5</pre></td>
           <td class="code">
-            <pre>        .map_err(|e| <div class='tooltip'><span class='region red'>format!(&quot;{:?}&quot;, e)</span><span class='tooltip-content'>0</span></div>)</pre>
+            <pre>        .map_err(|e| format!(<div class='tooltip'><span class='region red'>&quot;{e:?}&quot;</span><span class='tooltip-content'>0</span></div>))</pre>
           </td>
         </tr>
         <tr>
@@ -901,7 +901,7 @@ pub(super) fn parse_config(input: &amp;str) -&gt; IResult&lt;&amp;str, Vec&lt;Pa
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre>                <span class='region red'>ParseNode::singleton(root_state_name)</span></pre>
+            <pre>                <span class='region red'>ParseNode::singleton</span>(<span class='region red'>root_state_name</span>)</pre>
           </td>
         </tr>
         <tr>
@@ -1070,10 +1070,10 @@ pub(super) fn parse_config(input: &amp;str) -&gt; IResult&lt;&amp;str, Vec&lt;Pa
           <td class="line-number">
             <a name="L127" href="#L127"><pre>127</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code">
             <pre>
-pub fn parse_node(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</pre
+pub fn parse_node(input: &amp;&apos;_ str) -&gt; IResult&lt;&amp;&apos;_ str, ParseNode&lt;&apos;_&gt;&gt; {</pre
             >
           </td>
         </tr>
@@ -1081,21 +1081,21 @@ pub fn parse_node(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L128" href="#L128"><pre>128</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>    alt((</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L129" href="#L129"><pre>129</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>        parse_enum,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L130" href="#L130"><pre>130</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code">
             <pre>        #[cfg(feature = &quot;lists&quot;)]</pre>
           </td>
@@ -1104,14 +1104,14 @@ pub fn parse_node(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L131" href="#L131"><pre>131</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>        parse_list,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L132" href="#L132"><pre>132</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code">
             <pre>        #[cfg(feature = &quot;comments&quot;)]</pre>
           </td>
@@ -1120,35 +1120,35 @@ pub fn parse_node(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L133" href="#L133"><pre>133</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>        parse_comment,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L134" href="#L134"><pre>134</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>        parse_singleton,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L135" href="#L135"><pre>135</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>    ))</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L136" href="#L136"><pre>136</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>    .parse(input)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L137" href="#L137"><pre>137</pre></a>
           </td>
-          <td class="covered-line"><pre>180</pre></td>
+          <td class="covered-line"><pre>178</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -1162,10 +1162,10 @@ pub fn parse_node(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L139" href="#L139"><pre>139</pre></a>
           </td>
-          <td class="covered-line"><pre>150</pre></td>
+          <td class="covered-line"><pre>148</pre></td>
           <td class="code">
             <pre>
-pub fn parse_singleton(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</pre
+pub fn parse_singleton(input: &amp;&apos;_ str) -&gt; IResult&lt;&amp;&apos;_ str, ParseNode&lt;&apos;_&gt;&gt; {</pre
             >
           </td>
         </tr>
@@ -1173,21 +1173,21 @@ pub fn parse_singleton(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt;
           <td class="line-number">
             <a name="L140" href="#L140"><pre>140</pre></a>
           </td>
-          <td class="covered-line"><pre>150</pre></td>
+          <td class="covered-line"><pre>148</pre></td>
           <td class="code"><pre>    skip_to(identifier)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L141" href="#L141"><pre>141</pre></a>
           </td>
-          <td class="covered-line"><pre>150</pre></td>
+          <td class="covered-line"><pre>148</pre></td>
           <td class="code"><pre>        .parse(input)</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L142" href="#L142"><pre>142</pre></a>
           </td>
-          <td class="covered-line"><pre>150</pre></td>
+          <td class="covered-line"><pre>148</pre></td>
           <td class="code">
             <pre>        .map_result(ParseNode::singleton)</pre>
           </td>
@@ -1196,7 +1196,7 @@ pub fn parse_singleton(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt;
           <td class="line-number">
             <a name="L143" href="#L143"><pre>143</pre></a>
           </td>
-          <td class="covered-line"><pre>150</pre></td>
+          <td class="covered-line"><pre>148</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -1210,7 +1210,7 @@ pub fn parse_singleton(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt;
           <td class="line-number">
             <a name="L145" href="#L145"><pre>145</pre></a>
           </td>
-          <td class="covered-line"><pre>196</pre></td>
+          <td class="covered-line"><pre>194</pre></td>
           <td class="code">
             <pre>
 pub fn parse_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&apos;_&gt;&gt; {</pre
@@ -1221,9 +1221,9 @@ pub fn parse_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&apos
           <td class="line-number">
             <a name="L146" href="#L146"><pre>146</pre></a>
           </td>
-          <td class="covered-line"><pre>196</pre></td>
+          <td class="covered-line"><pre>194</pre></td>
           <td class="code">
-            <pre>    let (<div class='tooltip'>input, name<span class='tooltip-content'>40</span></div>) = terminated(skip_to(identifier), skip_to(open_enum)).parse(input)<div class='tooltip'>?<span class='tooltip-content'>156</span></div>;</pre>
+            <pre>    let (<div class='tooltip'>input<span class='tooltip-content'>40</span></div>, <div class='tooltip'>name<span class='tooltip-content'>40</span></div>) = terminated(skip_to(identifier), skip_to(open_enum)).parse(input)<div class='tooltip'>?<span class='tooltip-content'>154</span></div>;</pre>
           </td>
         </tr>
         <tr>
@@ -1232,7 +1232,7 @@ pub fn parse_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&apos
           </td>
           <td class="covered-line"><pre>40</pre></td>
           <td class="code">
-            <pre>    let (<div class='tooltip'>input, children<span class='tooltip-content'>38</span></div>) = skip_to(parse_elements_until(close_enum)).parse(input)<div class='tooltip'>?<span class='tooltip-content'>2</span></div>;</pre>
+            <pre>    let (<div class='tooltip'>input<span class='tooltip-content'>38</span></div>, <div class='tooltip'>children<span class='tooltip-content'>38</span></div>) = skip_to(parse_elements_until(close_enum)).parse(input)<div class='tooltip'>?<span class='tooltip-content'>2</span></div>;</pre>
           </td>
         </tr>
         <tr>
@@ -1248,7 +1248,7 @@ pub fn parse_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&apos
           <td class="line-number">
             <a name="L149" href="#L149"><pre>149</pre></a>
           </td>
-          <td class="covered-line"><pre>196</pre></td>
+          <td class="covered-line"><pre>194</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -1269,10 +1269,10 @@ pub fn parse_enum(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&lt;&apos
           <td class="line-number">
             <a name="L152" href="#L152"><pre>152</pre></a>
           </td>
-          <td class="covered-line"><pre>162</pre></td>
+          <td class="covered-line"><pre>160</pre></td>
           <td class="code">
             <pre>
-pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</pre
+pub fn parse_list(input: &amp;&apos;_ str) -&gt; IResult&lt;&amp;&apos;_ str, ParseNode&lt;&apos;_&gt;&gt; {</pre
             >
           </td>
         </tr>
@@ -1280,9 +1280,9 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L153" href="#L153"><pre>153</pre></a>
           </td>
-          <td class="covered-line"><pre>162</pre></td>
+          <td class="covered-line"><pre>160</pre></td>
           <td class="code">
-            <pre>    let (<div class='tooltip'>input, name<span class='tooltip-content'>82</span></div>) = skip_to(identifier).parse(input)<div class='tooltip'>?<span class='tooltip-content'>80</span></div>;</pre>
+            <pre>    let (<div class='tooltip'>input<span class='tooltip-content'>80</span></div>, <div class='tooltip'>name<span class='tooltip-content'>80</span></div>) = skip_to(identifier).parse(input)<div class='tooltip'>?<span class='tooltip-content'>80</span></div>;</pre>
           </td>
         </tr>
         <tr>
@@ -1296,9 +1296,9 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L155" href="#L155"><pre>155</pre></a>
           </td>
-          <td class="covered-line"><pre>82</pre></td>
+          <td class="covered-line"><pre>80</pre></td>
           <td class="code">
-            <pre>        skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)<div class='tooltip'>?<span class='tooltip-content'>75</span></div>;</pre>
+            <pre>        skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)<div class='tooltip'>?<span class='tooltip-content'>73</span></div>;</pre>
           </td>
         </tr>
         <tr>
@@ -1314,7 +1314,7 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L157" href="#L157"><pre>157</pre></a>
           </td>
-          <td class="covered-line"><pre>162</pre></td>
+          <td class="covered-line"><pre>160</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
@@ -1328,7 +1328,7 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L159" href="#L159"><pre>159</pre></a>
           </td>
-          <td class="covered-line"><pre>122</pre></td>
+          <td class="covered-line"><pre>120</pre></td>
           <td class="code">
             <pre>pub fn parse_elements_until&lt;&apos;a&gt;(</pre>
           </td>
@@ -1337,7 +1337,7 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L160" href="#L160"><pre>160</pre></a>
           </td>
-          <td class="covered-line"><pre>122</pre></td>
+          <td class="covered-line"><pre>120</pre></td>
           <td class="code">
             <pre>
     until: impl Fn(&amp;&apos;a str) -&gt; IResult&lt;&amp;&apos;a str, Token&gt; + Copy,</pre
@@ -1348,7 +1348,7 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L161" href="#L161"><pre>161</pre></a>
           </td>
-          <td class="covered-line"><pre>122</pre></td>
+          <td class="covered-line"><pre>120</pre></td>
           <td class="code">
             <pre>
 ) -&gt; impl Fn(&amp;&apos;a str) -&gt; IResult&lt;&amp;&apos;a str, Vec&lt;ParseNode&lt;&apos;a&gt;&gt;&gt; {</pre
@@ -1448,7 +1448,7 @@ pub fn parse_list(input: &amp;str) -&gt; IResult&lt;&amp;str, ParseNode&gt; {</p
           <td class="line-number">
             <a name="L173" href="#L173"><pre>173</pre></a>
           </td>
-          <td class="covered-line"><pre>122</pre></td>
+          <td class="covered-line"><pre>120</pre></td>
           <td class="code"><pre>}</pre></td>
         </tr>
       </table>

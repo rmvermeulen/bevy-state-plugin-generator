@@ -3,8 +3,12 @@
   <head>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../style.css" />
-    <script src="../../../../../../control.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../../../../../../style.css"
+    />
+    <script src="../../../../../../../control.js"></script>
   </head>
   <body>
     <h2>Coverage Report</h2>
@@ -18,7 +22,7 @@
       <table>
         <div class="source-name-title">
           <pre>
-/mnt/data/Projects/bevy/bevy-state-plugin-generator/Readme.md</pre
+/mnt/data/Projects/tools/bevy-state-plugin-generator/src/tokens.rs</pre
           >
         </div>
         <tr>
@@ -31,7 +35,7 @@
             <a name="L1" href="#L1"><pre>1</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre># State-Plugin generator</pre></td>
+          <td class="code"><pre>use derive_more::{Deref, From};</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -45,106 +49,106 @@
             <a name="L3" href="#L3"><pre>3</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-Generates a bunch of hierarchical states (structs and enums, using `State`</pre
-            >
-          </td>
+          <td class="code"><pre>#[derive(Debug, PartialEq)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L4" href="#L4"><pre>4</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>and `SubState`) and sets up their relationships</pre>
-          </td>
+          <td class="code"><pre>pub enum Token {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L5" href="#L5"><pre>5</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>in a `Plugin`.</pre></td>
+          <td class="code"><pre>    Separator,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L6" href="#L6"><pre>6</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>    OpenEnum,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L7" href="#L7"><pre>7</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>## versions</pre></td>
+          <td class="code"><pre>    CloseEnum,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L8" href="#L8"><pre>8</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code">
+            <pre>    #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L9" href="#L9"><pre>9</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>| bevy   | this thing |</pre></td>
+          <td class="code"><pre>    OpenList,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L10" href="#L10"><pre>10</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>| ------ | ---------- |</pre></td>
+          <td class="code">
+            <pre>    #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L11" href="#L11"><pre>11</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>| 0.15.2 | 1.2.0      |</pre></td>
+          <td class="code"><pre>    CloseList,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L12" href="#L12"><pre>12</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L13" href="#L13"><pre>13</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>## bugs</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L14" href="#L14"><pre>14</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code">
+            <pre>#[derive(Debug, Deref, From, PartialEq)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L15" href="#L15"><pre>15</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>```rust</pre></td>
+          <td class="code">
+            <pre>pub struct Identifier&lt;&apos;a&gt;(&amp;&apos;a str);</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L16" href="#L16"><pre>16</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>// TODO: fix naming-scheme collision detection</pre>
-          </td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -152,17 +156,17 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>// TODO: allow customizing derived traits</pre>
+            <pre>impl std::fmt::Display for Identifier&lt;&apos;_&gt; {</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L18" href="#L18"><pre>18</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code">
             <pre>
-// TODO: allow specifying naming-scheme in states.txt per-node</pre
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter&lt;&apos;_&gt;) -&gt; std::fmt::Result {</pre
             >
           </td>
         </tr>
@@ -170,22 +174,24 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           <td class="line-number">
             <a name="L19" href="#L19"><pre>19</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>```</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
+          <td class="code">
+            <pre>        write!(f, &quot;{}&quot;, self.0)</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L20" href="#L20"><pre>20</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre></pre></td>
+          <td class="covered-line"><pre>8</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L21" href="#L21"><pre>21</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>## usage</pre></td>
+          <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -199,46 +205,48 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
             <a name="L23" href="#L23"><pre>23</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>Create a `states.txt` in `src/`:</pre></td>
+          <td class="code">
+            <pre>#[cfg(feature = &quot;comments&quot;)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L24" href="#L24"><pre>24</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code">
+            <pre>#[derive(Debug, Deref, From, PartialEq)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L25" href="#L25"><pre>25</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>```txt</pre></td>
+          <td class="code">
+            <pre>pub struct Comment&lt;&apos;a&gt;(&amp;&apos;a str);</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L26" href="#L26"><pre>26</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>// the root is implicit</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L27" href="#L27"><pre>27</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>Loading // comments go until the end of the line</pre>
-          </td>
+          <td class="code"><pre>#[derive(Debug, PartialEq)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L28" href="#L28"><pre>28</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>Ready { Menu Game }                     // enum state</pre>
-          </td>
+          <td class="code"><pre>pub enum ParseNode&lt;&apos;a&gt; {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -246,7 +254,7 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>Exiting                                 // singleton</pre>
+            <pre>    Singleton(Identifier&lt;&apos;a&gt;),</pre>
           </td>
         </tr>
         <tr>
@@ -254,21 +262,31 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
             <a name="L30" href="#L30"><pre>30</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>```</pre></td>
+          <td class="code">
+            <pre>
+    Enum(Identifier&lt;&apos;a&gt;, Vec&lt;ParseNode&lt;&apos;a&gt;&gt;),</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L31" href="#L31"><pre>31</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code">
+            <pre>    #[cfg(feature = &quot;lists&quot;)]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L32" href="#L32"><pre>32</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>```rust</pre></td>
+          <td class="code">
+            <pre>
+    List(Identifier&lt;&apos;a&gt;, Vec&lt;ParseNode&lt;&apos;a&gt;&gt;),</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -276,35 +294,29 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre># // this is just here to check the above example</pre>
+            <pre>    #[cfg(feature = &quot;comments&quot;)]</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L34" href="#L34"><pre>34</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre># use bevy_state_plugin_generator::config_is_valid;</pre>
-          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    Comment(Comment&lt;&apos;a&gt;),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L35" href="#L35"><pre>35</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-# assert!(config_is_valid(&quot;Read { Config Assets }&quot;));</pre
-            >
-          </td>
+          <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L36" href="#L36"><pre>36</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre># #[cfg(feature = &quot;lists&quot;)]</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -312,79 +324,83 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>
-# assert!(config_is_valid(&quot;Loading [ Config Assets ]&quot;));</pre
-            >
+            <pre>impl&lt;&apos;a&gt; ParseNode&lt;&apos;a&gt; {</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L38" href="#L38"><pre>38</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
+          <td class="covered-line"><pre>117</pre></td>
           <td class="code">
-            <pre># #[cfg(feature = &quot;comments&quot;)]</pre>
+            <pre>
+    pub fn singleton&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;&gt;(name: I) -&gt; Self {</pre
+            >
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L39" href="#L39"><pre>39</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-# assert!(config_is_valid(&quot;Loading // Comments&quot;));</pre
-            >
-          </td>
+          <td class="covered-line"><pre>117</pre></td>
+          <td class="code"><pre>        Self::Singleton(name.into())</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L40" href="#L40"><pre>40</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>```</pre></td>
+          <td class="covered-line"><pre>117</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L41" href="#L41"><pre>41</pre></a>
           </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre></pre></td>
+          <td class="covered-line"><pre>31</pre></td>
+          <td class="code">
+            <pre>
+    pub fn enumeration&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;, V: IntoIterator&lt;Item = ParseNode&lt;&apos;a&gt;&gt;&gt;(</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L42" href="#L42"><pre>42</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>Set up your `build.rs` like this:</pre></td>
+          <td class="covered-line"><pre>31</pre></td>
+          <td class="code"><pre>        name: I,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L43" href="#L43"><pre>43</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="covered-line"><pre>31</pre></td>
+          <td class="code"><pre>        variants: V,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L44" href="#L44"><pre>44</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>```rust no_run</pre></td>
+          <td class="covered-line"><pre>31</pre></td>
+          <td class="code"><pre>    ) -&gt; Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L45" href="#L45"><pre>45</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>use bevy_state_plugin_generator::*;</pre></td>
+          <td class="covered-line"><pre>31</pre></td>
+          <td class="code">
+            <pre>
+        Self::Enum(name.into(), variants.into_iter().collect())</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L46" href="#L46"><pre>46</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>fn main() {</pre></td>
+          <td class="covered-line"><pre>31</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -392,33 +408,35 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>  /// The [Default::default] configuration is:</pre>
+            <pre>    #[cfg(all(test, feature = &quot;lists&quot;))]</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L48" href="#L48"><pre>48</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>  let config = PluginConfig {</pre></td>
+          <td class="covered-line"><pre>2</pre></td>
+          <td class="code">
+            <pre>
+    pub fn list_empty&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;&gt;(name: I) -&gt; Self {</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L49" href="#L49"><pre>49</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>2</pre></td>
           <td class="code">
-            <pre>    plugin_name: &quot;GeneratedStatesPlugin&quot;,</pre>
+            <pre>        Self::List(name.into(), vec![])</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L50" href="#L50"><pre>50</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    state_name: &quot;GameState&quot;,</pre>
-          </td>
+          <td class="covered-line"><pre>2</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -426,109 +444,117 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>    states_module_name: &quot;states&quot;,</pre>
+            <pre>    #[cfg(all(test, feature = &quot;lists&quot;))]</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L52" href="#L52"><pre>52</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    scheme: NamingScheme::Full,</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L53" href="#L53"><pre>53</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    additional_derives: &amp;[],</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L54" href="#L54"><pre>54</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>  };</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L55" href="#L55"><pre>55</pre></a>
-          </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>2</pre></td>
           <td class="code">
             <pre>
-  on_build_generate_plugin(&quot;src/states.txt&quot;, &quot;src/generated_states.rs&quot;, config)</pre
+    pub fn list&lt;I: Into&lt;Identifier&lt;&apos;a&gt;&gt;, V: IntoIterator&lt;Item = ParseNode&lt;&apos;a&gt;&gt;&gt;(</pre
             >
           </td>
         </tr>
         <tr>
           <td class="line-number">
+            <a name="L53" href="#L53"><pre>53</pre></a>
+          </td>
+          <td class="covered-line"><pre>2</pre></td>
+          <td class="code"><pre>        name: I,</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L54" href="#L54"><pre>54</pre></a>
+          </td>
+          <td class="covered-line"><pre>2</pre></td>
+          <td class="code"><pre>        variants: V,</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
+            <a name="L55" href="#L55"><pre>55</pre></a>
+          </td>
+          <td class="covered-line"><pre>2</pre></td>
+          <td class="code"><pre>    ) -&gt; Self {</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
             <a name="L56" href="#L56"><pre>56</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>2</pre></td>
           <td class="code">
-            <pre>    .expect(&quot;Failed to generate plugin!&quot;);</pre>
+            <pre>
+        Self::List(name.into(), variants.into_iter().collect())</pre
+            >
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L57" href="#L57"><pre>57</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
+          <td class="covered-line"><pre>2</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L58" href="#L58"><pre>58</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>```</pre></td>
+          <td class="code">
+            <pre>    #[cfg(all(test, feature = &quot;comments&quot;))]</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L59" href="#L59"><pre>59</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="covered-line"><pre>10</pre></td>
+          <td class="code">
+            <pre>
+    pub fn comment&lt;C: Into&lt;Comment&lt;&apos;a&gt;&gt;&gt;(name: C) -&gt; Self {</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L60" href="#L60"><pre>60</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>And it will generate something like the following:</pre>
-          </td>
+          <td class="covered-line"><pre>10</pre></td>
+          <td class="code"><pre>        Self::Comment(name.into())</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L61" href="#L61"><pre>61</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="covered-line"><pre>10</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L62" href="#L62"><pre>62</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>```rust no_run</pre></td>
+          <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L63" href="#L63"><pre>63</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>use bevy::prelude::{App, AppExtStates};</pre>
-          </td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L64" href="#L64"><pre>64</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>pub mod states {</pre></td>
+          <td class="code">
+            <pre>
+impl&lt;&apos;a&gt; TryFrom&lt;&amp;&apos;a str&gt; for ParseNode&lt;&apos;a&gt; {</pre
+            >
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -536,7 +562,9 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>    use bevy::prelude::{States, SubStates, StateSet};</pre>
+            <pre>
+    type Error = nom::Err&lt;nom::error::Error&lt;&amp;&apos;a str&gt;&gt;;</pre
+            >
           </td>
         </tr>
         <tr>
@@ -544,20 +572,16 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
             <a name="L66" href="#L66"><pre>66</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-    #[derive(States, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
-            >
-          </td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L67" href="#L67"><pre>67</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>
-    pub enum GameState { #[default] Loading, Ready, Exiting }</pre
+    fn try_from(s: &amp;&apos;a str) -&gt; Result&lt;Self, Self::Error&gt; {</pre
             >
           </td>
         </tr>
@@ -565,10 +589,10 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           <td class="line-number">
             <a name="L68" href="#L68"><pre>68</pre></a>
           </td>
-          <td class="skipped-line"></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
+        crate::parsing::parse_node(s).map(|(_, node)| node)</pre
             >
           </td>
         </tr>
@@ -576,166 +600,15 @@ Generates a bunch of hierarchical states (structs and enums, using `State`</pre
           <td class="line-number">
             <a name="L69" href="#L69"><pre>69</pre></a>
           </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    #[source(GameState = GameState::Loading)]</pre>
-          </td>
+          <td class="covered-line"><pre>4</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L70" href="#L70"><pre>70</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    pub struct GameStateLoading;</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L71" href="#L71"><pre>71</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L72" href="#L72"><pre>72</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    #[source(GameStateLoading = GameStateLoading)]</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L73" href="#L73"><pre>73</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    pub struct GameStateLoadingConfigs;</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L74" href="#L74"><pre>74</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L75" href="#L75"><pre>75</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    #[source(GameStateLoading = GameStateLoading)]</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L76" href="#L76"><pre>76</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    pub struct GameStateLoadingAssets;</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L77" href="#L77"><pre>77</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-    #[derive(SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L78" href="#L78"><pre>78</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    #[source(GameState = GameState::Ready)]</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L79" href="#L79"><pre>79</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    pub enum GameStateReady { #[default] Menu, Game }</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L80" href="#L80"><pre>80</pre></a>
-          </td>
-          <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L81" href="#L81"><pre>81</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>pub struct GeneratedStatesPlugin;</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L82" href="#L82"><pre>82</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>impl bevy::app::Plugin for GeneratedStatesPlugin {</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L83" href="#L83"><pre>83</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    fn build(&amp;self, app: &amp;mut App) {</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L84" href="#L84"><pre>84</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>        app.init_state::&lt;states::GameState&gt;();</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L85" href="#L85"><pre>85</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L86" href="#L86"><pre>86</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L87" href="#L87"><pre>87</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>```</pre></td>
         </tr>
       </table>
     </div>

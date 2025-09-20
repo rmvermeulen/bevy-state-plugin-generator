@@ -22,7 +22,7 @@
       <table>
         <div class="source-name-title">
           <pre>
-/mnt/data/Projects/bevy/bevy-state-plugin-generator/src/models.rs</pre
+/mnt/data/Projects/tools/bevy-state-plugin-generator/src/models.rs</pre
           >
         </div>
         <tr>
@@ -35,95 +35,88 @@
             <a name="L1" href="#L1"><pre>1</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>use derive_more::From;</pre></td>
+          <td class="code"><pre>use itertools::Itertools;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L2" href="#L2"><pre>2</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>use iter_tools::Itertools;</pre></td>
+          <td class="code"><pre>use std::rc::Rc;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L3" href="#L3"><pre>3</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>use std::rc::Rc;</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L4" href="#L4"><pre>4</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>use crate::tokens::ParseNode;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L5" href="#L5"><pre>5</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>use crate::tokens::ParseNode;</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L6" href="#L6"><pre>6</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>#[derive(Clone, Debug, PartialEq)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L7" href="#L7"><pre>7</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>#[derive(PartialEq, Debug, Clone)]</pre></td>
+          <td class="code"><pre>pub struct ParentState {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L8" href="#L8"><pre>8</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>pub struct ParentState {</pre></td>
+          <td class="code"><pre>    pub name: String,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L9" href="#L9"><pre>9</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    pub name: String,</pre></td>
+          <td class="code"><pre>    pub variant: String,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L10" href="#L10"><pre>10</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    pub variant: String,</pre></td>
+          <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L11" href="#L11"><pre>11</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L12" href="#L12"><pre>12</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L13" href="#L13"><pre>13</pre></a>
-          </td>
-          <td class="skipped-line"></td>
           <td class="code"><pre>impl ParentState {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L14" href="#L14"><pre>14</pre></a>
+            <a name="L13" href="#L13"><pre>13</pre></a>
           </td>
           <td class="covered-line"><pre>156</pre></td>
           <td class="code">
@@ -132,21 +125,21 @@
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L15" href="#L15"><pre>15</pre></a>
+            <a name="L14" href="#L14"><pre>14</pre></a>
           </td>
           <td class="covered-line"><pre>156</pre></td>
           <td class="code"><pre>        self.name.clone()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L16" href="#L16"><pre>16</pre></a>
+            <a name="L15" href="#L15"><pre>15</pre></a>
           </td>
           <td class="covered-line"><pre>156</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L17" href="#L17"><pre>17</pre></a>
+            <a name="L16" href="#L16"><pre>16</pre></a>
           </td>
           <td class="covered-line"><pre>83</pre></td>
           <td class="code">
@@ -155,7 +148,7 @@
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L18" href="#L18"><pre>18</pre></a>
+            <a name="L17" href="#L17"><pre>17</pre></a>
           </td>
           <td class="covered-line"><pre>83</pre></td>
           <td class="code">
@@ -166,28 +159,28 @@
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L19" href="#L19"><pre>19</pre></a>
+            <a name="L18" href="#L18"><pre>18</pre></a>
           </td>
           <td class="covered-line"><pre>83</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L20" href="#L20"><pre>20</pre></a>
+            <a name="L19" href="#L19"><pre>19</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L21" href="#L21"><pre>21</pre></a>
+            <a name="L20" href="#L20"><pre>20</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L22" href="#L22"><pre>22</pre></a>
+            <a name="L21" href="#L21"><pre>21</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -198,7 +191,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L23" href="#L23"><pre>23</pre></a>
+            <a name="L22" href="#L22"><pre>22</pre></a>
           </td>
           <td class="covered-line"><pre>2</pre></td>
           <td class="code">
@@ -207,21 +200,21 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L24" href="#L24"><pre>24</pre></a>
+            <a name="L23" href="#L23"><pre>23</pre></a>
           </td>
           <td class="covered-line"><pre>2</pre></td>
           <td class="code"><pre>        Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L25" href="#L25"><pre>25</pre></a>
+            <a name="L24" href="#L24"><pre>24</pre></a>
           </td>
           <td class="covered-line"><pre>2</pre></td>
           <td class="code"><pre>            name: name.to_string(),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L26" href="#L26"><pre>26</pre></a>
+            <a name="L25" href="#L25"><pre>25</pre></a>
           </td>
           <td class="covered-line"><pre>2</pre></td>
           <td class="code">
@@ -230,56 +223,56 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L27" href="#L27"><pre>27</pre></a>
+            <a name="L26" href="#L26"><pre>26</pre></a>
           </td>
           <td class="covered-line"><pre>2</pre></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L28" href="#L28"><pre>28</pre></a>
+            <a name="L27" href="#L27"><pre>27</pre></a>
           </td>
           <td class="covered-line"><pre>2</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L29" href="#L29"><pre>29</pre></a>
+            <a name="L28" href="#L28"><pre>28</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L30" href="#L30"><pre>30</pre></a>
+            <a name="L29" href="#L29"><pre>29</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L31" href="#L31"><pre>31</pre></a>
+            <a name="L30" href="#L30"><pre>30</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>#[derive(PartialEq, Clone)]</pre></td>
+          <td class="code"><pre>#[derive(Clone, PartialEq)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L32" href="#L32"><pre>32</pre></a>
+            <a name="L31" href="#L31"><pre>31</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>pub enum StateNode {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L33" href="#L33"><pre>33</pre></a>
+            <a name="L32" href="#L32"><pre>32</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    Singleton(String),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L34" href="#L34"><pre>34</pre></a>
+            <a name="L33" href="#L33"><pre>33</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -288,7 +281,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L35" href="#L35"><pre>35</pre></a>
+            <a name="L34" href="#L34"><pre>34</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -297,7 +290,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L36" href="#L36"><pre>36</pre></a>
+            <a name="L35" href="#L35"><pre>35</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -306,30 +299,30 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L37" href="#L37"><pre>37</pre></a>
+            <a name="L36" href="#L36"><pre>36</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L38" href="#L38"><pre>38</pre></a>
+            <a name="L37" href="#L37"><pre>37</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L39" href="#L39"><pre>39</pre></a>
+            <a name="L38" href="#L38"><pre>38</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>impl StateNode {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L40" href="#L40"><pre>40</pre></a>
+            <a name="L39" href="#L39"><pre>39</pre></a>
           </td>
-          <td class="covered-line"><pre>63</pre></td>
+          <td class="covered-line"><pre>61</pre></td>
           <td class="code">
             <pre>
     pub fn singleton&lt;S: ToString&gt;(name: S) -&gt; Self {</pre
@@ -338,25 +331,25 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L41" href="#L41"><pre>41</pre></a>
+            <a name="L40" href="#L40"><pre>40</pre></a>
           </td>
-          <td class="covered-line"><pre>63</pre></td>
+          <td class="covered-line"><pre>61</pre></td>
           <td class="code">
             <pre>        Self::Singleton(name.to_string())</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L42" href="#L42"><pre>42</pre></a>
+            <a name="L41" href="#L41"><pre>41</pre></a>
           </td>
-          <td class="covered-line"><pre>63</pre></td>
+          <td class="covered-line"><pre>61</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L43" href="#L43"><pre>43</pre></a>
+            <a name="L42" href="#L42"><pre>42</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
+          <td class="covered-line"><pre>33</pre></td>
           <td class="code">
             <pre>
     pub fn enumeration&lt;N: Into&lt;Rc&lt;StateNode&gt;&gt;, V: IntoIterator&lt;Item = N&gt;, S: ToString&gt;(</pre
@@ -365,44 +358,44 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
+            <a name="L43" href="#L43"><pre>43</pre></a>
+          </td>
+          <td class="covered-line"><pre>33</pre></td>
+          <td class="code"><pre>        name: S,</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
             <a name="L44" href="#L44"><pre>44</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
-          <td class="code"><pre>        name: S,</pre></td>
+          <td class="covered-line"><pre>33</pre></td>
+          <td class="code"><pre>        variants: V,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L45" href="#L45"><pre>45</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
-          <td class="code"><pre>        variants: V,</pre></td>
+          <td class="covered-line"><pre>33</pre></td>
+          <td class="code"><pre>    ) -&gt; Self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L46" href="#L46"><pre>46</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
-          <td class="code"><pre>    ) -&gt; Self {</pre></td>
+          <td class="covered-line"><pre>33</pre></td>
+          <td class="code"><pre>        Self::Enum(</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L47" href="#L47"><pre>47</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
-          <td class="code"><pre>        Self::Enum(</pre></td>
+          <td class="covered-line"><pre>33</pre></td>
+          <td class="code"><pre>            name.to_string(),</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L48" href="#L48"><pre>48</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
-          <td class="code"><pre>            name.to_string(),</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L49" href="#L49"><pre>49</pre></a>
-          </td>
-          <td class="covered-line"><pre>34</pre></td>
+          <td class="covered-line"><pre>33</pre></td>
           <td class="code">
             <pre>
             variants.into_iter().map(Into::into).collect_vec(),</pre
@@ -411,24 +404,31 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
         </tr>
         <tr>
           <td class="line-number">
+            <a name="L49" href="#L49"><pre>49</pre></a>
+          </td>
+          <td class="covered-line"><pre>33</pre></td>
+          <td class="code"><pre>        )</pre></td>
+        </tr>
+        <tr>
+          <td class="line-number">
             <a name="L50" href="#L50"><pre>50</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
-          <td class="code"><pre>        )</pre></td>
+          <td class="covered-line"><pre>33</pre></td>
+          <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L51" href="#L51"><pre>51</pre></a>
           </td>
-          <td class="covered-line"><pre>34</pre></td>
-          <td class="code"><pre>    }</pre></td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>    #[cfg(test)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L52" href="#L52"><pre>52</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    #[cfg(test)]</pre></td>
+          <td class="code"><pre>    #[allow(dead_code)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -619,7 +619,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L76" href="#L76"><pre>76</pre></a>
           </td>
-          <td class="covered-line"><pre>8</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code">
             <pre>
     fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter&lt;&apos;_&gt;) -&gt; std::fmt::Result {</pre
@@ -630,7 +630,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L77" href="#L77"><pre>77</pre></a>
           </td>
-          <td class="covered-line"><pre>3</pre></td>
+          <td class="covered-line"><pre>2</pre></td>
           <td class="code">
             <pre>
         fn format_children(children: &amp;[Rc&lt;StateNode&gt;]) -&gt; String {</pre
@@ -641,7 +641,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L78" href="#L78"><pre>78</pre></a>
           </td>
-          <td class="covered-line"><pre>4</pre></td>
+          <td class="covered-line"><pre>2</pre></td>
           <td class="code">
             <pre>
             children.iter().map(|c| format!(&quot;{c:?}&quot;)).join(&quot;, &quot;)</pre
@@ -652,24 +652,24 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L79" href="#L79"><pre>79</pre></a>
           </td>
-          <td class="covered-line"><pre>3</pre></td>
+          <td class="covered-line"><pre>2</pre></td>
           <td class="code"><pre>        }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L80" href="#L80"><pre>80</pre></a>
           </td>
-          <td class="covered-line"><pre>8</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L81" href="#L81"><pre>81</pre></a>
           </td>
-          <td class="covered-line"><pre>5</pre></td>
+          <td class="covered-line"><pre>3</pre></td>
           <td class="code">
             <pre>
-            StateNode::Singleton(name) =&gt; write!(f, &quot;{}&quot;, name),</pre
+            StateNode::Singleton(name) =&gt; write!(f, &quot;{name}&quot;),</pre
             >
           </td>
         </tr>
@@ -677,7 +677,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L82" href="#L82"><pre>82</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>1</pre></td>
           <td class="code">
             <pre>            StateNode::Enum(name, children) =&gt; {</pre>
           </td>
@@ -686,7 +686,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L83" href="#L83"><pre>83</pre></a>
           </td>
-          <td class="covered-line"><pre>2</pre></td>
+          <td class="covered-line"><pre>1</pre></td>
           <td class="code">
             <pre>
                 write!(f, &quot;{} {{ {} }}&quot;, name, format_children(children))</pre
@@ -747,7 +747,7 @@ impl&lt;N: ToString, V: ToString&gt; From&lt;(N, V)&gt; for ParentState {</pre
           <td class="line-number">
             <a name="L90" href="#L90"><pre>90</pre></a>
           </td>
-          <td class="covered-line"><pre>8</pre></td>
+          <td class="covered-line"><pre>5</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -786,7 +786,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L95" href="#L95"><pre>95</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code">
             <pre>
     fn try_from(node: ParseNode) -&gt; Result&lt;Self, Self::Error&gt; {</pre
@@ -797,11 +797,9 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L96" href="#L96"><pre>96</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code">
-            <pre>
-        let map_children = |children: Vec&lt;ParseNode&gt;| {</pre
-            >
+            <pre>        let map_children = |children: Vec&lt;ParseNode&gt;| <div class='tooltip'>{<span class='tooltip-content'>4</span></div></pre>
           </td>
         </tr>
         <tr>
@@ -852,14 +850,14 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L103" href="#L103"><pre>103</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code"><pre>        match node {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L104" href="#L104"><pre>104</pre></a>
           </td>
-          <td class="covered-line"><pre>6</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>
             ParseNode::Singleton(name) =&gt; Ok(StateNode::singleton(name)),</pre
@@ -908,7 +906,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre>            ParseNode::List(<span class='region red'>name, children) =&gt; Ok(StateNode::list(name, map_children(children)))</span>,</pre>
+            <pre>            ParseNode::List(<span class='region red'>name</span>, <span class='region red'>children</span>) =&gt; <span class='region red'>Ok(</span><span class='region red'>StateNode::list</span><span class='region red'>(</span><span class='region red'>name</span><span class='region red'>, map_children(children)))</span>,</pre>
           </td>
         </tr>
         <tr>
@@ -940,7 +938,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L113" href="#L113"><pre>113</pre></a>
           </td>
-          <td class="covered-line"><pre>10</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -998,7 +996,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L121" href="#L121"><pre>121</pre></a>
           </td>
-          <td class="covered-line"><pre>11</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code">
             <pre>    fn get_tree_size(&amp;self) -&gt; usize {</pre>
           </td>
@@ -1007,14 +1005,14 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L122" href="#L122"><pre>122</pre></a>
           </td>
-          <td class="covered-line"><pre>11</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code"><pre>        match self {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L123" href="#L123"><pre>123</pre></a>
           </td>
-          <td class="covered-line"><pre>6</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>            StateNode::Singleton(_) =&gt; 1,</pre>
           </td>
@@ -1023,7 +1021,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L124" href="#L124"><pre>124</pre></a>
           </td>
-          <td class="covered-line"><pre>5</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>            StateNode::Enum(_, children) =&gt; {</pre>
           </td>
@@ -1032,21 +1030,21 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L125" href="#L125"><pre>125</pre></a>
           </td>
-          <td class="covered-line"><pre>5</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>                children</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L126" href="#L126"><pre>126</pre></a>
           </td>
-          <td class="covered-line"><pre>5</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>                    .iter()</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L127" href="#L127"><pre>127</pre></a>
           </td>
-          <td class="covered-line"><pre>6</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>                    .map(|child| child.get_tree_size())</pre>
           </td>
@@ -1055,7 +1053,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L128" href="#L128"><pre>128</pre></a>
           </td>
-          <td class="covered-line"><pre>5</pre></td>
+          <td class="covered-line"><pre>4</pre></td>
           <td class="code">
             <pre>                    .sum::&lt;usize&gt;()</pre>
           </td>
@@ -1064,7 +1062,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L129" href="#L129"><pre>129</pre></a>
           </td>
-          <td class="covered-line"><pre>5</pre></td>
+          <td class="skipped-line"></td>
           <td class="code"><pre>                    + 1</pre></td>
         </tr>
         <tr>
@@ -1089,7 +1087,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre>            StateNode::List(_, <span class='region red'>children) =&gt; {</span></pre>
+            <pre>            StateNode::List(_, <span class='region red'>children</span>) =&gt; {</pre>
           </td>
         </tr>
         <tr>
@@ -1098,7 +1096,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre><span class='region red'>                children</span></pre>
+            <pre>                <span class='region red'>children</span></pre>
           </td>
         </tr>
         <tr>
@@ -1116,7 +1114,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre><span class='region red'>                    .map(</span>|child| <span class='region red'>child.get_tree_size()</span><span class='region red'>)</span></pre>
+            <pre>                    .<span class='region red'>map</span>(|child| <span class='region red'>child</span>.<span class='region red'>get_tree_size</span>())</pre>
           </td>
         </tr>
         <tr>
@@ -1125,17 +1123,15 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre><span class='region red'>                    .sum::&lt;usize&gt;()</span></pre>
+            <pre>                    .<span class='region red'>sum</span>::&lt;usize&gt;()</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L137" href="#L137"><pre>137</pre></a>
           </td>
-          <td class="uncovered-line"><pre>0</pre></td>
-          <td class="code">
-            <pre><span class='region red'>                    + 1</span></pre>
-          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>                    + 1</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1155,7 +1151,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L140" href="#L140"><pre>140</pre></a>
           </td>
-          <td class="covered-line"><pre>11</pre></td>
+          <td class="covered-line"><pre>8</pre></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
@@ -1269,7 +1265,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           <td class="line-number">
             <a name="L154" href="#L154"><pre>154</pre></a>
           </td>
-          <td class="covered-line"><pre>4</pre></td>
+          <td class="skipped-line"></td>
           <td class="code"><pre>                    + 1</pre></td>
         </tr>
         <tr>
@@ -1294,7 +1290,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre>            ParseNode::List(_, <span class='region red'>children) =&gt; {</span></pre>
+            <pre>            ParseNode::List(_, <span class='region red'>children</span>) =&gt; {</pre>
           </td>
         </tr>
         <tr>
@@ -1303,7 +1299,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre><span class='region red'>                children</span></pre>
+            <pre>                <span class='region red'>children</span></pre>
           </td>
         </tr>
         <tr>
@@ -1321,7 +1317,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre><span class='region red'>                    .map(</span>|child| <span class='region red'>child.get_tree_size()</span><span class='region red'>)</span></pre>
+            <pre>                    .<span class='region red'>map</span>(|child| <span class='region red'>child</span>.<span class='region red'>get_tree_size</span>())</pre>
           </td>
         </tr>
         <tr>
@@ -1330,17 +1326,15 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
           </td>
           <td class="uncovered-line"><pre>0</pre></td>
           <td class="code">
-            <pre><span class='region red'>                    .sum::&lt;usize&gt;()</span></pre>
+            <pre>                    .<span class='region red'>sum</span>::&lt;usize&gt;()</pre>
           </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L162" href="#L162"><pre>162</pre></a>
           </td>
-          <td class="uncovered-line"><pre>0</pre></td>
-          <td class="code">
-            <pre><span class='region red'>                    + 1</span></pre>
-          </td>
+          <td class="skipped-line"></td>
+          <td class="code"><pre>                    + 1</pre></td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1382,336 +1376,53 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
             <a name="L168" href="#L168"><pre>168</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>#[derive(PartialEq, Clone, From)]</pre></td>
+          <td class="code"><pre>#[cfg(test)]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L169" href="#L169"><pre>169</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>pub struct StateTree {</pre></td>
+          <td class="code"><pre>mod tests {</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L170" href="#L170"><pre>170</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    root: Rc&lt;StateNode&gt;,</pre></td>
+          <td class="code"><pre>    use crate::models::StateNode;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L171" href="#L171"><pre>171</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
+          <td class="code"><pre>    use crate::testing::*;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L172" href="#L172"><pre>172</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
+          <td class="code"><pre>    use crate::tokens::ParseNode;</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L173" href="#L173"><pre>173</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>impl StateTree {</pre></td>
+          <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L174" href="#L174"><pre>174</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>    #[cfg(test)]</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L175" href="#L175"><pre>175</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>
-    pub fn create&lt;N: TryInto&lt;StateNode&gt;, I: IntoIterator&lt;Item = N&gt;&gt;(nodes: I) -&gt; Self {</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L176" href="#L176"><pre>176</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>        Self {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L177" href="#L177"><pre>177</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>            root: Rc::new(StateNode::enumeration(</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L178" href="#L178"><pre>178</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>                &quot;:root:&quot;,</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L179" href="#L179"><pre>179</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>                nodes</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L180" href="#L180"><pre>180</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>                    .into_iter()</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L181" href="#L181"><pre>181</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>                    .flat_map(TryInto::try_into)</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L182" href="#L182"><pre>182</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>                    .map(Rc::new)</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L183" href="#L183"><pre>183</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>                    .collect_vec(),</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L184" href="#L184"><pre>184</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>            )),</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L185" href="#L185"><pre>185</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>        }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L186" href="#L186"><pre>186</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L187" href="#L187"><pre>187</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>    pub fn get_size(&amp;self) -&gt; usize {</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L188" href="#L188"><pre>188</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>        let subsize = self.root.get_tree_size();</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L189" href="#L189"><pre>189</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>        assert!(subsize &gt; 0);</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L190" href="#L190"><pre>190</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>        subsize - 1</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L191" href="#L191"><pre>191</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L192" href="#L192"><pre>192</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L193" href="#L193"><pre>193</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L194" href="#L194"><pre>194</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>impl std::fmt::Debug for StateTree {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L195" href="#L195"><pre>195</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>
-    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter&lt;&apos;_&gt;) -&gt; std::fmt::Result {</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L196" href="#L196"><pre>196</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>
-        write!(f, &quot;StateTree {{ {:?} }}&quot;, self.root)</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L197" href="#L197"><pre>197</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L198" href="#L198"><pre>198</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L199" href="#L199"><pre>199</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L200" href="#L200"><pre>200</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>impl SubTree for StateTree {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L201" href="#L201"><pre>201</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code">
-            <pre>    fn get_tree_size(&amp;self) -&gt; usize {</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L202" href="#L202"><pre>202</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>        self.get_size()</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L203" href="#L203"><pre>203</pre></a>
-          </td>
-          <td class="covered-line"><pre>1</pre></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L204" href="#L204"><pre>204</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>}</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L205" href="#L205"><pre>205</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>#[cfg(test)]</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L206" href="#L206"><pre>206</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>mod tests {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L207" href="#L207"><pre>207</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>    use crate::models::{StateNode, StateTree, SubTree};</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L208" href="#L208"><pre>208</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    use crate::testing::*;</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L209" href="#L209"><pre>209</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    use crate::tokens::ParseNode;</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L210" href="#L210"><pre>210</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre></pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L211" href="#L211"><pre>211</pre></a>
-          </td>
-          <td class="covered-line"><pre>4</pre></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L212" href="#L212"><pre>212</pre></a>
+            <a name="L175" href="#L175"><pre>175</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1722,7 +1433,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L213" href="#L213"><pre>213</pre></a>
+            <a name="L176" href="#L176"><pre>176</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1733,7 +1444,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L214" href="#L214"><pre>214</pre></a>
+            <a name="L177" href="#L177"><pre>177</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1744,7 +1455,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L215" href="#L215"><pre>215</pre></a>
+            <a name="L178" href="#L178"><pre>178</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1755,7 +1466,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L216" href="#L216"><pre>216</pre></a>
+            <a name="L179" href="#L179"><pre>179</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1764,7 +1475,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L217" href="#L217"><pre>217</pre></a>
+            <a name="L180" href="#L180"><pre>180</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1773,14 +1484,14 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L218" href="#L218"><pre>218</pre></a>
+            <a name="L181" href="#L181"><pre>181</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    ]))]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L219" href="#L219"><pre>219</pre></a>
+            <a name="L182" href="#L182"><pre>182</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1791,7 +1502,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L220" href="#L220"><pre>220</pre></a>
+            <a name="L183" href="#L183"><pre>183</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1802,102 +1513,28 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L221" href="#L221"><pre>221</pre></a>
+            <a name="L184" href="#L184"><pre>184</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L222" href="#L222"><pre>222</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    #[rstest]</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L223" href="#L223"><pre>223</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    fn test_state_tree() {</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L224" href="#L224"><pre>224</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-        let a: ParseNode = &quot;PartA&quot;.try_into().unwrap();</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L225" href="#L225"><pre>225</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-        let b: ParseNode = &quot;PartB&quot;.try_into().unwrap();</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L226" href="#L226"><pre>226</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>        let tree = StateTree::create([a, b]);</pre>
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L227" href="#L227"><pre>227</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-        assert_that!(tree.get_tree_size()).is_equal_to(2);</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L228" href="#L228"><pre>228</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code">
-            <pre>
-        assert_compact_debug_snapshot!(tree, @&quot;StateTree { :root: { PartA, PartB } }&quot;);</pre
-            >
-          </td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L229" href="#L229"><pre>229</pre></a>
-          </td>
-          <td class="skipped-line"></td>
-          <td class="code"><pre>    }</pre></td>
-        </tr>
-        <tr>
-          <td class="line-number">
-            <a name="L230" href="#L230"><pre>230</pre></a>
+            <a name="L185" href="#L185"><pre>185</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre></pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L231" href="#L231"><pre>231</pre></a>
+            <a name="L186" href="#L186"><pre>186</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    #[rstest]</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L232" href="#L232"><pre>232</pre></a>
+            <a name="L187" href="#L187"><pre>187</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1908,7 +1545,7 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L233" href="#L233"><pre>233</pre></a>
+            <a name="L188" href="#L188"><pre>188</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1919,18 +1556,18 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L234" href="#L234"><pre>234</pre></a>
+            <a name="L189" href="#L189"><pre>189</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
             <pre>
-    #[case(StateNode::list(&quot;A&quot;, [StateNode::singleton(&quot;B&quot;)]), &quot;A [ B ]&quot;)]</pre
+    #[cfg_attr(feature = &quot;lists&quot;, case(StateNode::list(&quot;A&quot;, [StateNode::singleton(&quot;B&quot;)]), &quot;A [ B ]&quot;))]</pre
             >
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L235" href="#L235"><pre>235</pre></a>
+            <a name="L190" href="#L190"><pre>190</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
@@ -1941,25 +1578,25 @@ impl TryFrom&lt;ParseNode&lt;&apos;_&gt;&gt; for StateNode {</pre
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L236" href="#L236"><pre>236</pre></a>
+            <a name="L191" href="#L191"><pre>191</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code">
             <pre>
-        assert_eq!(format!(&quot;{:?}&quot;, node), expected);</pre
+        assert_eq!(format!(&quot;{node:?}&quot;), expected);</pre
             >
           </td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L237" href="#L237"><pre>237</pre></a>
+            <a name="L192" href="#L192"><pre>192</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>    }</pre></td>
         </tr>
         <tr>
           <td class="line-number">
-            <a name="L238" href="#L238"><pre>238</pre></a>
+            <a name="L193" href="#L193"><pre>193</pre></a>
           </td>
           <td class="skipped-line"></td>
           <td class="code"><pre>}</pre></td>
