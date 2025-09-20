@@ -48,7 +48,20 @@ fn get_typedef(
     } else {
         parent_state
             .clone()
-            .map(|parent_state| format!("{}{}", parent_state.name(), node.name()))
+            .map(|parent_state| {
+                let parent_name = parent_state
+                    .name()
+                    .strip_suffix("State")
+                    .map(ToOwned::to_owned)
+                    .unwrap_or_else(|| parent_state.name());
+                assert!(!parent_name.is_empty());
+                let child_name = node
+                    .name()
+                    .strip_suffix("State")
+                    .unwrap_or_else(|| node.name());
+                assert!(!child_name.is_empty());
+                format!("{parent_name}{child_name}")
+            })
             .unwrap_or_else(|| node.name().to_string())
     };
     let source_for_struct = || {
@@ -62,9 +75,14 @@ fn get_typedef(
             .iter()
             .map(|variant| variant.name())
             .join(",\n      ");
+        let typename = node
+            .name()
+            .strip_suffix("State")
+            .map(ToOwned::to_owned)
+            .unwrap_or_else(|| typename.clone());
         formatdoc! {"
             {derives}
-            pub enum {typename} {{
+            pub enum {typename}State {{
                 #[default]
                 {variants}
             }}
@@ -98,15 +116,15 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
             let mut variants = variants
                 .iter()
                 .flat_map(|child_node| {
-                    let parent_state = ParentState {
-                        name: match context.naming_scheme {
+                    let parent_state = ParentState::new(
+                        match context.naming_scheme {
                             NamingScheme::Short | NamingScheme::None => {
                                 root_node.name().to_string()
                             }
                             NamingScheme::Full => root_typedef.typename.clone(),
                         },
-                        variant: child_node.name().to_string(),
-                    };
+                        child_node.name(),
+                    );
                     generate_all_type_definitions(
                         child_node,
                         Context {
@@ -130,7 +148,7 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                 .flat_map({
                     |child_node| {
                         // NOTE: pass along current Context since List does not actually render
-                        // into a struct, but refers to it's parent
+                        // into a struct, but refers to its parent
                         generate_all_type_definitions(child_node, context.clone()).take()
                     }
                 })

@@ -4,28 +4,28 @@ expression: "generate_all_type_definitions(&StateNode::list(\"List\",\n[StateNod
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub struct GameStateList;
+pub struct GameList;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub struct GameStateItem1;
+pub struct GameItem1;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub enum GameStateItem2 {
+pub enum GameItem2State {
     #[default]
     A,
       B
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameStateItem2 = GameStateItem2::A)]
-pub struct GameStateItem2A;
+#[source(GameItem2 = GameItem2::A)]
+pub struct GameItem2A;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameStateItem2 = GameStateItem2::B)]
-pub struct GameStateItem2B;
+#[source(GameItem2 = GameItem2::B)]
+pub struct GameItem2B;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub struct GameStateItem3;
+pub struct GameItem3;

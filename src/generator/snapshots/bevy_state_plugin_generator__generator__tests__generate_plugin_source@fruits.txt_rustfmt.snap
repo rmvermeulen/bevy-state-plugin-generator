@@ -15,35 +15,35 @@ pub mod states {
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Loading)]
-    pub struct GameStateLoading;
+    pub struct GameLoading;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Ready)]
-    pub enum GameStateReady {
+    pub enum GameReadyState {
         #[default]
         Menu,
         Game,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameStateReady = GameStateReady::Menu)]
-    pub enum GameStateReadyMenu {
+    #[source(GameReady = GameReady::Menu)]
+    pub enum GameReadyMenuState {
         #[default]
         Main,
         Options,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameStateReadyMenu = GameStateReadyMenu::Main)]
-    pub struct GameStateReadyMenuMain;
+    #[source(GameReadyMenu = GameReadyMenu::Main)]
+    pub struct GameReadyMenuMain;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameStateReadyMenu = GameStateReadyMenu::Options)]
-    pub struct GameStateReadyMenuOptions;
+    #[source(GameReadyMenu = GameReadyMenu::Options)]
+    pub struct GameReadyMenuOptions;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameStateReady = GameStateReady::Game)]
-    pub enum GameStateReadyGame {
+    #[source(GameReady = GameReady::Game)]
+    pub enum GameReadyGameState {
         #[default]
         Playing,
         Paused,
@@ -51,29 +51,29 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameStateReadyGame = GameStateReadyGame::Playing)]
-    pub struct GameStateReadyGamePlaying;
+    #[source(GameReadyGame = GameReadyGame::Playing)]
+    pub struct GameReadyGamePlaying;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameStateReadyGame = GameStateReadyGame::Paused)]
-    pub struct GameStateReadyGamePaused;
+    #[source(GameReadyGame = GameReadyGame::Paused)]
+    pub struct GameReadyGamePaused;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameStateReadyGame = GameStateReadyGame::GameOver)]
-    pub struct GameStateReadyGameGameOver;
+    #[source(GameReadyGame = GameReadyGame::GameOver)]
+    pub struct GameReadyGameGameOver;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
         app.init_state::<states::GameState>()
-            .add_sub_state::<states::GameStateLoading>()
-            .add_sub_state::<states::GameStateReady>()
-            .add_sub_state::<states::GameStateReadyMenu>()
-            .add_sub_state::<states::GameStateReadyMenuMain>()
-            .add_sub_state::<states::GameStateReadyMenuOptions>()
-            .add_sub_state::<states::GameStateReadyGame>()
-            .add_sub_state::<states::GameStateReadyGamePlaying>()
-            .add_sub_state::<states::GameStateReadyGamePaused>()
-            .add_sub_state::<states::GameStateReadyGameGameOver>();
+            .add_sub_state::<states::GameLoading>()
+            .add_sub_state::<states::GameReady>()
+            .add_sub_state::<states::GameReadyMenu>()
+            .add_sub_state::<states::GameReadyMenuMain>()
+            .add_sub_state::<states::GameReadyMenuOptions>()
+            .add_sub_state::<states::GameReadyGame>()
+            .add_sub_state::<states::GameReadyGamePlaying>()
+            .add_sub_state::<states::GameReadyGamePaused>()
+            .add_sub_state::<states::GameReadyGameGameOver>();
     }
 }

@@ -140,10 +140,7 @@ fn test_naming_scheme(#[case] src_path: &str, #[case] source: &str, #[case] sche
 
 #[fixture]
 fn root_parent_state() -> ParentState {
-    ParentState {
-        name: "Game".to_string(),
-        variant: "Menu".to_string(),
-    }
+    ParentState::new("Game", "Menu")
 }
 #[fixture]
 fn nested_node() -> StateNode {
@@ -269,11 +266,7 @@ fn snapshot1() {
     set_snapshot_suffix!("snapshot1{suffix}");
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::singleton("Alpha"),
-        ParentState {
-            name: "GameState".to_string(),
-            variant: "Alpha".to_string()
-        }
-        .into()
+        ParentState::new("GameState", "Alpha").into()
     ));
 }
 
@@ -297,14 +290,7 @@ fn snapshot2() {
     set_snapshot_suffix!("snapshot2{suffix}");
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
-        (
-            ParentState {
-                name: "GameState".to_string(),
-                variant: "Alpha".to_string()
-            },
-            NamingScheme::Full
-        )
-            .into()
+        (ParentState::new("GameState", "Alpha"), NamingScheme::Full).into()
     ));
 }
 

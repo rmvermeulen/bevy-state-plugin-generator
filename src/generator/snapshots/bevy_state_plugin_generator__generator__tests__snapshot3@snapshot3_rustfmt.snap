@@ -4,8 +4,8 @@ expression: "generate_all_type_definitions(&StateNode::list(\"Alpha\",\n[StateNo
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub struct GameStateAlpha;
+pub struct GameAlpha;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub struct GameStateBeta;
+pub struct GameBeta;

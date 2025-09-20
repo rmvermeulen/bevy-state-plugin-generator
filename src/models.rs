@@ -5,11 +5,14 @@ use crate::tokens::ParseNode;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParentState {
-    pub name: String,
-    pub variant: String,
+    name: String,
+    variant: String,
 }
 
 impl ParentState {
+    pub fn new<N: ToString, V: ToString>(name: N, variant: V) -> Self {
+        (name, variant).into()
+    }
     pub fn name(&self) -> String {
         self.name.clone()
     }

@@ -4,7 +4,7 @@ expression: "generate_all_type_definitions(&node, (source, scheme).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(Game = Game::Menu)]
-pub enum GameMenu {
+pub enum GameMenuState {
     #[default]
     Main,
       Options,
@@ -17,7 +17,7 @@ pub struct MenuMain;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(Menu = Menu::Options)]
-pub enum MenuOptions {
+pub enum MenuOptionsState {
     #[default]
     Graphics,
       Audio,
@@ -38,7 +38,7 @@ pub struct OptionsGameplay;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(Menu = Menu::Continue)]
-pub enum MenuContinue {
+pub enum MenuContinueState {
     #[default]
     Save,
       Load

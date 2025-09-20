@@ -1,14 +1,14 @@
 ---
 source: src/generator/tests.rs
-expression: "generate_all_type_definitions(&StateNode::enumeration(\"Alpha\",\n[StateNode::singleton(\"Beta\")]),\n(ParentState { name: \"GameState\".to_string(), variant: \"Alpha\".to_string() },\nNamingScheme::Full).into())"
+expression: "generate_all_type_definitions(&StateNode::enumeration(\"Alpha\",\n[StateNode::singleton(\"Beta\")]),\n(ParentState::new(\"GameState\", \"Alpha\"), NamingScheme::Full).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub enum GameStateAlpha {
+pub enum GameAlphaState {
     #[default]
     Beta
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameStateAlpha = GameStateAlpha::Beta)]
-pub struct GameStateAlphaBeta;
+#[source(GameAlpha = GameAlpha::Beta)]
+pub struct GameAlphaBeta;
