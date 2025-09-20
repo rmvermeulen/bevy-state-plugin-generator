@@ -1,4 +1,3 @@
-use derive_more::From;
 use iter_tools::Itertools;
 use std::rc::Rc;
 
@@ -166,46 +165,9 @@ impl SubTree for ParseNode<'_> {
     }
 }
 
-#[derive(Clone, From, PartialEq)]
-pub struct StateTree {
-    root: Rc<StateNode>,
-}
-
-impl StateTree {
-    #[cfg(test)]
-    pub fn create<N: TryInto<StateNode>, I: IntoIterator<Item = N>>(nodes: I) -> Self {
-        Self {
-            root: Rc::new(StateNode::enumeration(
-                ":root:",
-                nodes
-                    .into_iter()
-                    .flat_map(TryInto::try_into)
-                    .map(Rc::new)
-                    .collect_vec(),
-            )),
-        }
-    }
-    pub fn get_size(&self) -> usize {
-        let subsize = self.root.get_tree_size();
-        assert!(subsize > 0);
-        subsize - 1
-    }
-}
-
-impl std::fmt::Debug for StateTree {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "StateTree {{ {:?} }}", self.root)
-    }
-}
-
-impl SubTree for StateTree {
-    fn get_tree_size(&self) -> usize {
-        self.get_size()
-    }
-}
 #[cfg(test)]
 mod tests {
-    use crate::models::{StateNode, StateTree, SubTree};
+    use crate::models::StateNode;
     use crate::testing::*;
     use crate::tokens::ParseNode;
 
@@ -220,20 +182,12 @@ mod tests {
     fn test_parse_node_try_from_str(#[case] input: &str, #[case] expected: ParseNode) {
         assert_that!(ParseNode::try_from(input)).is_ok_containing(expected);
     }
-    #[rstest]
-    fn test_state_tree() {
-        let a: ParseNode = "PartA".try_into().unwrap();
-        let b: ParseNode = "PartB".try_into().unwrap();
-        let tree = StateTree::create([a, b]);
-        assert_that!(tree.get_tree_size()).is_equal_to(2);
-        assert_compact_debug_snapshot!(tree, @"StateTree { :root: { PartA, PartB } }");
-    }
 
     #[rstest]
     #[case(StateNode::singleton("A"), "A")]
     #[case(StateNode::enumeration("A", [StateNode::singleton("B")]), "A { B }")]
     #[cfg_attr(feature = "lists", case(StateNode::list("A", [StateNode::singleton("B")]), "A [ B ]"))]
     fn test_state_node_debug(#[case] node: StateNode, #[case] expected: &str) {
-        assert_eq!(format!("{:?}", node), expected);
+        assert_eq!(format!("{node:?}"), expected);
     }
 }
