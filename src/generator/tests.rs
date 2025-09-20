@@ -12,10 +12,10 @@ use crate::{NamingScheme, PluginConfig};
 async fn test_format_source() {
     let formatted = format_source("fn main(){println!(\"Hello, world!\");}");
     assert_snapshot!(formatted, @r#"
-        fn main() {
-            println!("Hello, world!");
-        }
-        "#);
+    fn main() {
+        println!("Hello, world!");
+    }
+    "#);
 }
 
 #[rstest]
@@ -53,7 +53,10 @@ fn test_generate_states_plugin() {
 #[case("root.txt", "RootState")]
 #[case("fruits.txt", "Apple Orange { O1 O2 }")]
 fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
-    set_snapshot_suffix!("{src_path}");
+    let suffix = cfg!(feature = "rustfmt")
+        .then_some("_rustfmt")
+        .unwrap_or_default();
+    set_snapshot_suffix!("{src_path}{suffix}");
     assert_snapshot!(generate_debug_info(src_path, source));
 }
 
@@ -88,7 +91,10 @@ fn test_plugin_formatted(root_node: Rc<StateNode>, plugin_config: PluginConfig) 
     ]),
 ])))]
 fn test_generate_plugin_source(#[case] src_path: &str, #[case] root_node: Rc<StateNode>) {
-    set_snapshot_suffix!("{src_path}");
+    let suffix = cfg!(feature = "rustfmt")
+        .then_some("_rustfmt")
+        .unwrap_or_default();
+    set_snapshot_suffix!("{src_path}{suffix}");
     assert_snapshot!(test_plugin_formatted(root_node, Default::default()));
 }
 
