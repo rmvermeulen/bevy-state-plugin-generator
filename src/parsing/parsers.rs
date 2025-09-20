@@ -124,7 +124,7 @@ pub fn config_is_valid(input: &str) -> bool {
         .unwrap_or(false)
 }
 
-pub fn parse_node(input: &str) -> IResult<&str, ParseNode> {
+pub fn parse_node(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
     alt((
         parse_enum,
         #[cfg(feature = "lists")]
@@ -136,7 +136,7 @@ pub fn parse_node(input: &str) -> IResult<&str, ParseNode> {
     .parse(input)
 }
 
-pub fn parse_singleton(input: &str) -> IResult<&str, ParseNode> {
+pub fn parse_singleton(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
     skip_to(identifier)
         .parse(input)
         .map_result(ParseNode::singleton)
@@ -149,7 +149,7 @@ pub fn parse_enum(input: &str) -> IResult<&str, ParseNode<'_>> {
 }
 
 #[cfg(feature = "lists")]
-pub fn parse_list(input: &str) -> IResult<&str, ParseNode> {
+pub fn parse_list(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
