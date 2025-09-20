@@ -1538,21 +1538,25 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
             <a name="L186" href="#L186"><pre>186</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;GameMenu&quot;,</pre></td>
+          <td class="code"><pre>        &quot;GameMenuState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L187" href="#L187"><pre>187</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;GameMenuMain&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;GameMenuMainState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L188" href="#L188"><pre>188</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;GameMenuOptions&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;GameMenuOptionsState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1560,7 +1564,7 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        &quot;GameMenuOptionsGraphics&quot;,</pre>
+            <pre>        &quot;GameMenuOptionsGraphicsState&quot;,</pre>
           </td>
         </tr>
         <tr>
@@ -1569,7 +1573,7 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        &quot;GameMenuOptionsAudio&quot;,</pre>
+            <pre>        &quot;GameMenuOptionsAudioState&quot;,</pre>
           </td>
         </tr>
         <tr>
@@ -1578,7 +1582,7 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        &quot;GameMenuOptionsGameplay&quot;,</pre>
+            <pre>        &quot;GameMenuOptionsGameplayState&quot;,</pre>
           </td>
         </tr>
         <tr>
@@ -1586,7 +1590,9 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
             <a name="L192" href="#L192"><pre>192</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;GameMenuContinue&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;GameMenuContinueState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1594,7 +1600,7 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        &quot;GameMenuContinueSave&quot;,</pre>
+            <pre>        &quot;GameMenuContinueSaveState&quot;,</pre>
           </td>
         </tr>
         <tr>
@@ -1603,7 +1609,7 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
           </td>
           <td class="skipped-line"></td>
           <td class="code">
-            <pre>        &quot;GameMenuContinueLoad&quot;,</pre>
+            <pre>        &quot;GameMenuContinueLoadState&quot;,</pre>
           </td>
         </tr>
         <tr>
@@ -1723,63 +1729,75 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
             <a name="L209" href="#L209"><pre>209</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;GameMenu&quot;,</pre></td>
+          <td class="code"><pre>        &quot;GameMenuState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L210" href="#L210"><pre>210</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;MenuMain&quot;,</pre></td>
+          <td class="code"><pre>        &quot;MenuMainState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L211" href="#L211"><pre>211</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;MenuOptions&quot;,</pre></td>
+          <td class="code"><pre>        &quot;MenuOptionsState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L212" href="#L212"><pre>212</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;OptionsGraphics&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;OptionsGraphicsState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L213" href="#L213"><pre>213</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;OptionsAudio&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;OptionsAudioState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L214" href="#L214"><pre>214</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;OptionsGameplay&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;OptionsGameplayState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L215" href="#L215"><pre>215</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;MenuContinue&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;MenuContinueState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L216" href="#L216"><pre>216</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;ContinueSave&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;ContinueSaveState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L217" href="#L217"><pre>217</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;ContinueLoad&quot;,</pre></td>
+          <td class="code">
+            <pre>        &quot;ContinueLoadState&quot;,</pre>
+          </td>
         </tr>
         <tr>
           <td class="line-number">
@@ -1898,63 +1916,63 @@ fn test_naming_scheme(#[case] src_path: &amp;str, #[case] source: &amp;str, #[ca
             <a name="L232" href="#L232"><pre>232</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Menu&quot;,</pre></td>
+          <td class="code"><pre>        &quot;MenuState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L233" href="#L233"><pre>233</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Main&quot;,</pre></td>
+          <td class="code"><pre>        &quot;MainState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L234" href="#L234"><pre>234</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Options&quot;,</pre></td>
+          <td class="code"><pre>        &quot;OptionsState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L235" href="#L235"><pre>235</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Graphics&quot;,</pre></td>
+          <td class="code"><pre>        &quot;GraphicsState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L236" href="#L236"><pre>236</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Audio&quot;,</pre></td>
+          <td class="code"><pre>        &quot;AudioState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L237" href="#L237"><pre>237</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Gameplay&quot;,</pre></td>
+          <td class="code"><pre>        &quot;GameplayState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L238" href="#L238"><pre>238</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Continue&quot;,</pre></td>
+          <td class="code"><pre>        &quot;ContinueState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L239" href="#L239"><pre>239</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Save&quot;,</pre></td>
+          <td class="code"><pre>        &quot;SaveState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
             <a name="L240" href="#L240"><pre>240</pre></a>
           </td>
           <td class="skipped-line"></td>
-          <td class="code"><pre>        &quot;Load&quot;,</pre></td>
+          <td class="code"><pre>        &quot;LoadState&quot;,</pre></td>
         </tr>
         <tr>
           <td class="line-number">
