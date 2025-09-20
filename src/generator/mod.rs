@@ -5,7 +5,7 @@ mod tests;
 
 use context::Context;
 use indoc::formatdoc;
-use std::{io, rc::Rc};
+use std::rc::Rc;
 
 use crate::{
     NamingScheme, PluginConfig,
@@ -207,7 +207,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
 }
 
 #[cfg(feature = "rustfmt")]
-pub fn try_format_source(source: &str) -> io::Result<String> {
+pub fn try_format_source(source: &str) -> std::io::Result<String> {
     duct::cmd!("rustfmt")
         .stdin_bytes(source)
         .stderr_to_stdout()
