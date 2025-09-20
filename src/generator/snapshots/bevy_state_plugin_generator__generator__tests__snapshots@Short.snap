@@ -3,7 +3,7 @@ source: src/generator/tests.rs
 expression: "generate_all_type_definitions(&node, (source, scheme).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Menu)]
+#[source(GameState = GameState::Menu)]
 pub enum GameMenuState {
     #[default]
     Main,
@@ -12,11 +12,11 @@ pub enum GameMenuState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Main)]
-pub struct MenuMain;
+#[source(MenuState = MenuState::Main)]
+pub struct MenuMainState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Options)]
+#[source(MenuState = MenuState::Options)]
 pub enum MenuOptionsState {
     #[default]
     Graphics,
@@ -25,19 +25,19 @@ pub enum MenuOptionsState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Options = Options::Graphics)]
-pub struct OptionsGraphics;
+#[source(OptionsState = OptionsState::Graphics)]
+pub struct OptionsGraphicsState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Options = Options::Audio)]
-pub struct OptionsAudio;
+#[source(OptionsState = OptionsState::Audio)]
+pub struct OptionsAudioState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Options = Options::Gameplay)]
-pub struct OptionsGameplay;
+#[source(OptionsState = OptionsState::Gameplay)]
+pub struct OptionsGameplayState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Continue)]
+#[source(MenuState = MenuState::Continue)]
 pub enum MenuContinueState {
     #[default]
     Save,
@@ -45,9 +45,9 @@ pub enum MenuContinueState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Continue = Continue::Save)]
-pub struct ContinueSave;
+#[source(ContinueState = ContinueState::Save)]
+pub struct ContinueSaveState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Continue = Continue::Load)]
-pub struct ContinueLoad;
+#[source(ContinueState = ContinueState::Load)]
+pub struct ContinueLoadState;

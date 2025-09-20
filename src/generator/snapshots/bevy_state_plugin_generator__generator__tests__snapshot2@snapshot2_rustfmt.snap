@@ -10,5 +10,5 @@ pub enum GameAlphaState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameAlpha = GameAlpha::Beta)]
-pub struct GameAlphaBeta;
+#[source(GameAlphaState = GameAlphaState::Beta)]
+pub struct GameAlphaBetaState;

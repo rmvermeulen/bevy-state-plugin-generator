@@ -9,5 +9,5 @@ pub enum AlphaState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Alpha = Alpha::Beta)]
-pub struct AlphaBeta;
+#[source(AlphaState = AlphaState::Beta)]
+pub struct AlphaBetaState;

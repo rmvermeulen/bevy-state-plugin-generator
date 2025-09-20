@@ -22,6 +22,22 @@ pub(super) const REQUIRED_DERIVES: &[&str] =
 pub trait ToStringWith {
     fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String;
 }
+
+pub trait ToStateName {
+    fn to_state_name(&self) -> String;
+}
+
+impl<S: ToString> ToStateName for S {
+    fn to_state_name(&self) -> String {
+        let s = self.to_string();
+        if s.ends_with("State") {
+            s
+        } else {
+            format!("{s}State")
+        }
+    }
+}
+
 fn get_typedef(
     node: &StateNode,
     Context {
@@ -44,7 +60,7 @@ fn get_typedef(
         .trim()
         .to_string();
     let typename = if naming_scheme == NamingScheme::None {
-        node.name().to_string()
+        node.name().to_state_name()
     } else {
         parent_state
             .clone()
@@ -63,6 +79,7 @@ fn get_typedef(
                 format!("{parent_name}{child_name}")
             })
             .unwrap_or_else(|| node.name().to_string())
+            .to_state_name()
     };
     let source_for_struct = || {
         formatdoc! {"
@@ -75,14 +92,9 @@ fn get_typedef(
             .iter()
             .map(|variant| variant.name())
             .join(",\n      ");
-        let typename = node
-            .name()
-            .strip_suffix("State")
-            .map(ToOwned::to_owned)
-            .unwrap_or_else(|| typename.clone());
         formatdoc! {"
             {derives}
-            pub enum {typename}State {{
+            pub enum {typename} {{
                 #[default]
                 {variants}
             }}

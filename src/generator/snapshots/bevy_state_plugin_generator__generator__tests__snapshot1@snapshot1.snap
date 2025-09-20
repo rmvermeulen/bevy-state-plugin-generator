@@ -1,7 +1,7 @@
 ---
 source: src/generator/tests.rs
-expression: "generate_all_type_definitions(&StateNode::singleton(\"Alpha\"), ParentState\n{ name: \"GameState\".to_string(), variant: \"Alpha\".to_string() }.into())"
+expression: "generate_all_type_definitions(&StateNode::singleton(\"Alpha\"),\nParentState::new(\"GameState\", \"Alpha\").into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]
-pub struct Alpha;
+pub struct AlphaState;

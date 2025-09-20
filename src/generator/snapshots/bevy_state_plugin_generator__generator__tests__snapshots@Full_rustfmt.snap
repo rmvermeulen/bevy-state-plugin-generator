@@ -3,7 +3,7 @@ source: src/generator/tests.rs
 expression: "generate_all_type_definitions(&node, (source, scheme).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Menu)]
+#[source(GameState = GameState::Menu)]
 pub enum GameMenuState {
     #[default]
     Main,
@@ -12,11 +12,11 @@ pub enum GameMenuState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenu = GameMenu::Main)]
-pub struct GameMenuMain;
+#[source(GameMenuState = GameMenuState::Main)]
+pub struct GameMenuMainState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenu = GameMenu::Options)]
+#[source(GameMenuState = GameMenuState::Options)]
 pub enum GameMenuOptionsState {
     #[default]
     Graphics,
@@ -25,19 +25,19 @@ pub enum GameMenuOptionsState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenuOptions = GameMenuOptions::Graphics)]
-pub struct GameMenuOptionsGraphics;
+#[source(GameMenuOptionsState = GameMenuOptionsState::Graphics)]
+pub struct GameMenuOptionsGraphicsState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenuOptions = GameMenuOptions::Audio)]
-pub struct GameMenuOptionsAudio;
+#[source(GameMenuOptionsState = GameMenuOptionsState::Audio)]
+pub struct GameMenuOptionsAudioState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenuOptions = GameMenuOptions::Gameplay)]
-pub struct GameMenuOptionsGameplay;
+#[source(GameMenuOptionsState = GameMenuOptionsState::Gameplay)]
+pub struct GameMenuOptionsGameplayState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenu = GameMenu::Continue)]
+#[source(GameMenuState = GameMenuState::Continue)]
 pub enum GameMenuContinueState {
     #[default]
     Save,
@@ -45,9 +45,9 @@ pub enum GameMenuContinueState {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenuContinue = GameMenuContinue::Save)]
-pub struct GameMenuContinueSave;
+#[source(GameMenuContinueState = GameMenuContinueState::Save)]
+pub struct GameMenuContinueSaveState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameMenuContinue = GameMenuContinue::Load)]
-pub struct GameMenuContinueLoad;
+#[source(GameMenuContinueState = GameMenuContinueState::Load)]
+pub struct GameMenuContinueLoadState;

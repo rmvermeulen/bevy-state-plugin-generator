@@ -15,7 +15,7 @@ pub mod states {
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Loading)]
-    pub struct GameLoading;
+    pub struct GameLoadingState;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Ready)]
@@ -26,21 +26,21 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReady = GameReady::Menu)]
-    pub struct GameReadyMenu;
+    #[source(GameReadyState = GameReadyState::Menu)]
+    pub struct GameReadyMenuState;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReady = GameReady::Game)]
-    pub struct GameReadyGame;
+    #[source(GameReadyState = GameReadyState::Game)]
+    pub struct GameReadyGameState;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) { 
         app.init_state::<states::GameState>()
-            .add_sub_state::<states::GameLoading>()
-            .add_sub_state::<states::GameReady>()
-            .add_sub_state::<states::GameReadyMenu>()
-            .add_sub_state::<states::GameReadyGame>()
+            .add_sub_state::<states::GameLoadingState>()
+            .add_sub_state::<states::GameReadyState>()
+            .add_sub_state::<states::GameReadyMenuState>()
+            .add_sub_state::<states::GameReadyGameState>()
         ;
     }
 }

@@ -4,9 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bevy = { version = "0.15.3", default-features = false, features = [
-    "bevy_state",
-] }
+bevy = { version = "0.16", default-features = false, features = ["bevy_state"] }
+bevy_app = "0.16"
 
 [build-dependencies]
 bevy_state_plugin_generator = { path = "../" }

@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use std::rc::Rc;
 
-use crate::tokens::ParseNode;
+use crate::{generator::ToStateName, tokens::ParseNode};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParentState {
@@ -11,22 +11,26 @@ pub struct ParentState {
 
 impl ParentState {
     pub fn new<N: ToString, V: ToString>(name: N, variant: V) -> Self {
-        (name, variant).into()
+        let name = name.to_string();
+        Self {
+            name: name
+                .strip_suffix("State")
+                .map(ToOwned::to_owned)
+                .unwrap_or(name),
+            variant: variant.to_string(),
+        }
     }
     pub fn name(&self) -> String {
-        self.name.clone()
+        self.name.to_state_name()
     }
     pub fn name_and_variant(&self) -> String {
-        format!("{}::{}", self.name, self.variant)
+        format!("{}::{}", self.name.to_state_name(), self.variant)
     }
 }
 
 impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
     fn from((name, variant): (N, V)) -> Self {
-        Self {
-            name: name.to_string(),
-            variant: variant.to_string(),
-        }
+        Self::new(name, variant)
     }
 }
 
