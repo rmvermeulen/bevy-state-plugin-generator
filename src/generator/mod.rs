@@ -12,7 +12,7 @@ use crate::{
     models::{ParentState, StateNode, SubTree},
     parsing::parse_states_file,
 };
-use iter_tools::Itertools;
+use itertools::Itertools;
 
 use models::{TypeDef, TypeDefinitions};
 

@@ -1,4 +1,4 @@
-use iter_tools::Itertools;
+use itertools::Itertools;
 use std::rc::Rc;
 
 use crate::tokens::ParseNode;

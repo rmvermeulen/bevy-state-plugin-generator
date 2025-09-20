@@ -1,7 +1,7 @@
 use std::fmt::{self, Display};
 
 use derive_more::{Deref, From};
-use iter_tools::Itertools;
+use itertools::Itertools;
 
 use super::ToStringWith;
 
