@@ -9,6 +9,7 @@ use crate::{NamingScheme, PluginConfig};
 
 #[rstest]
 #[timeout(Duration::from_millis(250))]
+#[async_std::test]
 async fn test_format_source() {
     let suffix = cfg!(feature = "rustfmt")
         .then_some("_rustfmt")
