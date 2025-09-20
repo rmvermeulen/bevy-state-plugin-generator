@@ -1,0 +1,5 @@
+---
+source: src/generator/tests.rs
+expression: formatted
+---
+fn main(){println!("Hello, world!");}

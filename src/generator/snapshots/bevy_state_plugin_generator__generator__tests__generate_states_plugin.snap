@@ -74,7 +74,7 @@ impl bevy::app::Plugin for GeneratedStatesPlugin {
             .add_sub_state::<states::GameStateReadyGame>()
             .add_sub_state::<states::GameStateReadyGamePlaying>()
             .add_sub_state::<states::GameStateReadyGamePaused>()
-            .add_sub_state::<states::GameStateReadyGameGameOver>();
+            .add_sub_state::<states::GameStateReadyGameGameOver>()
         ;
     }
 }

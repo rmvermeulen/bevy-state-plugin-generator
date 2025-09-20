@@ -199,7 +199,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         impl bevy::app::Plugin for {plugin_name} {{
             fn build(&self, app: &mut bevy::app::App) {{ 
                 app.init_state::<{states_module_name}::{state_name}>()
-                    {sub_states};
+                    {sub_states}
                 ;
             }}
         }}

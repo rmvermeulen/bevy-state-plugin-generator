@@ -10,7 +10,7 @@ pub mod states {
     pub enum GameState {
         #[default]
         Loading,
-        Ready,
+          Ready
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -22,7 +22,7 @@ pub mod states {
     pub enum GameStateReady {
         #[default]
         Menu,
-        Game,
+          Game
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
@@ -35,11 +35,12 @@ pub mod states {
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
-    fn build(&self, app: &mut bevy::app::App) {
+    fn build(&self, app: &mut bevy::app::App) { 
         app.init_state::<states::GameState>()
             .add_sub_state::<states::GameStateLoading>()
             .add_sub_state::<states::GameStateReady>()
             .add_sub_state::<states::GameStateReadyMenu>()
-            .add_sub_state::<states::GameStateReadyGame>();
+            .add_sub_state::<states::GameStateReadyGame>()
+        ;
     }
 }
