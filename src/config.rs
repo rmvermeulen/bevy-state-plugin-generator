@@ -1,5 +1,5 @@
 /// How state-names are determined
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum NamingScheme {
     /// Name includes the names of all ancestors
     #[default]
@@ -38,7 +38,7 @@ impl NamingScheme {
 }
 
 /// Configuration for the generated plugin
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct PluginConfig<'a> {
     /// name of the struct that implements [bevy::plugin::Plugin]
     pub plugin_name: &'a str,

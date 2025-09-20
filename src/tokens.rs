@@ -11,7 +11,7 @@ pub enum Token {
     CloseList,
 }
 
-#[derive(Debug, PartialEq, From, Deref)]
+#[derive(Debug, Deref, From, PartialEq)]
 pub struct Identifier<'a>(&'a str);
 
 impl std::fmt::Display for Identifier<'_> {
@@ -21,7 +21,7 @@ impl std::fmt::Display for Identifier<'_> {
 }
 
 #[cfg(feature = "comments")]
-#[derive(Debug, PartialEq, From, Deref)]
+#[derive(Debug, Deref, From, PartialEq)]
 pub struct Comment<'a>(&'a str);
 
 #[derive(Debug, PartialEq)]

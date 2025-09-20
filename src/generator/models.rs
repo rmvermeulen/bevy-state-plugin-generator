@@ -5,7 +5,7 @@ use iter_tools::Itertools;
 
 use super::ToStringWith;
 
-#[derive(Debug, Clone, From, Deref)]
+#[derive(Clone, Debug, Deref, From)]
 pub(super) struct TypeDefinitions(Vec<TypeDef>);
 
 impl TypeDefinitions {
@@ -31,7 +31,7 @@ impl Display for TypeDefinitions {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub(super) struct TypeDef {
     pub typename: String,
     pub source: String,

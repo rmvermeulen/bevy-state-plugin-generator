@@ -1,7 +1,7 @@
 use super::REQUIRED_DERIVES;
 use crate::{NamingScheme, models::ParentState};
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub(super) struct Context {
     pub(super) derives: String,
     pub(super) naming_scheme: NamingScheme,

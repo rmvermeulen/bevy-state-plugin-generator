@@ -4,7 +4,7 @@ use std::rc::Rc;
 
 use crate::tokens::ParseNode;
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct ParentState {
     pub name: String,
     pub variant: String,
@@ -28,7 +28,7 @@ impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
     }
 }
 
-#[derive(PartialEq, Clone)]
+#[derive(Clone, PartialEq)]
 pub enum StateNode {
     Singleton(String),
     Enum(String, Vec<Rc<StateNode>>),
@@ -50,6 +50,7 @@ impl StateNode {
         )
     }
     #[cfg(test)]
+    #[allow(dead_code)]
     pub fn enum_empty<S: ToString>(name: S) -> Self {
         Self::Enum(name.to_string(), vec![])
     }
@@ -165,7 +166,7 @@ impl SubTree for ParseNode<'_> {
     }
 }
 
-#[derive(PartialEq, Clone, From)]
+#[derive(Clone, From, PartialEq)]
 pub struct StateTree {
     root: Rc<StateNode>,
 }
@@ -231,7 +232,7 @@ mod tests {
     #[rstest]
     #[case(StateNode::singleton("A"), "A")]
     #[case(StateNode::enumeration("A", [StateNode::singleton("B")]), "A { B }")]
-    #[case(StateNode::list("A", [StateNode::singleton("B")]), "A [ B ]")]
+    #[cfg_attr(feature = "lists", case(StateNode::list("A", [StateNode::singleton("B")]), "A [ B ]"))]
     fn test_state_node_debug(#[case] node: StateNode, #[case] expected: &str) {
         assert_eq!(format!("{:?}", node), expected);
     }
