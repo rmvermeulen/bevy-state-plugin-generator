@@ -23,18 +23,18 @@ derive_more = { version = "2.0.1", features = [
     "from",
 ] }
 duct = { version = "0.13.7", optional = true }
-indoc = "2.0.5"
+indoc = "2.0.6"
 iter_tools = "0.24.0"
 nom = "8.0.0"
 
 [dev-dependencies]
-async-std = { version = "1.13.0", features = ["attributes"] }
-insta = "1.42.1"
+async-std = { version = "1.13.2", features = ["attributes"] }
+insta = "1.43.2"
 rstest = "0.24.0"
 speculoos = "0.11.0"
-tempfile = "3.16.0"
+tempfile = "3.22.0"
 
 [dev-dependencies.bevy]
 default-features = false
 features = ["bevy_state"]
-version = "0.15.2"
+version = "0.15.3"
