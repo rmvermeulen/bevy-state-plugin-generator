@@ -3,25 +3,20 @@ use nom::{
     combinator::recognize, multi::many0, sequence::*,
 };
 
-#[cfg(feature = "comments")]
 use crate::tokens::Comment;
 use crate::tokens::{Identifier, ParseNode, Token};
 
-#[cfg(feature = "comments")]
 pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
     comment(input).map_result(ParseNode::Comment)
 }
 
 /// ```rust
-/// # #[cfg(feature = "comments")] {
 /// # use bevy_state_plugin_generator::comment;
 /// assert_eq!(comment("//comment"), Ok(("", "comment".into())));
 /// assert_eq!(comment("// comment "), Ok(("", "comment".into())));
 /// assert_eq!(comment(" // comment "), Ok(("", "comment".into())));
 /// assert_eq!(comment("//\ncomment "), Ok(("comment ", "".into())));
-/// # }
 /// ```
-#[cfg(feature = "comments")]
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     use nom::combinator::eof;
 
@@ -67,14 +62,12 @@ pub fn close_enum(input: &str) -> IResult<&str, Token> {
         .map_result(|_| Token::CloseEnum)
 }
 
-#[cfg(feature = "lists")]
 pub fn open_list(input: &str) -> IResult<&str, Token> {
     skip_to(tag("["))
         .parse(input)
         .map_result(|_| Token::OpenList)
 }
 
-#[cfg(feature = "lists")]
 pub fn close_list(input: &str) -> IResult<&str, Token> {
     skip_to(tag("]"))
         .parse(input)
@@ -125,15 +118,7 @@ pub fn config_is_valid(input: &str) -> bool {
 }
 
 pub fn parse_node(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
-    alt((
-        parse_enum,
-        #[cfg(feature = "lists")]
-        parse_list,
-        #[cfg(feature = "comments")]
-        parse_comment,
-        parse_singleton,
-    ))
-    .parse(input)
+    alt((parse_enum, parse_list, parse_comment, parse_singleton)).parse(input)
 }
 
 pub fn parse_singleton(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
@@ -148,7 +133,6 @@ pub fn parse_enum(input: &str) -> IResult<&str, ParseNode<'_>> {
     Ok((input, ParseNode::Enum(name, children)))
 }
 
-#[cfg(feature = "lists")]
 pub fn parse_list(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =

@@ -5,9 +5,7 @@ pub enum Token {
     Separator,
     OpenEnum,
     CloseEnum,
-    #[cfg(feature = "lists")]
     OpenList,
-    #[cfg(feature = "lists")]
     CloseList,
 }
 
@@ -20,7 +18,6 @@ impl std::fmt::Display for Identifier<'_> {
     }
 }
 
-#[cfg(feature = "comments")]
 #[derive(Debug, Deref, From, PartialEq)]
 pub struct Comment<'a>(&'a str);
 
@@ -28,9 +25,7 @@ pub struct Comment<'a>(&'a str);
 pub enum ParseNode<'a> {
     Singleton(Identifier<'a>),
     Enum(Identifier<'a>, Vec<ParseNode<'a>>),
-    #[cfg(feature = "lists")]
     List(Identifier<'a>, Vec<ParseNode<'a>>),
-    #[cfg(feature = "comments")]
     Comment(Comment<'a>),
 }
 
@@ -44,18 +39,18 @@ impl<'a> ParseNode<'a> {
     ) -> Self {
         Self::Enum(name.into(), variants.into_iter().collect())
     }
-    #[cfg(all(test, feature = "lists"))]
+    #[cfg(test)]
     pub fn list_empty<I: Into<Identifier<'a>>>(name: I) -> Self {
         Self::List(name.into(), vec![])
     }
-    #[cfg(all(test, feature = "lists"))]
+    #[cfg(test)]
     pub fn list<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
         name: I,
         variants: V,
     ) -> Self {
         Self::List(name.into(), variants.into_iter().collect())
     }
-    #[cfg(all(test, feature = "comments"))]
+    #[cfg(test)]
     pub fn comment<C: Into<Comment<'a>>>(name: C) -> Self {
         Self::Comment(name.into())
     }

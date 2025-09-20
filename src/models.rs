@@ -31,7 +31,6 @@ impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
 pub enum StateNode {
     Singleton(String),
     Enum(String, Vec<Rc<StateNode>>),
-    #[cfg(feature = "lists")]
     List(String, Vec<Rc<StateNode>>),
 }
 
@@ -53,7 +52,6 @@ impl StateNode {
     pub fn enum_empty<S: ToString>(name: S) -> Self {
         Self::Enum(name.to_string(), vec![])
     }
-    #[cfg(feature = "lists")]
     pub fn list<N: Into<Rc<StateNode>>, V: IntoIterator<Item = N>, S: ToString>(
         name: S,
         variants: V,
@@ -65,7 +63,6 @@ impl StateNode {
     }
     pub fn name(&self) -> &str {
         match self {
-            #[cfg(feature = "lists")]
             StateNode::List(name, _) => name,
             StateNode::Singleton(name) | StateNode::Enum(name, _) => name,
         }
@@ -82,7 +79,6 @@ impl std::fmt::Debug for StateNode {
             StateNode::Enum(name, children) => {
                 write!(f, "{} {{ {} }}", name, format_children(children))
             }
-            #[cfg(feature = "lists")]
             StateNode::List(name, children) => {
                 write!(f, "{} [ {} ]", name, format_children(children))
             }
@@ -105,9 +101,7 @@ impl TryFrom<ParseNode<'_>> for StateNode {
             ParseNode::Enum(name, children) => {
                 Ok(StateNode::enumeration(name, map_children(children)))
             }
-            #[cfg(feature = "lists")]
             ParseNode::List(name, children) => Ok(StateNode::list(name, map_children(children))),
-            #[cfg(feature = "comments")]
             ParseNode::Comment(_) => Err(()),
         }
     }
@@ -128,7 +122,6 @@ impl SubTree for StateNode {
                     .sum::<usize>()
                     + 1
             }
-            #[cfg(feature = "lists")]
             StateNode::List(_, children) => {
                 children
                     .iter()
@@ -143,7 +136,6 @@ impl SubTree for StateNode {
 impl SubTree for ParseNode<'_> {
     fn get_tree_size(&self) -> usize {
         match self {
-            #[cfg(feature = "comments")]
             ParseNode::Comment(_) => 1,
             ParseNode::Singleton(_) => 1,
             ParseNode::Enum(_, children) => {
@@ -153,7 +145,6 @@ impl SubTree for ParseNode<'_> {
                     .sum::<usize>()
                     + 1
             }
-            #[cfg(feature = "lists")]
             ParseNode::List(_, children) => {
                 children
                     .iter()
@@ -186,7 +177,7 @@ mod tests {
     #[rstest]
     #[case(StateNode::singleton("A"), "A")]
     #[case(StateNode::enumeration("A", [StateNode::singleton("B")]), "A { B }")]
-    #[cfg_attr(feature = "lists", case(StateNode::list("A", [StateNode::singleton("B")]), "A [ B ]"))]
+    #[case(StateNode::list("A", [StateNode::singleton("B")]), "A [ B ]")]
     fn test_state_node_debug(#[case] node: StateNode, #[case] expected: &str) {
         assert_eq!(format!("{node:?}"), expected);
     }

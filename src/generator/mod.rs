@@ -71,7 +71,6 @@ fn get_typedef(
         "}
     };
     match node {
-        #[cfg(feature = "lists")]
         StateNode::List(_, _) => TypeDef {
             source: source_for_struct(),
             typename,
@@ -125,7 +124,6 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                 typedefs.into()
             }
         }
-        #[cfg(feature = "lists")]
         StateNode::List(_, variants) => {
             let mut variants = variants
                 .iter()

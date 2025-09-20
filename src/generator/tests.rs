@@ -66,10 +66,7 @@ fn test_plugin_formatted(root_node: Rc<StateNode>, plugin_config: PluginConfig) 
 }
 
 #[rstest]
-#[cfg_attr(
-    feature = "comments",
-    case("comments.txt", Rc::new(StateNode::enum_empty("GameState")),)
-)]
+#[case("comments.txt", Rc::new(StateNode::enum_empty("GameState")))]
 #[case("simple.txt", Rc::new(StateNode::enumeration("GameState", [
     StateNode::singleton("Loading"),
     StateNode::enumeration("Ready", [
@@ -99,7 +96,6 @@ fn test_generate_plugin_source(#[case] src_path: &str, #[case] root_node: Rc<Sta
     assert_snapshot!(test_plugin_formatted(root_node, Default::default()));
 }
 
-#[cfg(feature = "lists")]
 #[rstest]
 #[case("root.txt", "RootState", PluginConfig::default())]
 #[case(
@@ -324,7 +320,6 @@ fn snapshot2a() {
     ));
 }
 
-#[cfg(feature = "lists")]
 #[rstest]
 fn snapshot3() {
     let suffix = cfg!(feature = "rustfmt")
@@ -341,7 +336,6 @@ fn snapshot3() {
     ));
 }
 
-#[cfg(feature = "lists")]
 #[rstest]
 fn snapshot4() {
     let suffix = cfg!(feature = "rustfmt")

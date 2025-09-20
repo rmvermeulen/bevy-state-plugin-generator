@@ -7,7 +7,6 @@ use std::{fs, io, path::Path};
 use generator::generate_state_plugin_source;
 
 pub use config::{NamingScheme, PluginConfig};
-#[cfg(feature = "comments")]
 pub use parsing::comment;
 pub use parsing::config_is_valid;
 
