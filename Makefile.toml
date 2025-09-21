@@ -1,14 +1,6 @@
 [config]
 default_to_workspace = false
 
-[tasks.run]
-command = "cargo"
-args = ["run"]
-
-[tasks.run-headless]
-command = "cargo"
-args = ["run"]
-
 [tasks.test]
 clear = true
 run_task = { name = ["test-lib", "test-app"] }
