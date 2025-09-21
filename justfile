@@ -5,7 +5,7 @@ test-all: test
 
 test-fast: (test "--fail-fast")
 
-check-snapshots action="reject":
-    cargo insta test --all-features --unreferenced {{action}}
-
-clean-snapshots: (check-snapshots "delete")
+# NOTE: this only works if `--all-features` implies "all test cases" and not "alternate test cases"
+# check-snapshots action="reject":
+#     cargo insta test --all-features --unreferenced {{action}}
+# clean-snapshots: (check-snapshots "delete")
