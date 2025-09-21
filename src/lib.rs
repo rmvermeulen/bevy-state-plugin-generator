@@ -7,6 +7,8 @@ use std::{fs, io};
 
 pub use config::{NamingScheme, PluginConfig};
 use generator::generate_state_plugin_source;
+use itertools::Itertools;
+use lazy_regex::regex;
 pub use parsing::{comment, config_is_valid};
 
 /// config structs
@@ -21,12 +23,73 @@ pub(crate) mod tokens;
 /// ```rust no_run
 /// use bevy_state_plugin_generator::*;
 /// fn main() {
-///   on_build_generate_plugin("src/states.txt", "src/generated_states.rs", PluginConfig::default())
-///     .expect("Failed to generate plugin!");
+///   update_template(
+///     "src/generated_states.rs",
+///     PluginConfig::default()
+///   ).expect("Failed to generate plugin!");
 /// }
 /// ```
 #[cfg_attr(coverage_nightly, coverage(off))]
-pub fn on_build_generate_plugin(
+pub fn update_template(
+    template_path: impl AsRef<Path>,
+    plugin_config: PluginConfig,
+) -> io::Result<()> {
+    let src_display = template_path.as_ref().to_string_lossy();
+    println!("cargo:rerun-if-changed={src_display}");
+    let source = std::fs::read_to_string(&template_path)?;
+
+    let comment_block = source
+        .lines()
+        .take_while(|line| line.starts_with("//"))
+        .collect_vec();
+
+    let source = {
+        let mut template_src = Vec::new();
+        let mut in_template = false;
+        for line in &comment_block {
+            if in_template {
+                if regex!(r#"^\s+//\s+```"#).is_match(line) {
+                    in_template = false;
+                } else if let Some(line) = line.strip_prefix("// ") {
+                    template_src.push(line);
+                } else {
+                    break;
+                }
+            } else if regex!(r#"^\s*//\s*bspg:"#).is_match(line) {
+                // TODO: parse config
+            } else if regex!(r#"^\s*//\s*bspg\s+```"#).is_match(line) {
+                in_template = true;
+            } else {
+                break;
+            }
+        }
+        template_src.join("\n")
+    };
+
+    let plugin_source = match generate_state_plugin_source(&source, plugin_config, None) {
+        Ok(source) => source,
+        Err(message) => message,
+    };
+
+    let comment_block = comment_block.join("\n");
+    fs::write(
+        &template_path,
+        format!("{comment_block}\n\n{plugin_source}"),
+    )
+}
+
+/// ```rust no_run
+/// use bevy_state_plugin_generator::*;
+/// fn main() {
+///   generate_plugin(
+///     "src/states.txt",
+///     "src/generated_states.rs",
+///     PluginConfig::default()
+///   ).expect("Failed to generate plugin!");
+/// }
+/// ```
+#[cfg_attr(coverage_nightly, coverage(off))]
+pub fn generate_plugin(
     src: impl AsRef<Path>,
     dst: impl AsRef<Path>,
     plugin_config: PluginConfig,
@@ -34,7 +97,7 @@ pub fn on_build_generate_plugin(
     let src_display = src.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&src)?;
-    let source = match generate_state_plugin_source(src_display, source, plugin_config) {
+    let source = match generate_state_plugin_source(&source, plugin_config, Some(&src_display)) {
         Ok(source) => source,
         Err(message) => message,
     };

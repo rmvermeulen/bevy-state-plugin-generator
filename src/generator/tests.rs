@@ -113,7 +113,8 @@ fn test_generate_full_source(
         .unwrap_or_default();
     set_snapshot_suffix!("{src_path}{suffix}");
     assert_snapshot!(
-        generate_state_plugin_source(src_path, source, plugin_config).unwrap_or_else(identity)
+        generate_state_plugin_source(source, plugin_config, Some(src_path))
+            .unwrap_or_else(identity)
     );
 }
 
@@ -127,12 +128,12 @@ fn test_naming_scheme(#[case] src_path: &str, #[case] source: &str, #[case] sche
     set_snapshot_suffix!("{src_path}{suffix}");
     assert_snapshot!(
         generate_state_plugin_source(
-            src_path,
             source,
             PluginConfig {
                 scheme,
                 ..Default::default()
-            }
+            },
+            Some(src_path),
         )
         .unwrap_or_else(identity)
     );

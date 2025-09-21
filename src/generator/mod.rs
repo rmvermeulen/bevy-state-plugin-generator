@@ -12,7 +12,7 @@ use models::{TypeDef, TypeDefinitions};
 use nom::AsChar;
 
 use crate::models::{ParentState, StateNode, SubTree};
-use crate::parsing::parse_states_file;
+use crate::parsing::parse_states_text;
 use crate::{NamingScheme, PluginConfig};
 
 pub(super) const REQUIRED_DERIVES: &[&str] =
@@ -255,14 +255,13 @@ pub fn format_source<S: AsRef<str>>(source: S) -> String {
     }
 }
 
-pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<str>>(
-    src_path: P,
-    source: S,
+pub fn generate_state_plugin_source(
+    source: &str,
     plugin_config: PluginConfig,
+    src_path: Option<&str>,
 ) -> Result<String, String> {
-    let source = source.as_ref();
     let parse_tree =
-        parse_states_file(source, plugin_config.state_name).map_err(|e| e.to_string())?;
+        parse_states_text(source, plugin_config.state_name).map_err(|e| e.to_string())?;
 
     let parse_tree_size = parse_tree.get_tree_size();
 
@@ -276,9 +275,13 @@ pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<
         return Err("state-tree exceeds parse-tree!".into());
     }
 
-    let debug_info = generate_debug_info(src_path.as_ref(), source);
     let plugin_source = generate_plugin_source(root_node, plugin_config);
-    let source = [debug_info, plugin_source].join("\n");
+    let source = if let Some(src_path) = src_path {
+        let debug_info = generate_debug_info(src_path, source);
+        [debug_info, plugin_source].join("\n")
+    } else {
+        plugin_source
+    };
 
     Ok(format_source(source))
 }

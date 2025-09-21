@@ -43,7 +43,7 @@ fn main() {
     scheme: NamingScheme::Full,
     additional_derives: &[],
   };
-  on_build_generate_plugin("src/states.txt", "src/generated_states.rs", config)
+  generate_plugin("src/states.txt", "src/generated_states.rs", config)
     .expect("Failed to generate plugin!");
 }
 ```

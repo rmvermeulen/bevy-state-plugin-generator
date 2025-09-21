@@ -236,7 +236,7 @@ fn test_parse_states_file(
     #[case] root_state_name: &str,
     #[case] expected: ParseNode,
 ) {
-    assert_that!(parse_states_file(input, root_state_name))
+    assert_that!(parse_states_text(input, root_state_name))
         .is_ok()
         .is_equal_to(expected);
 }

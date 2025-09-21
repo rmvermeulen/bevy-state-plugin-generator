@@ -90,7 +90,7 @@ pub(super) fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
     many0(delimited(many0(separator), parse_node, many0(separator))).parse(input)
 }
 
-pub fn parse_states_file<'a>(
+pub fn parse_states_text<'a>(
     input: &'a str,
     root_state_name: &'a str,
 ) -> Result<ParseNode<'a>, String> {
