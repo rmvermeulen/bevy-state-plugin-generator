@@ -41,3 +41,7 @@ tempfile = "3.22.0"
 default-features = false
 features = ["bevy_state"]
 version = "0.16.1"
+
+[package.metadata.cargo-feature-combinations]
+exclude_features = ["default"]
+exclude_packages = ["test-app"]
