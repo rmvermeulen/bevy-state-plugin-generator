@@ -60,7 +60,7 @@ pub mod states {
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameReadyGameState = GameReadyGameState::GameOver)]
-    pub struct GameReadyGameGameOverState;
+    pub struct GameReadyGameOverState;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
@@ -74,6 +74,6 @@ impl bevy::app::Plugin for GeneratedStatesPlugin {
             .add_sub_state::<states::GameReadyGameState>()
             .add_sub_state::<states::GameReadyGamePlayingState>()
             .add_sub_state::<states::GameReadyGamePausedState>()
-            .add_sub_state::<states::GameReadyGameGameOverState>();
+            .add_sub_state::<states::GameReadyGameOverState>();
     }
 }

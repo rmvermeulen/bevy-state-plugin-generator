@@ -13,6 +13,7 @@ use nom::AsChar;
 
 use crate::models::{ParentState, StateNode, SubTree};
 use crate::parsing::parse_states_text;
+use crate::split_case::normalize_state_name;
 use crate::{NamingScheme, PluginConfig};
 
 pub(super) const REQUIRED_DERIVES: &[&str] =
@@ -29,11 +30,12 @@ pub trait ToStateName {
 impl<S: ToString> ToStateName for S {
     fn to_state_name(&self) -> String {
         let s = self.to_string();
-        if s.ends_with("State") {
+        let state_name = if s.ends_with("State") {
             s
         } else {
             format!("{s}State")
-        }
+        };
+        normalize_state_name(&state_name)
     }
 }
 
