@@ -3,18 +3,16 @@ mod models;
 #[cfg(test)]
 mod tests;
 
-use context::Context;
-use indoc::formatdoc;
 use std::rc::Rc;
 
-use crate::{
-    NamingScheme, PluginConfig,
-    models::{ParentState, StateNode, SubTree},
-    parsing::parse_states_file,
-};
+use context::Context;
+use indoc::formatdoc;
 use itertools::Itertools;
-
 use models::{TypeDef, TypeDefinitions};
+
+use crate::models::{ParentState, StateNode, SubTree};
+use crate::parsing::parse_states_file;
+use crate::{NamingScheme, PluginConfig};
 
 pub(super) const REQUIRED_DERIVES: &[&str] =
     &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
@@ -225,7 +223,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         }}
         pub struct {plugin_name};
         impl bevy::app::Plugin for {plugin_name} {{
-            fn build(&self, app: &mut bevy::app::App) {{ 
+            fn build(&self, app: &mut bevy::app::App) {{
                 app.init_state::<{states_module_name}::{state_name}>()
                     {sub_states}
                 ;

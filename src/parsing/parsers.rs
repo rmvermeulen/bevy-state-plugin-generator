@@ -1,10 +1,12 @@
-use nom::{
-    IResult, Parser, branch::alt, bytes::complete::*, character::complete::*,
-    combinator::recognize, multi::many0, sequence::*,
-};
+use nom::branch::alt;
+use nom::bytes::complete::*;
+use nom::character::complete::*;
+use nom::combinator::recognize;
+use nom::multi::many0;
+use nom::sequence::*;
+use nom::{IResult, Parser};
 
-use crate::tokens::Comment;
-use crate::tokens::{Identifier, ParseNode, Token};
+use crate::tokens::{Comment, Identifier, ParseNode, Token};
 
 pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
     comment(input).map_result(ParseNode::Comment)

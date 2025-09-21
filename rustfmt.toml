@@ -1,0 +1,8 @@
+# prevent merge conflicts by grouping, sorting, and unmerging imports
+reorder_imports = true
+group_imports = "StdExternalCrate"
+imports_granularity = "Module"
+imports_indent = "Visual"
+# for cobweb callbacks etc.
+error_on_line_overflow = true
+error_on_unformatted = true

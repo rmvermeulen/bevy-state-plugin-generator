@@ -1,9 +1,7 @@
 mod generated_states;
 
-use bevy::{
-    prelude::{App, AppExit},
-    state::app::StatesPlugin,
-};
+use bevy::prelude::{App, AppExit};
+use bevy::state::app::StatesPlugin;
 use generated_states::GeneratedStatesPlugin;
 
 fn main() -> AppExit {

@@ -2,13 +2,12 @@
 #![warn(missing_docs)]
 #![doc = include_str!("../Readme.md")]
 
-use std::{fs, io, path::Path};
-
-use generator::generate_state_plugin_source;
+use std::path::Path;
+use std::{fs, io};
 
 pub use config::{NamingScheme, PluginConfig};
-pub use parsing::comment;
-pub use parsing::config_is_valid;
+use generator::generate_state_plugin_source;
+pub use parsing::{comment, config_is_valid};
 
 /// config structs
 pub mod config;

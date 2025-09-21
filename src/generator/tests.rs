@@ -1,11 +1,11 @@
-use std::{convert::identity, time::Duration};
+use std::convert::identity;
+use std::time::Duration;
 
-use super::*;
 use insta::{assert_debug_snapshot, assert_snapshot};
 use rstest::{fixture, rstest};
 
-use crate::set_snapshot_suffix;
-use crate::{NamingScheme, PluginConfig};
+use super::*;
+use crate::{NamingScheme, PluginConfig, set_snapshot_suffix};
 
 #[rstest]
 #[timeout(Duration::from_millis(250))]

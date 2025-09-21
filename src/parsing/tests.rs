@@ -1,4 +1,5 @@
-use nom::{Parser, branch::alt};
+use nom::Parser;
+use nom::branch::alt;
 
 use super::parsers::*;
 use crate::testing::*;
@@ -100,11 +101,16 @@ fn test_parse_enum_variants(#[case] input: &str, #[case] node: ParseNode) {
 #[rstest]
 #[case::just_a_comma("Name {,}", ParseNode::enumeration("Name", [ ]))]
 #[case::mora_commas("Name {,,,,}", ParseNode::enumeration("Name", [ ]))]
-#[case::comma_after_variant("Name {A,}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-#[case::comma_before_variant("Name {,A}", ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-#[case::comma_between_variants("Name {A,B}", ParseNode::enumeration("Name", [
-    ParseNode::singleton("A"), ParseNode::singleton("B")
-]))]
+#[case::comma_after_variant("Name {A,}",
+    ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
+#[case::comma_before_variant("Name {,A}",
+    ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
+#[case::comma_between_variants("Name {A,B}",
+    ParseNode::enumeration("Name", [
+        ParseNode::singleton("A"),
+        ParseNode::singleton("B")
+    ])
+)]
 fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: ParseNode) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }

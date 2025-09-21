@@ -1,7 +1,9 @@
-use itertools::Itertools;
 use std::rc::Rc;
 
-use crate::{generator::ToStateName, tokens::ParseNode};
+use itertools::Itertools;
+
+use crate::generator::ToStateName;
+use crate::tokens::ParseNode;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParentState {
