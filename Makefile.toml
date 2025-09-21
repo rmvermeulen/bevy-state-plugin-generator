@@ -14,8 +14,8 @@ clear = true
 run_task = { name = ["test-lib", "test-app"] }
 
 [tasks.test-lib]
-install_crate = "cargo-insta"
-command = "cargo"
+install_crate = "cargo-feature-combinations"
+command = "cargo-feature-combinations"
 args = ["insta", "test", "--unreferenced=warn"]
 
 [tasks.review]
