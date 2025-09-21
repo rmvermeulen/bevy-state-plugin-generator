@@ -9,6 +9,7 @@ use context::Context;
 use indoc::formatdoc;
 use itertools::Itertools;
 use models::{TypeDef, TypeDefinitions};
+use nom::AsChar;
 
 use crate::models::{ParentState, StateNode, SubTree};
 use crate::parsing::parse_states_file;
@@ -243,12 +244,14 @@ pub fn try_format_source(source: &str) -> std::io::Result<String> {
 pub fn format_source<S: AsRef<str>>(source: S) -> String {
     let source = source.as_ref();
     #[cfg(feature = "rustfmt")]
-    {
-        try_format_source(source).unwrap_or_else(|_| source.to_owned())
-    }
+    let source = try_format_source(source).unwrap_or_else(|_| source.to_owned());
     #[cfg(not(feature = "rustfmt"))]
-    {
-        source.to_owned()
+    let source = source.to_owned();
+
+    if source.ends_with(|c: char| c.is_newline()) {
+        source
+    } else {
+        source + "\n"
     }
 }
 
