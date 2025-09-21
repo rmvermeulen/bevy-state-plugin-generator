@@ -8,7 +8,7 @@ run_task = { name = ["test-lib", "test-app"] }
 [tasks.test-lib]
 install_crate = "cargo-feature-combinations"
 command = "cargo-feature-combinations"
-args = ["insta", "test", "--unreferenced=warn"]
+args = ["insta", "test"]
 
 [tasks.review]
 install_crate = "cargo-insta"
