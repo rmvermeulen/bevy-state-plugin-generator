@@ -8,10 +8,35 @@ use nom::{IResult, Parser};
 
 use crate::parsing::tokens::{Comment, Identifier, ParseNode, Token};
 
-// TODO: add #directives to the format to configure the parser
-// TODO: replace PluginConfig with something like ParserOverrides and GeneratorOverrides
-// TODO: add the parent-name-prefix operator to the format (e.g. '$' or '^')
-// TODO: #[cfg(feature = "directives")] pub struct Directive;
+#[cfg(feature = "directives")]
+pub mod directives {
+    // TODO: add #directives to the format to configure the parser
+    // TODO: replace PluginConfig with something like ParserOverrides and GeneratorOverrides
+    // TODO: add the parent-name-prefix operator to the format (e.g. '$' or '^')
+
+    use nom::branch::alt;
+    use nom::bytes::complete::tag;
+    use nom::character::complete::{line_ending, not_line_ending};
+    use nom::combinator::eof;
+    use nom::sequence::delimited;
+    use nom::{IResult, Parser};
+
+    use crate::parsing::ParseNode;
+    use crate::parsing::tokens::Directive;
+
+    pub fn directive(input: &str) -> IResult<&str, &str> {
+        delimited(tag("#"), not_line_ending, alt((eof, line_ending))).parse(input)
+    }
+    fn inner_directive(input: &str) -> IResult<&str, Directive<'_>> {
+        todo!()
+    }
+    pub fn parse_directive(input: &str) -> IResult<&str, ParseNode<'_>> {
+        directive
+            .and_then(inner_directive)
+            .map(ParseNode::Directive)
+            .parse(input)
+    }
+}
 
 pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
     comment(input).map_result(ParseNode::Comment)

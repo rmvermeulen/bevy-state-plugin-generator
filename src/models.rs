@@ -36,6 +36,11 @@ impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
     }
 }
 
+pub struct GeneratorContext {
+    pub parent: Option<ParentState>,
+    pub state: Rc<StateNode>,
+}
+
 #[derive(Clone, PartialEq)]
 pub enum StateNode {
     Singleton(String),
@@ -112,6 +117,8 @@ impl TryFrom<ParseNode<'_>> for StateNode {
             }
             ParseNode::List(name, children) => Ok(StateNode::list(name, map_children(children))),
             ParseNode::Comment(_) => Err(()),
+            #[cfg(feature = "directives")]
+            ParseNode::Directive(_) => todo!(),
         }
     }
 }
@@ -161,6 +168,8 @@ impl SubTree for ParseNode<'_> {
                     .sum::<usize>()
                     + 1
             }
+            #[cfg(feature = "directives")]
+            ParseNode::Directive(_) => todo!(),
         }
     }
 }

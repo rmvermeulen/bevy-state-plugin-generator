@@ -8,22 +8,6 @@ pub enum Token {
     OpenList,
     CloseList,
 }
-#[cfg(feature = "directives")]
-pub struct Directive<'a>(ConfigProperty, &'a str);
-
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub enum ConfigProperty {
-    /// name of the struct that implements [bevy::plugin::Plugin]
-    PluginName,
-    /// name of the root enum/struct that represents the game state
-    StateName,
-    /// name of the module that contains sub-states
-    StatesModuleName,
-    /// naming scheme for the generated states
-    Scheme,
-    /// add additional traits to the derive list
-    AdditionDerives,
-}
 
 #[derive(Debug, Deref, From, PartialEq)]
 pub struct Identifier<'a>(&'a str);
@@ -43,6 +27,8 @@ pub enum ParseNode<'a> {
     Enum(Identifier<'a>, Vec<ParseNode<'a>>),
     List(Identifier<'a>, Vec<ParseNode<'a>>),
     Comment(Comment<'a>),
+    #[cfg(feature = "directives")]
+    Directive(Directive<'a>),
 }
 
 impl<'a> ParseNode<'a> {
@@ -78,4 +64,22 @@ impl<'a> TryFrom<&'a str> for ParseNode<'a> {
     fn try_from(s: &'a str) -> Result<Self, Self::Error> {
         crate::parsing::parse_node(s).map(|(_, node)| node)
     }
+}
+
+#[cfg(feature = "directives")]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Directive<'a>(ConfigProperty, &'a str);
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum ConfigProperty {
+    /// name of the struct that implements [bevy::plugin::Plugin]
+    PluginName,
+    /// name of the root enum/struct that represents the game state
+    StateName,
+    /// name of the module that contains sub-states
+    StatesModuleName,
+    /// naming scheme for the generated states
+    Scheme,
+    /// add additional traits to the derive list
+    AdditionDerives,
 }
