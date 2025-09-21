@@ -7,6 +7,7 @@ cargo fmt --check
 branch=$(git rev-parse --abbrev-ref HEAD)
 if [ "$branch" != "main" ]; then
 	makers test
+	cargo insta test --all-features --unreferenced reject
 	exit 0
 fi
 
