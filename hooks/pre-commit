@@ -11,4 +11,4 @@ if [ ! -z "$unformatted" ]; then
 	exit 1
 fi
 
-makers test
+just test-fast
