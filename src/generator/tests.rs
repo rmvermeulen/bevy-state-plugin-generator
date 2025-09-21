@@ -120,7 +120,11 @@ fn test_generate_full_source(
 #[rstest]
 #[case("root.txt", "RootState", NamingScheme::Full)]
 #[case("root.txt", "RootState", NamingScheme::Short)]
-fn test_naming_scheme(#[case] src_path: &str, #[case] source: &str, #[case] scheme: NamingScheme) {
+fn test_naming_scheme(
+    #[case] src_path: &str,
+    #[case] source: &str,
+    #[case] naming_scheme: NamingScheme,
+) {
     let suffix = cfg!(feature = "rustfmt")
         .then_some("_rustfmt")
         .unwrap_or_default();
@@ -130,7 +134,7 @@ fn test_naming_scheme(#[case] src_path: &str, #[case] source: &str, #[case] sche
             src_path,
             source,
             PluginConfig {
-                scheme,
+                naming_scheme,
                 ..Default::default()
             }
         )

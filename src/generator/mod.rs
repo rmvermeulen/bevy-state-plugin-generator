@@ -188,16 +188,16 @@ pub fn generate_debug_info(src_path: &str, source: &str) -> String {
     "}
 }
 
-pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginConfig) -> String {
+pub(crate) fn generate_plugin_source(root_node: Rc<StateNode>, config: PluginConfig) -> String {
     let PluginConfig {
         plugin_name,
-        state_name,
+        root_state,
         states_module_name,
-        scheme: _,
+        naming_scheme,
         additional_derives,
     } = config;
 
-    let context = Context::from(config.scheme);
+    let context = Context::from(naming_scheme);
     let context = if additional_derives.is_empty() {
         context
     } else {
@@ -207,7 +207,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         }
     };
 
-    let type_definitions = generate_all_type_definitions(&root_state, context);
+    let type_definitions = generate_all_type_definitions(&root_node, context);
     let definitions_source = type_definitions.to_string_indented("    ");
     let sub_states = type_definitions
         .take()
@@ -216,6 +216,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         .map(|typedef| typedef.typename)
         .map(|state_name| format!(".add_sub_state::<{states_module_name}::{state_name}>()"))
         .join("\n            ");
+
     formatdoc! {"
         #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
@@ -226,7 +227,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         pub struct {plugin_name};
         impl bevy::app::Plugin for {plugin_name} {{
             fn build(&self, app: &mut bevy::app::App) {{
-                app.init_state::<{states_module_name}::{state_name}>()
+                app.init_state::<{states_module_name}::{root_state}>()
                     {sub_states}
                 ;
             }}
@@ -263,7 +264,7 @@ pub fn generate_state_plugin_source<P: AsRef<str> + std::fmt::Display, S: AsRef<
 ) -> Result<String, String> {
     let source = source.as_ref();
     let parse_tree =
-        parse_states_file(source, plugin_config.state_name).map_err(|e| e.to_string())?;
+        parse_states_file(source, plugin_config.root_state).map_err(|e| e.to_string())?;
 
     let parse_tree_size = parse_tree.get_tree_size();
 

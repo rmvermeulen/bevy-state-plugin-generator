@@ -1,11 +1,11 @@
 use std::fmt::{self, Display};
 
-use derive_more::{Deref, From};
+use derive_more::{Deref, DerefMut, From};
 use itertools::Itertools;
 
 use super::ToStringWith;
 
-#[derive(Clone, Debug, Deref, From)]
+#[derive(Clone, Debug, Deref, DerefMut, From)]
 pub(super) struct TypeDefinitions(Vec<TypeDef>);
 
 impl TypeDefinitions {

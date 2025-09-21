@@ -67,19 +67,19 @@ impl<'a> TryFrom<&'a str> for ParseNode<'a> {
 }
 
 #[cfg(feature = "directives")]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Directive<'a>(ConfigProperty, &'a str);
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum ConfigProperty {
-    /// name of the struct that implements [bevy::plugin::Plugin]
+    /// name of the struct that implements [`bevy::plugin::Plugin`]
     PluginName,
     /// name of the root enum/struct that represents the game state
-    StateName,
+    RootState,
     /// name of the module that contains sub-states
     StatesModuleName,
     /// naming scheme for the generated states
-    Scheme,
+    NamingScheme,
     /// add additional traits to the derive list
-    AdditionDerives,
+    AdditionalDerives,
 }

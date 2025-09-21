@@ -16,11 +16,11 @@ use bevy::prelude::AppExtStates;
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    pub struct GameState;
+    pub struct RootState;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>();
+        app.init_state::<states::RootState>();
     }
 }

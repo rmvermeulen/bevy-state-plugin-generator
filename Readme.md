@@ -38,9 +38,9 @@ fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
     plugin_name: "GeneratedStatesPlugin",
-    state_name: "GameState",
+    root_state: "GameState",
     states_module_name: "states",
-    scheme: NamingScheme::Full,
+    naming_scheme: NamingScheme::Full,
     additional_derives: &[],
   };
   on_build_generate_plugin("src/states.txt", "src/generated_states.rs", config)

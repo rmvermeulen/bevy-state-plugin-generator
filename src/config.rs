@@ -52,14 +52,14 @@ impl NamingScheme {
 #[cfg_attr(feature = "directives", derive(Partial), partially(derive(Default)))]
 #[derive(Clone, Copy, Debug)]
 pub struct PluginConfig<'a> {
-    /// name of the struct that implements [bevy::plugin::Plugin]
+    /// name of the struct that implements [`bevy::plugin::Plugin`]
     pub plugin_name: &'a str,
     /// name of the root enum/struct that represents the game state
-    pub state_name: &'a str,
+    pub root_state: &'a str,
     /// name of the module that contains sub-states
     pub states_module_name: &'a str,
     /// naming scheme for the generated states
-    pub scheme: NamingScheme,
+    pub naming_scheme: NamingScheme,
     /// add additional traits to the derive list
     pub additional_derives: &'a [&'a str],
 }
@@ -69,26 +69,26 @@ pub struct PluginConfig<'a> {
 /// # use bevy_state_plugin_generator::{NamingScheme, PluginConfig};
 /// let config = PluginConfig::default();
 /// assert_eq!(config.plugin_name, "GeneratedStatesPlugin");
-/// assert_eq!(config.state_name, "GameState");
+/// assert_eq!(config.root_state, "RootState");
 /// assert_eq!(config.states_module_name, "states");
-/// assert_eq!(config.scheme, NamingScheme::Full);
+/// assert_eq!(config.naming_scheme, NamingScheme::Full);
 /// ```
 impl Default for PluginConfig<'_> {
     fn default() -> Self {
         Self {
             plugin_name: "GeneratedStatesPlugin",
-            state_name: "GameState",
+            root_state: "RootState",
             states_module_name: "states",
-            scheme: Default::default(),
+            naming_scheme: Default::default(),
             additional_derives: &[],
         }
     }
 }
 
 impl From<NamingScheme> for PluginConfig<'_> {
-    fn from(scheme: NamingScheme) -> Self {
+    fn from(naming_scheme: NamingScheme) -> Self {
         Self {
-            scheme,
+            naming_scheme,
             ..Default::default()
         }
     }
