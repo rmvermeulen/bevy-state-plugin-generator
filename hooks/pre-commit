@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-set -exu
+set -eu
 echo "Pre-commit hook"
-cargo fmt --check
-cargo t --doc
+
+unformatted=$(cargo fmt --check --message-format short | ag -v generated_states || exit 0)
+
+if [ ! -z "$unformatted" ]; then
+	echo "Unformatted files!"
+	echo "$unformatted"
+	exit 1
+fi
+
+makers test
