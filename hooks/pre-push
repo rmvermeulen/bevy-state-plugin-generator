@@ -6,11 +6,11 @@ cargo fmt --check
 
 branch=$(git rev-parse --abbrev-ref HEAD)
 if [ "$branch" != "main" ]; then
-	cargo-feature-combinations test
+	makers test
 	exit 0
 fi
 
-cargo make --no-workspace report
+makers report
 status=$(git status -s)
 if [ -n "$status" ]; then
 	echo "You have uncommitted changes; aborting push"
