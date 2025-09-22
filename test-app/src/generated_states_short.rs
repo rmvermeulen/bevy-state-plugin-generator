@@ -23,51 +23,51 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Loading)]
-    pub enum GameLoadingState {
+    #[source(Game = Game::Loading)]
+    pub enum GameLoading {
         #[default]
         Configs,
         Assets,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameLoadingState = GameLoadingState::Configs)]
-    pub struct GameLoadingConfigsState;
+    #[source(Loading = Loading::Configs)]
+    pub struct LoadingConfigs;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameLoadingState = GameLoadingState::Assets)]
-    pub struct GameLoadingAssetsState;
+    #[source(Loading = Loading::Assets)]
+    pub struct LoadingAssets;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Ready)]
-    pub enum GameReadyState {
+    #[source(Game = Game::Ready)]
+    pub enum GameReady {
         #[default]
         Playing,
         Paused,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReadyState = GameReadyState::Playing)]
-    pub struct GameReadyPlayingState;
+    #[source(Ready = Ready::Playing)]
+    pub struct ReadyPlaying;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReadyState = GameReadyState::Paused)]
-    pub struct GameReadyPausedState;
+    #[source(Ready = Ready::Paused)]
+    pub struct ReadyPaused;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Exiting)]
-    pub struct GameExitingState;
+    #[source(Game = Game::Exiting)]
+    pub struct GameExiting;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
         app.init_state::<states::GameState>()
-            .add_sub_state::<states::GameLoadingState>()
-            .add_sub_state::<states::GameLoadingConfigsState>()
-            .add_sub_state::<states::GameLoadingAssetsState>()
-            .add_sub_state::<states::GameReadyState>()
-            .add_sub_state::<states::GameReadyPlayingState>()
-            .add_sub_state::<states::GameReadyPausedState>()
-            .add_sub_state::<states::GameExitingState>();
+            .add_sub_state::<states::GameLoading>()
+            .add_sub_state::<states::LoadingConfigs>()
+            .add_sub_state::<states::LoadingAssets>()
+            .add_sub_state::<states::GameReady>()
+            .add_sub_state::<states::ReadyPlaying>()
+            .add_sub_state::<states::ReadyPaused>()
+            .add_sub_state::<states::GameExiting>();
     }
 }
