@@ -4,7 +4,7 @@ use crate::models::ParentState;
 
 #[derive(Clone, Debug)]
 pub(super) struct Context {
-    pub(super) derives: String,
+    pub(super) derives: Vec<String>,
     pub(super) naming_scheme: NamingScheme,
     pub(super) parent_state: Option<ParentState>,
 }
@@ -14,7 +14,7 @@ impl Default for Context {
         Self {
             parent_state: None,
             naming_scheme: NamingScheme::None,
-            derives: REQUIRED_DERIVES.join(", "),
+            derives: REQUIRED_DERIVES.iter().map(ToString::to_string).collect(),
         }
     }
 }

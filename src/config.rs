@@ -40,7 +40,7 @@ impl NamingScheme {
 /// Configuration for the generated plugin
 #[derive(Clone, Copy, Debug)]
 pub struct PluginConfig<'a> {
-    /// name of the struct that implements [bevy::plugin::Plugin]
+    /// name of the struct that implements [`bevy::plugin::Plugin`]
     pub plugin_name: &'a str,
     /// name of the root enum/struct that represents the game state
     pub state_name: &'a str,
