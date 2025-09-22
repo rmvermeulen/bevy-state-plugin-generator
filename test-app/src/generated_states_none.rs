@@ -23,7 +23,7 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Loading)]
+    #[source(GameState = GameState::Loading)]
     pub enum Loading {
         #[default]
         Configs,
@@ -39,7 +39,7 @@ pub mod states {
     pub struct Assets;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Ready)]
+    #[source(GameState = GameState::Ready)]
     pub enum Ready {
         #[default]
         Playing,
@@ -55,7 +55,7 @@ pub mod states {
     pub struct Paused;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Exiting)]
+    #[source(GameState = GameState::Exiting)]
     pub struct Exiting;
 }
 pub struct GeneratedStatesPlugin;

@@ -96,9 +96,8 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                 .flat_map(|child_node| {
                     let parent_state = ParentState::new(
                         match context.naming_scheme {
-                            NamingScheme::Short | NamingScheme::None => {
-                                root_node.name().to_string()
-                            }
+                            NamingScheme::Short => root_node.name().to_string(),
+                            NamingScheme::None => root_node.name().to_string(),
                             NamingScheme::Full => root_typedef.typename.clone(),
                         },
                         child_node.name(),

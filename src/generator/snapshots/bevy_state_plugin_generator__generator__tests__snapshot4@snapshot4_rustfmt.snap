@@ -3,29 +3,29 @@ source: src/generator/tests.rs
 expression: "generate_all_type_definitions(&StateNode::list(\"List\",\n[StateNode::singleton(\"Item1\"),\nStateNode::enumeration(\"Item2\",\n[StateNode::singleton(\"A\"), StateNode::singleton(\"B\"),]),\nStateNode::singleton(\"Item3\"),]),\n(ParentState::new(\"GameState\", \"Alpha\", None), NamingScheme::Full).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Alpha)]
-pub struct GameList;
+#[source(GameState = GameState::Alpha)]
+pub struct GameStateList;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Alpha)]
-pub struct GameItem1;
+#[source(GameState = GameState::Alpha)]
+pub struct GameStateItem1;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Alpha)]
-pub enum GameItem2 {
+#[source(GameState = GameState::Alpha)]
+pub enum GameStateItem2 {
     #[default]
     A,
       B
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameItem2 = GameItem2::A)]
-pub struct GameItem2A;
+#[source(GameStateItem2 = GameStateItem2::A)]
+pub struct GameStateGameStateItem2A;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameItem2 = GameItem2::B)]
-pub struct GameItem2B;
+#[source(GameStateItem2 = GameStateItem2::B)]
+pub struct GameStateGameStateItem2B;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Alpha)]
-pub struct GameItem3;
+#[source(GameState = GameState::Alpha)]
+pub struct GameStateItem3;

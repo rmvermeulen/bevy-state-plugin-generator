@@ -14,36 +14,36 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Loading)]
-    pub struct GameLoading;
+    #[source(GameState = GameState::Loading)]
+    pub struct GameStateLoading;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Ready)]
-    pub enum GameReady {
+    #[source(GameState = GameState::Ready)]
+    pub enum GameStateReady {
         #[default]
         Menu,
         Game,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReady = GameReady::Menu)]
-    pub enum GameReadyMenu {
+    #[source(GameStateReady = GameStateReady::Menu)]
+    pub enum GameStateGameStateReadyMenu {
         #[default]
         Main,
         Options,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReadyMenu = GameReadyMenu::Main)]
-    pub struct GameReadyGameReadyMenuMain;
+    #[source(GameStateGameStateReadyMenu = GameStateGameStateReadyMenu::Main)]
+    pub struct GameStateGameStateReadyGameStateGameStateReadyMenuMain;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReadyMenu = GameReadyMenu::Options)]
-    pub struct GameReadyGameReadyMenuOptions;
+    #[source(GameStateGameStateReadyMenu = GameStateGameStateReadyMenu::Options)]
+    pub struct GameStateGameStateReadyGameStateGameStateReadyMenuOptions;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReady = GameReady::Game)]
-    pub enum GameReadyGame {
+    #[source(GameStateReady = GameStateReady::Game)]
+    pub enum GameStateGameStateReadyGame {
         #[default]
         Playing,
         Paused,
@@ -51,29 +51,29 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReadyGame = GameReadyGame::Playing)]
-    pub struct GameReadyGameReadyGamePlaying;
+    #[source(GameStateGameStateReadyGame = GameStateGameStateReadyGame::Playing)]
+    pub struct GameStateGameStateReadyGameStateGameStateReadyGamePlaying;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReadyGame = GameReadyGame::Paused)]
-    pub struct GameReadyGameReadyGamePaused;
+    #[source(GameStateGameStateReadyGame = GameStateGameStateReadyGame::Paused)]
+    pub struct GameStateGameStateReadyGameStateGameStateReadyGamePaused;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReadyGame = GameReadyGame::GameOver)]
-    pub struct GameReadyGameReadyGameOver;
+    #[source(GameStateGameStateReadyGame = GameStateGameStateReadyGame::GameOver)]
+    pub struct GameStateGameStateReadyGameStateGameStateReadyGameOver;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
         app.init_state::<states::GameState>()
-            .add_sub_state::<states::GameLoading>()
-            .add_sub_state::<states::GameReady>()
-            .add_sub_state::<states::GameReadyMenu>()
-            .add_sub_state::<states::GameReadyGameReadyMenuMain>()
-            .add_sub_state::<states::GameReadyGameReadyMenuOptions>()
-            .add_sub_state::<states::GameReadyGame>()
-            .add_sub_state::<states::GameReadyGameReadyGamePlaying>()
-            .add_sub_state::<states::GameReadyGameReadyGamePaused>()
-            .add_sub_state::<states::GameReadyGameReadyGameOver>();
+            .add_sub_state::<states::GameStateLoading>()
+            .add_sub_state::<states::GameStateReady>()
+            .add_sub_state::<states::GameStateGameStateReadyMenu>()
+            .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyMenuMain>()
+            .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyMenuOptions>()
+            .add_sub_state::<states::GameStateGameStateReadyGame>()
+            .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyGamePlaying>()
+            .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyGamePaused>()
+            .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyGameOver>();
     }
 }

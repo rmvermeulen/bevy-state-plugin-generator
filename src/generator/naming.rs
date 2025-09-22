@@ -6,13 +6,13 @@ use lazy_regex::regex;
 use crate::NamingScheme;
 use crate::models::{ParentState, StateNode};
 
-pub trait ToStateName {
-    fn to_state_name(&self) -> String;
+pub trait NormalizeStateName {
+    fn normalize_state_name(&self) -> String;
 }
 
-impl<S: ToString> ToStateName for S {
-    fn to_state_name(&self) -> String {
-        normalize_state_name(&self.to_string())
+impl<S: ToString> NormalizeStateName for S {
+    fn normalize_state_name(&self) -> String {
+        split_by_case(&self.to_string()).join("")
     }
 }
 
@@ -21,13 +21,13 @@ pub fn apply_naming_scheme(
     node: &StateNode,
     parent: Option<&ParentState>,
 ) -> String {
-    let name = node.name().to_state_name();
+    let name = node.name().normalize_state_name();
     match naming_scheme {
         NamingScheme::None => name,
         NamingScheme::Short => {
             if let Some(parent) = parent {
                 let parent = parent.state_name();
-                format!("{parent}{name}").to_state_name()
+                format!("{parent}{name}").normalize_state_name()
             } else {
                 name
             }
@@ -35,16 +35,12 @@ pub fn apply_naming_scheme(
         NamingScheme::Full => {
             if let Some(parent) = parent {
                 let parent = parent.ancestral_name();
-                format!("{parent}{name}").to_state_name()
+                format!("{parent}{name}").normalize_state_name()
             } else {
                 name
             }
         }
     }
-}
-
-pub fn normalize_state_name(input: &str) -> String {
-    split_by_case(input).join("")
 }
 
 fn split_by_case<'s>(input: &'s str) -> Vec<Cow<'s, str>> {
