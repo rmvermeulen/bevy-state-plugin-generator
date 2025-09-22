@@ -24,6 +24,17 @@ impl ParentState {
             parent: parent.map(Box::new),
         }
     }
+    pub fn parent(&self) -> Option<ParentState> {
+        self.parent.clone().map(|p| *p)
+    }
+    pub fn ancestral_name(&self) -> String {
+        (self
+            .parent()
+            .map(|p| p.ancestral_name())
+            .unwrap_or_default()
+            + &self.name)
+            .to_state_name()
+    }
     pub fn state_name(&self) -> String {
         self.name.to_state_name()
     }
