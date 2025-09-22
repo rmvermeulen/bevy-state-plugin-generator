@@ -37,6 +37,12 @@ impl NamingScheme {
     }
 }
 
+impl std::fmt::Display for NamingScheme {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}
+
 /// Configuration for the generated plugin
 #[derive(Clone, Copy, Debug)]
 pub struct PluginConfig<'a> {

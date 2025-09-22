@@ -1,6 +1,6 @@
 ---
 source: src/generator/tests.rs
-expression: "generate_all_type_definitions(&node, (source, scheme).into())"
+expression: "generate_all_type_definitions(&node, (source, naming_scheme).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Menu)]

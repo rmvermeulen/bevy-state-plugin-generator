@@ -129,7 +129,7 @@ fn test_naming_scheme(
     let suffix = cfg!(feature = "rustfmt")
         .then_some("_rustfmt")
         .unwrap_or_default();
-    set_snapshot_suffix!("{src_path}{suffix}");
+    set_snapshot_suffix!("{src_path}_{naming_scheme}{suffix}");
     assert_snapshot!(
         generate_state_plugin_source(
             source,
