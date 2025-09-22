@@ -188,15 +188,15 @@ fn test_generate_all_type_definitions_full(
     .collect_vec();
     assert_debug_snapshot!(typenames, @r#"
     [
-        "GameMenuState",
-        "GameMenuMainState",
-        "GameMenuOptionsState",
-        "GameMenuOptionsGraphicsState",
-        "GameMenuOptionsAudioState",
-        "GameMenuOptionsGameplayState",
-        "GameMenuContinueState",
-        "GameMenuContinueSaveState",
-        "GameMenuContinueLoadState",
+        "GameMenu",
+        "GameMenuMain",
+        "GameMenuOptions",
+        "GameMenuGameMenuOptionsGraphics",
+        "GameMenuGameMenuOptionsAudio",
+        "GameMenuGameMenuOptionsGameplay",
+        "GameMenuContinue",
+        "GameMenuGameMenuContinueSave",
+        "GameMenuGameMenuContinueLoad",
     ]
     "#);
 }
@@ -211,15 +211,15 @@ fn test_generate_all_type_definitions_shortened(
             .take().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
-        "GameMenuState",
-        "MenuMainState",
-        "MenuOptionsState",
-        "OptionsGraphicsState",
-        "OptionsAudioState",
-        "OptionsGameplayState",
-        "MenuContinueState",
-        "ContinueSaveState",
-        "ContinueLoadState",
+        "GameMenu",
+        "MenuMain",
+        "MenuOptions",
+        "OptionsGraphics",
+        "OptionsAudio",
+        "OptionsGameplay",
+        "MenuContinue",
+        "ContinueSave",
+        "ContinueLoad",
     ]
     "#);
 }
@@ -234,15 +234,15 @@ fn test_generate_all_type_definitions_none(
             .take().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
-        "MenuState",
-        "MainState",
-        "OptionsState",
-        "GraphicsState",
-        "AudioState",
-        "GameplayState",
-        "ContinueState",
-        "SaveState",
-        "LoadState",
+        "Menu",
+        "Main",
+        "Options",
+        "Graphics",
+        "Audio",
+        "Gameplay",
+        "Continue",
+        "Save",
+        "Load",
     ]
     "#);
 }
