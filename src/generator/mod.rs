@@ -29,13 +29,7 @@ pub trait ToStateName {
 
 impl<S: ToString> ToStateName for S {
     fn to_state_name(&self) -> String {
-        let s = self.to_string();
-        let state_name = if s.ends_with("State") {
-            s
-        } else {
-            format!("{s}State")
-        };
-        normalize_state_name(&state_name)
+        normalize_state_name(&format!("{}State", self.to_string()))
     }
 }
 
@@ -194,11 +188,11 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         plugin_name,
         state_name,
         states_module_name,
-        scheme: _,
+        naming_scheme,
         additional_derives,
     } = config;
 
-    let context = Context::from(config.scheme);
+    let context = Context::from(naming_scheme);
     let context = if additional_derives.is_empty() {
         context
     } else {

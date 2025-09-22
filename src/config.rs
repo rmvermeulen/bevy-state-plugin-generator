@@ -47,7 +47,7 @@ pub struct PluginConfig<'a> {
     /// name of the module that contains sub-states
     pub states_module_name: &'a str,
     /// naming scheme for the generated states
-    pub scheme: NamingScheme,
+    pub naming_scheme: NamingScheme,
     /// add additional traits to the derive list
     pub additional_derives: &'a [&'a str],
 }
@@ -59,7 +59,7 @@ pub struct PluginConfig<'a> {
 /// assert_eq!(config.plugin_name, "GeneratedStatesPlugin");
 /// assert_eq!(config.state_name, "GameState");
 /// assert_eq!(config.states_module_name, "states");
-/// assert_eq!(config.scheme, NamingScheme::Full);
+/// assert_eq!(config.naming_scheme, NamingScheme::Full);
 /// ```
 impl Default for PluginConfig<'_> {
     fn default() -> Self {
@@ -67,16 +67,16 @@ impl Default for PluginConfig<'_> {
             plugin_name: "GeneratedStatesPlugin",
             state_name: "GameState",
             states_module_name: "states",
-            scheme: Default::default(),
+            naming_scheme: Default::default(),
             additional_derives: &[],
         }
     }
 }
 
 impl From<NamingScheme> for PluginConfig<'_> {
-    fn from(scheme: NamingScheme) -> Self {
+    fn from(naming_scheme: NamingScheme) -> Self {
         Self {
-            scheme,
+            naming_scheme: naming_scheme,
             ..Default::default()
         }
     }
