@@ -2,17 +2,18 @@ use std::rc::Rc;
 
 use itertools::Itertools;
 
-use crate::generator::ToStateName;
+use crate::generator::naming::ToStateName;
 use crate::tokens::ParseNode;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParentState {
+    parent: Option<Box<ParentState>>,
     name: String,
     variant: String,
 }
 
 impl ParentState {
-    pub fn new<N: ToString, V: ToString>(name: N, variant: V) -> Self {
+    pub fn new<N: ToString, V: ToString>(name: N, variant: V, parent: Option<ParentState>) -> Self {
         let name = name.to_string();
         Self {
             name: name
@@ -20,6 +21,7 @@ impl ParentState {
                 .map(ToOwned::to_owned)
                 .unwrap_or(name),
             variant: variant.to_string(),
+            parent: parent.map(Box::new),
         }
     }
     pub fn state_name(&self) -> String {
@@ -27,12 +29,6 @@ impl ParentState {
     }
     pub fn name_and_variant(&self) -> String {
         format!("{}::{}", self.name.to_state_name(), self.variant)
-    }
-}
-
-impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
-    fn from((name, variant): (N, V)) -> Self {
-        Self::new(name, variant)
     }
 }
 
