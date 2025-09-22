@@ -15,8 +15,7 @@ in a `Plugin`.
 
 ```rust
 // TODO: fix naming-scheme collision detection
-// TODO: allow customizing derived traits
-// TODO: allow specifying naming-scheme in states.txt per-node
+// TODO: fix parent-names being incorrect if they contain `State`
 ```
 
 ## usage
