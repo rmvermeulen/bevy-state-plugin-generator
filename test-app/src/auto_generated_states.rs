@@ -1,6 +1,6 @@
 // bspg:root_state    RootState
 // bspg:naming_scheme Full
-// bspg ```
+// bspg:
 // Loading {
 //     Configs
 //     Assets
@@ -10,7 +10,6 @@
 //     Paused
 // }
 // Exiting
-// ```
 
 #![allow(missing_docs)]
 use bevy::prelude::AppExtStates;

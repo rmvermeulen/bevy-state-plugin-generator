@@ -11,6 +11,8 @@ use itertools::Itertools;
 use lazy_regex::regex;
 pub use parsing::{comment, config_is_valid};
 
+use crate::generator::get_package_info;
+
 /// config structs
 pub mod config;
 pub(crate) mod generator;
@@ -49,16 +51,14 @@ pub fn update_template(
         let mut in_template = false;
         for line in &comment_block {
             if in_template {
-                if regex!(r#"^\s+//\s+```"#).is_match(line) {
-                    in_template = false;
-                } else if let Some(line) = line.strip_prefix("// ") {
-                    template_src.push(line);
+                if let Some(line) = line.strip_prefix("//") {
+                    template_src.push(line.trim());
                 } else {
                     break;
                 }
-            } else if regex!(r#"^\s*//\s*bspg:"#).is_match(line) {
+            } else if regex!(r#"^\s*//\s*bspg:(\w+)\s+(\w+)\s*$"#).is_match(line) {
                 // TODO: parse config
-            } else if regex!(r#"^\s*//\s*bspg\s+```"#).is_match(line) {
+            } else if regex!(r#"^\s*//\s*bspg:\s*$"#).is_match(line) {
                 in_template = true;
             } else {
                 break;
@@ -72,6 +72,7 @@ pub fn update_template(
         Err(message) => message,
     };
 
+    // TODO: also include `get_package_info()`
     let comment_block = comment_block.join("\n");
     fs::write(
         &template_path,
