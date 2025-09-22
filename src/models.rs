@@ -2,37 +2,74 @@ use std::rc::Rc;
 
 use itertools::Itertools;
 
-use crate::generator::ToStateName;
+use crate::generator::naming::NormalizeStateName;
 use crate::tokens::ParseNode;
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct StateNodeName {
+    source: String,
+    resolved: String,
+}
+
+impl StateNodeName {
+    pub fn new<S: ToString>(source: S) -> Self {
+        let source = source.to_string();
+        let resolved = source.normalize_state_name();
+        let resolved = if resolved.starts_with(&source) {
+            resolved
+        } else {
+            source.clone()
+        };
+        Self { source, resolved }
+    }
+}
+
+impl<S: ToString> From<S> for StateNodeName {
+    fn from(value: S) -> Self {
+        Self::new(value)
+    }
+}
+
+impl NormalizeStateName for StateNodeName {
+    fn normalize_state_name(&self) -> String {
+        self.resolved.clone()
+    }
+}
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParentState {
-    name: String,
+    parent: Option<Rc<ParentState>>,
+    name: StateNodeName,
     variant: String,
 }
 
 impl ParentState {
-    pub fn new<N: ToString, V: ToString>(name: N, variant: V) -> Self {
-        let name = name.to_string();
+    pub fn new<N: Into<StateNodeName>, V: ToString>(
+        name: N,
+        variant: V,
+        parent: Option<ParentState>,
+    ) -> Self {
         Self {
-            name: name
-                .strip_suffix("State")
-                .map(ToOwned::to_owned)
-                .unwrap_or(name),
+            name: name.into(),
             variant: variant.to_string(),
+            parent: parent.map(Rc::new),
         }
     }
+    pub fn parent(&self) -> Option<Rc<ParentState>> {
+        self.parent.clone()
+    }
+    pub fn ancestral_name(&self) -> String {
+        let anc_name = self
+            .parent()
+            .map(|p| p.ancestral_name())
+            .unwrap_or_default();
+        format!("{anc_name}{}", self.name.resolved).normalize_state_name()
+    }
     pub fn state_name(&self) -> String {
-        self.name.to_state_name()
+        self.name.normalize_state_name()
     }
     pub fn name_and_variant(&self) -> String {
-        format!("{}::{}", self.name.to_state_name(), self.variant)
-    }
-}
-
-impl<N: ToString, V: ToString> From<(N, V)> for ParentState {
-    fn from((name, variant): (N, V)) -> Self {
-        Self::new(name, variant)
+        format!("{}::{}", self.name.normalize_state_name(), self.variant)
     }
 }
 

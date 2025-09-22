@@ -1,8 +1,12 @@
 # State-Plugin generator
 
 Generates a bunch of hierarchical states (structs and enums, using `State`
-and `SubState`) and sets up their relationships
+and `SubState`) from a simple DSL and sets up their relationships
 in a `Plugin`.
+
+## Probably do not use
+
+It has many bugs and the versions mean nothing. It will not save you time.
 
 ## versions
 
@@ -14,12 +18,44 @@ in a `Plugin`.
 ## bugs
 
 ```rust
-// TODO: fix naming-scheme collision detection
-// TODO: allow customizing derived traits
-// TODO: allow specifying naming-scheme in states.txt per-node
+// TODO: naming-scheme collision detection
+// TODO: incorrect names containing `State`
+// TODO: fix parent-names being incorrect if they contain `State`
 ```
 
 ## usage
+
+### single-file mode
+
+Create a `states.rs` in `src/` and add the following comment at the top:
+
+````rs
+// bspg: ```
+// Loading
+// Ready { Menu Game }
+// Exiting
+// ```
+````
+
+Set up your `build.rs` like this:
+
+```rust no_run
+use bevy_state_plugin_generator::*;
+fn main() {
+  /// The [Default::default] configuration is:
+  let config = PluginConfig {
+    plugin_name: "GeneratedStatesPlugin",
+    state_name: "GameState",
+    states_module_name: "states",
+    naming_scheme: NamingScheme::Full,
+    additional_derives: &[],
+  };
+  update_template("src/states.rs", config)
+    .expect("Failed to update template!");
+}
+```
+
+### separate-file mode
 
 Create a `states.txt` in `src/`:
 
@@ -84,32 +120,21 @@ impl bevy::app::Plugin for GeneratedStatesPlugin {
 # assert!(config_is_valid("Loading // Comments"));
 ```
 
-### single-file mode
+## naming
 
-Create a `states.rs` in `src/` and add the following comment at the top:
+Consider the following sample:
 
-````rs
-// bspg: ```
-// Loading
-// Ready { Menu Game }
-// Exiting
-// ```
-````
-
-Set up your `build.rs` like this:
-
-```rust no_run
-use bevy_state_plugin_generator::*;
-fn main() {
-  /// The [Default::default] configuration is:
-  let config = PluginConfig {
-    plugin_name: "GeneratedStatesPlugin",
-    state_name: "GameState",
-    states_module_name: "states",
-    naming_scheme: NamingScheme::Full,
-    additional_derives: &[],
-  };
-  update_template("src/states.rs", config)
-    .expect("Failed to update template!");
+```txt
+PlayerState {
+    Good
+    BadState { OnFire InWater }
 }
 ```
+
+| none          | full                         | merge                   |
+| ------------- | ---------------------------- | ----------------------- |
+| `PlayerState` | `PlayerState`                | `PlayerState`           |
+| `Good`        | `PlayerStateGood`            | `PlayerGoodState`       |
+| `BadState`    | `PlayerStateBadState`        | `PlayerBadState`        |
+| `OnFire`      | `PlayerStateBadStateOnFire`  | `PlayerBadOnFireState`  |
+| `InWater`     | `PlayerStateBadStateInWater` | `PlayerBadInWaterState` |

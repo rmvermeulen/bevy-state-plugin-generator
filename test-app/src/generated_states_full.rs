@@ -23,51 +23,51 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Loading)]
-    pub enum GameLoading {
+    #[source(GameState = GameState::Loading)]
+    pub enum GameStateLoading {
         #[default]
         Configs,
         Assets,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameLoading = GameLoading::Configs)]
-    pub struct GameLoadingConfigs;
+    #[source(GameStateLoading = GameStateLoading::Configs)]
+    pub struct GameStateGameStateLoadingConfigs;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameLoading = GameLoading::Assets)]
-    pub struct GameLoadingAssets;
+    #[source(GameStateLoading = GameStateLoading::Assets)]
+    pub struct GameStateGameStateLoadingAssets;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Ready)]
-    pub enum GameReady {
+    #[source(GameState = GameState::Ready)]
+    pub enum GameStateReady {
         #[default]
         Playing,
         Paused,
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReady = GameReady::Playing)]
-    pub struct GameReadyPlaying;
+    #[source(GameStateReady = GameStateReady::Playing)]
+    pub struct GameStateGameStateReadyPlaying;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameReady = GameReady::Paused)]
-    pub struct GameReadyPaused;
+    #[source(GameStateReady = GameStateReady::Paused)]
+    pub struct GameStateGameStateReadyPaused;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Exiting)]
-    pub struct GameExiting;
+    #[source(GameState = GameState::Exiting)]
+    pub struct GameStateExiting;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
         app.init_state::<states::GameState>()
-            .add_sub_state::<states::GameLoading>()
-            .add_sub_state::<states::GameLoadingConfigs>()
-            .add_sub_state::<states::GameLoadingAssets>()
-            .add_sub_state::<states::GameReady>()
-            .add_sub_state::<states::GameReadyPlaying>()
-            .add_sub_state::<states::GameReadyPaused>()
-            .add_sub_state::<states::GameExiting>();
+            .add_sub_state::<states::GameStateLoading>()
+            .add_sub_state::<states::GameStateGameStateLoadingConfigs>()
+            .add_sub_state::<states::GameStateGameStateLoadingAssets>()
+            .add_sub_state::<states::GameStateReady>()
+            .add_sub_state::<states::GameStateGameStateReadyPlaying>()
+            .add_sub_state::<states::GameStateGameStateReadyPaused>()
+            .add_sub_state::<states::GameStateExiting>();
     }
 }

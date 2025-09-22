@@ -61,10 +61,6 @@ fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
     assert_snapshot!(generate_debug_info(src_path, source));
 }
 
-fn test_plugin_formatted(root_node: Rc<StateNode>, plugin_config: PluginConfig) -> String {
-    format_source(generate_plugin_source(root_node, plugin_config))
-}
-
 #[rstest]
 #[case("comments.txt", Rc::new(StateNode::enum_empty("GameState")))]
 #[case("simple.txt", Rc::new(StateNode::enumeration("GameState", [
@@ -93,7 +89,10 @@ fn test_generate_plugin_source(#[case] src_path: &str, #[case] root_node: Rc<Sta
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("{src_path}{suffix}");
-    assert_snapshot!(test_plugin_formatted(root_node, Default::default()));
+    assert_snapshot!(format_source(generate_plugin_source(
+        root_node,
+        Default::default()
+    )));
 }
 
 #[rstest]
@@ -145,8 +144,9 @@ fn test_naming_scheme(
 
 #[fixture]
 fn root_parent_state() -> ParentState {
-    ParentState::new("Game", "Menu")
+    ParentState::new("Game", "Menu", None)
 }
+
 #[fixture]
 fn nested_node() -> StateNode {
     StateNode::enumeration(
@@ -188,15 +188,15 @@ fn test_generate_all_type_definitions_full(
     .collect_vec();
     assert_debug_snapshot!(typenames, @r#"
     [
-        "GameMenuState",
-        "GameMenuMainState",
-        "GameMenuOptionsState",
-        "GameMenuOptionsGraphicsState",
-        "GameMenuOptionsAudioState",
-        "GameMenuOptionsGameplayState",
-        "GameMenuContinueState",
-        "GameMenuContinueSaveState",
-        "GameMenuContinueLoadState",
+        "GameMenu",
+        "GameMenuMain",
+        "GameMenuOptions",
+        "GameMenuGameMenuOptionsGraphics",
+        "GameMenuGameMenuOptionsAudio",
+        "GameMenuGameMenuOptionsGameplay",
+        "GameMenuContinue",
+        "GameMenuGameMenuContinueSave",
+        "GameMenuGameMenuContinueLoad",
     ]
     "#);
 }
@@ -211,15 +211,15 @@ fn test_generate_all_type_definitions_shortened(
             .take().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
-        "GameMenuState",
-        "MenuMainState",
-        "MenuOptionsState",
-        "OptionsGraphicsState",
-        "OptionsAudioState",
-        "OptionsGameplayState",
-        "MenuContinueState",
-        "ContinueSaveState",
-        "ContinueLoadState",
+        "GameMenu",
+        "MenuMain",
+        "MenuOptions",
+        "OptionsGraphics",
+        "OptionsAudio",
+        "OptionsGameplay",
+        "MenuContinue",
+        "ContinueSave",
+        "ContinueLoad",
     ]
     "#);
 }
@@ -234,15 +234,15 @@ fn test_generate_all_type_definitions_none(
             .take().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
-        "MenuState",
-        "MainState",
-        "OptionsState",
-        "GraphicsState",
-        "AudioState",
-        "GameplayState",
-        "ContinueState",
-        "SaveState",
-        "LoadState",
+        "Menu",
+        "Main",
+        "Options",
+        "Graphics",
+        "Audio",
+        "Gameplay",
+        "Continue",
+        "Save",
+        "Load",
     ]
     "#);
 }
@@ -271,7 +271,7 @@ fn snapshot1() {
     set_snapshot_suffix!("snapshot1{suffix}");
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::singleton("Alpha"),
-        ParentState::new("GameState", "Alpha").into()
+        ParentState::new("GameState", "Alpha", None).into()
     ));
 }
 
@@ -295,7 +295,11 @@ fn snapshot2() {
     set_snapshot_suffix!("snapshot2{suffix}");
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
-        (ParentState::new("GameState", "Alpha"), NamingScheme::Full).into()
+        (
+            ParentState::new("GameState", "Alpha", None),
+            NamingScheme::Full
+        )
+            .into()
     ));
 }
 
@@ -320,7 +324,7 @@ fn snapshot3() {
     assert_snapshot!(generate_all_type_definitions(
         &StateNode::list("Alpha", [StateNode::singleton("Beta")]),
         (
-            ParentState::from(("GameState", "Alpha")),
+            ParentState::new("GameState", "Alpha", None),
             NamingScheme::Full
         )
             .into()
@@ -346,7 +350,7 @@ fn snapshot4() {
             ]
         ),
         (
-            ParentState::from(("GameState", "Alpha")),
+            ParentState::new("GameState", "Alpha", None),
             NamingScheme::Full
         )
             .into()

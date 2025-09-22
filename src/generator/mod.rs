@@ -1,5 +1,6 @@
 mod context;
 mod models;
+pub mod naming;
 #[cfg(test)]
 mod tests;
 
@@ -11,9 +12,9 @@ use itertools::Itertools;
 use models::{TypeDef, TypeDefinitions};
 use nom::AsChar;
 
+use crate::generator::naming::apply_naming_scheme;
 use crate::models::{ParentState, StateNode, SubTree};
 use crate::parsing::parse_states_text;
-use crate::split_case::normalize_state_name;
 use crate::{NamingScheme, PluginConfig};
 
 pub(super) const REQUIRED_DERIVES: &[&str] =
@@ -21,16 +22,6 @@ pub(super) const REQUIRED_DERIVES: &[&str] =
 
 pub trait ToStringWith {
     fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String;
-}
-
-pub trait ToStateName {
-    fn to_state_name(&self) -> String;
-}
-
-impl<S: ToString> ToStateName for S {
-    fn to_state_name(&self) -> String {
-        normalize_state_name(&format!("{}State", self.to_string()))
-    }
 }
 
 fn get_typedef(
@@ -55,33 +46,7 @@ fn get_typedef(
         .unwrap_or_else(|| formatdoc! {"#[derive(bevy::prelude::States, {derives})]"})
         .trim()
         .to_string();
-    let typename = if naming_scheme == NamingScheme::None {
-        node.name().to_state_name()
-    } else {
-        parent_state
-            .clone()
-            .map(|parent_state| {
-                let parent_name = {
-                    let parent_name = parent_state.state_name();
-                    parent_name
-                        .strip_suffix("State")
-                        .map(ToOwned::to_owned)
-                        .unwrap_or(parent_name)
-                };
-                assert!(!parent_name.is_empty());
-                let child_name = {
-                    let child_name = node.name().to_state_name();
-                    child_name
-                        .strip_suffix("State")
-                        .map(ToOwned::to_owned)
-                        .unwrap_or(child_name)
-                };
-                assert!(!child_name.is_empty());
-                format!("{parent_name}{child_name}")
-            })
-            .unwrap_or_else(|| node.name().to_string())
-            .to_state_name()
-    };
+    let typename = apply_naming_scheme(naming_scheme, node, parent_state.as_ref());
     let source_for_struct = || {
         formatdoc! {"
             {derives}
@@ -131,12 +96,12 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                 .flat_map(|child_node| {
                     let parent_state = ParentState::new(
                         match context.naming_scheme {
-                            NamingScheme::Short | NamingScheme::None => {
-                                root_node.name().to_string()
-                            }
+                            NamingScheme::Short => root_node.name().to_string(),
+                            NamingScheme::None => root_node.name().to_string(),
                             NamingScheme::Full => root_typedef.typename.clone(),
                         },
                         child_node.name(),
+                        context.parent_state.clone(),
                     );
                     generate_all_type_definitions(
                         child_node,

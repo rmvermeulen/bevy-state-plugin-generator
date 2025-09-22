@@ -16,7 +16,6 @@ pub mod config;
 pub(crate) mod generator;
 pub(crate) mod models;
 pub(crate) mod parsing;
-pub(crate) mod split_case;
 #[cfg(test)]
 pub(crate) mod testing;
 pub(crate) mod tokens;
