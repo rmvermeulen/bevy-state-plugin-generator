@@ -45,7 +45,7 @@ fn get_typedef(
     let derives = parent_state
         .clone()
         .map(|parent_state| {
-            let source = parent_state.name();
+            let source = parent_state.state_name();
             let variant = parent_state.name_and_variant();
             formatdoc! {"
                 #[derive(bevy::prelude::SubStates, {derives})]
@@ -61,16 +61,21 @@ fn get_typedef(
         parent_state
             .clone()
             .map(|parent_state| {
-                let parent_name = parent_state
-                    .name()
-                    .strip_suffix("State")
-                    .map(ToOwned::to_owned)
-                    .unwrap_or_else(|| parent_state.name());
+                let parent_name = {
+                    let parent_name = parent_state.state_name();
+                    parent_name
+                        .strip_suffix("State")
+                        .map(ToOwned::to_owned)
+                        .unwrap_or(parent_name)
+                };
                 assert!(!parent_name.is_empty());
-                let child_name = node
-                    .name()
-                    .strip_suffix("State")
-                    .unwrap_or_else(|| node.name());
+                let child_name = {
+                    let child_name = node.name().to_state_name();
+                    child_name
+                        .strip_suffix("State")
+                        .map(ToOwned::to_owned)
+                        .unwrap_or(child_name)
+                };
                 assert!(!child_name.is_empty());
                 format!("{parent_name}{child_name}")
             })

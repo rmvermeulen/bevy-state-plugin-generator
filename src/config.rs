@@ -82,7 +82,7 @@ impl Default for PluginConfig<'_> {
 impl From<NamingScheme> for PluginConfig<'_> {
     fn from(naming_scheme: NamingScheme) -> Self {
         Self {
-            naming_scheme: naming_scheme,
+            naming_scheme,
             ..Default::default()
         }
     }

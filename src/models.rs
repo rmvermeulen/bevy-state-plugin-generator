@@ -22,7 +22,7 @@ impl ParentState {
             variant: variant.to_string(),
         }
     }
-    pub fn name(&self) -> String {
+    pub fn state_name(&self) -> String {
         self.name.to_state_name()
     }
     pub fn name_and_variant(&self) -> String {

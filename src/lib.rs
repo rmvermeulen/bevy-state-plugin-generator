@@ -11,8 +11,6 @@ use itertools::Itertools;
 use lazy_regex::regex;
 pub use parsing::{comment, config_is_valid};
 
-use crate::generator::get_package_info;
-
 /// config structs
 pub mod config;
 pub(crate) mod generator;
