@@ -40,7 +40,7 @@ fn main() {
     plugin_name: "GeneratedStatesPlugin",
     state_name: "GameState",
     states_module_name: "states",
-    scheme: NamingScheme::Full,
+    naming_scheme: NamingScheme::Full,
     additional_derives: &[],
   };
   generate_plugin("src/states.txt", "src/generated_states.rs", config)
@@ -82,4 +82,34 @@ impl bevy::app::Plugin for GeneratedStatesPlugin {
 # assert!(config_is_valid("Read { Config Assets }"));
 # assert!(config_is_valid("Loading [ Config Assets ]"));
 # assert!(config_is_valid("Loading // Comments"));
+```
+
+### single-file mode
+
+Create a `states.rs` in `src/` and add the following comment at the top:
+
+````rs
+// bspg: ```
+// Loading
+// Ready { Menu Game }
+// Exiting
+// ```
+````
+
+Set up your `build.rs` like this:
+
+```rust no_run
+use bevy_state_plugin_generator::*;
+fn main() {
+  /// The [Default::default] configuration is:
+  let config = PluginConfig {
+    plugin_name: "GeneratedStatesPlugin",
+    state_name: "GameState",
+    states_module_name: "states",
+    naming_scheme: NamingScheme::Full,
+    additional_derives: &[],
+  };
+  update_template("src/states.rs", config)
+    .expect("Failed to update template!");
+}
 ```

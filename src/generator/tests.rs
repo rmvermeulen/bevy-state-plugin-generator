@@ -121,16 +121,20 @@ fn test_generate_full_source(
 #[rstest]
 #[case("root.txt", "RootState", NamingScheme::Full)]
 #[case("root.txt", "RootState", NamingScheme::Short)]
-fn test_naming_scheme(#[case] src_path: &str, #[case] source: &str, #[case] scheme: NamingScheme) {
+fn test_naming_scheme(
+    #[case] src_path: &str,
+    #[case] source: &str,
+    #[case] naming_scheme: NamingScheme,
+) {
     let suffix = cfg!(feature = "rustfmt")
         .then_some("_rustfmt")
         .unwrap_or_default();
-    set_snapshot_suffix!("{src_path}{suffix}");
+    set_snapshot_suffix!("{src_path}_{naming_scheme}{suffix}");
     assert_snapshot!(
         generate_state_plugin_source(
             source,
             PluginConfig {
-                scheme,
+                naming_scheme,
                 ..Default::default()
             },
             Some(src_path),
@@ -245,17 +249,17 @@ fn test_generate_all_type_definitions_none(
 
 #[rstest]
 fn snapshots(
-    #[values(NamingScheme::Full, NamingScheme::Short)] scheme: NamingScheme,
+    #[values(NamingScheme::Full, NamingScheme::Short)] naming_scheme: NamingScheme,
     #[from(root_parent_state)] source: ParentState,
     #[from(nested_node)] node: StateNode,
 ) {
     let suffix = cfg!(feature = "rustfmt")
         .then_some("_rustfmt")
         .unwrap_or_default();
-    set_snapshot_suffix!("{scheme:?}{suffix}");
+    set_snapshot_suffix!("{naming_scheme:?}{suffix}");
     assert_snapshot!(generate_all_type_definitions(
         &node,
-        (source, scheme).into()
+        (source, naming_scheme).into()
     ));
 }
 
