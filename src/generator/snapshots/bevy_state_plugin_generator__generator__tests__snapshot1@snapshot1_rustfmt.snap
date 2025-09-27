@@ -1,6 +1,6 @@
 ---
 source: src/generator/tests.rs
-expression: "generate_all_type_definitions(&StateNode::singleton(\"Alpha\"),\nParentState::new(\"GameState\", \"Alpha\", None).into())"
+expression: "generate_all_type_definitions(StateNode::singleton(\"Alpha\").into(),\nParentState::new(\"GameState\", \"Alpha\", None).into())"
 ---
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Alpha)]

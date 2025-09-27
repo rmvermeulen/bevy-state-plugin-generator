@@ -21,7 +21,7 @@ async fn test_format_source() {
 
 #[rstest]
 fn test_generate_states_plugin() {
-    let states = StateNode::enumeration(
+    let root_state = StateNode::enumeration(
         "GameState",
         [
             StateNode::singleton("Loading"),
@@ -47,7 +47,10 @@ fn test_generate_states_plugin() {
             ),
         ],
     );
-    assert_snapshot!(generate_plugin_source(Rc::new(states), Default::default()));
+    assert_snapshot!(generate_plugin_source(
+        root_state.into(),
+        Default::default()
+    ));
 }
 
 #[rstest]
@@ -62,15 +65,15 @@ fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
 }
 
 #[rstest]
-#[case("comments.txt", Rc::new(StateNode::enum_empty("GameState")))]
-#[case("simple.txt", Rc::new(StateNode::enumeration("GameState", [
+#[case("comments.txt", StateNode::enum_empty("GameState"))]
+#[case("simple.txt", StateNode::enumeration("GameState", [
     StateNode::singleton("Loading"),
     StateNode::enumeration("Ready", [
         StateNode::singleton("Menu"),
         StateNode::singleton("Game"),
     ]),
-])))]
-#[case("fruits.txt", Rc::new(StateNode::enumeration("GameState", [
+]))]
+#[case("fruits.txt", StateNode::enumeration("GameState", [
     StateNode::singleton("Loading"),
     StateNode::enumeration("Ready", [
         StateNode::enumeration("Menu", [
@@ -83,14 +86,14 @@ fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
             StateNode::singleton("GameOver"),
         ]),
     ]),
-])))]
-fn test_generate_plugin_source(#[case] src_path: &str, #[case] root_node: Rc<StateNode>) {
+]))]
+fn test_generate_plugin_source(#[case] src_path: &str, #[case] root_node: StateNode) {
     let suffix = cfg!(feature = "rustfmt")
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("{src_path}{suffix}");
     assert_snapshot!(format_source(generate_plugin_source(
-        root_node,
+        root_node.into(),
         Default::default()
     )));
 }
@@ -175,14 +178,14 @@ fn test_generate_all_type_definitions_full(
     #[from(nested_node)] node: StateNode,
 ) {
     let typenames = generate_all_type_definitions(
-        &node,
+        node.into(),
         Context {
             parent_state: Some(source.clone()),
             naming_scheme: NamingScheme::Full,
             ..Default::default()
         },
     )
-    .take()
+    .inner()
     .into_iter()
     .map(|td| td.typename)
     .collect_vec();
@@ -207,8 +210,8 @@ fn test_generate_all_type_definitions_shortened(
     #[from(nested_node)] node: StateNode,
 ) {
     assert_debug_snapshot!(
-        generate_all_type_definitions(&node, (source, NamingScheme::Short).into())
-            .take().into_iter().map(|td| td.typename).collect_vec(),
+        generate_all_type_definitions(node.into(), (source, NamingScheme::Short).into())
+            .inner().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
         "GameMenu",
@@ -230,8 +233,8 @@ fn test_generate_all_type_definitions_none(
     #[from(nested_node)] node: StateNode,
 ) {
     assert_debug_snapshot!(
-        generate_all_type_definitions(&node, (source, NamingScheme::None).into())
-            .take().into_iter().map(|td| td.typename).collect_vec(),
+        generate_all_type_definitions(node.into(), (source, NamingScheme::None).into())
+            .inner().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
         "Menu",
@@ -258,7 +261,7 @@ fn snapshots(
         .unwrap_or_default();
     set_snapshot_suffix!("{naming_scheme:?}{suffix}");
     assert_snapshot!(generate_all_type_definitions(
-        &node,
+        node.into(),
         (source, naming_scheme).into()
     ));
 }
@@ -270,7 +273,7 @@ fn snapshot1() {
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot1{suffix}");
     assert_snapshot!(generate_all_type_definitions(
-        &StateNode::singleton("Alpha"),
+        StateNode::singleton("Alpha").into(),
         ParentState::new("GameState", "Alpha", None).into()
     ));
 }
@@ -282,7 +285,7 @@ fn snapshot1a() {
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot1a{suffix}");
     assert_snapshot!(generate_all_type_definitions(
-        &StateNode::singleton("Alpha"),
+        StateNode::singleton("Alpha").into(),
         NamingScheme::Full.into()
     ));
 }
@@ -294,7 +297,7 @@ fn snapshot2() {
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot2{suffix}");
     assert_snapshot!(generate_all_type_definitions(
-        &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
+        StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]).into(),
         (
             ParentState::new("GameState", "Alpha", None),
             NamingScheme::Full
@@ -310,7 +313,7 @@ fn snapshot2a() {
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot2a{suffix}");
     assert_snapshot!(generate_all_type_definitions(
-        &StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]),
+        StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]).into(),
         NamingScheme::Full.into()
     ));
 }
@@ -322,7 +325,7 @@ fn snapshot3() {
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot3{suffix}");
     assert_snapshot!(generate_all_type_definitions(
-        &StateNode::list("Alpha", [StateNode::singleton("Beta")]),
+        StateNode::list("Alpha", [StateNode::singleton("Beta")]).into(),
         (
             ParentState::new("GameState", "Alpha", None),
             NamingScheme::Full
@@ -338,7 +341,7 @@ fn snapshot4() {
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot4{suffix}");
     assert_snapshot!(generate_all_type_definitions(
-        &StateNode::list(
+        StateNode::list(
             "List",
             [
                 StateNode::singleton("Item1"),
@@ -348,7 +351,8 @@ fn snapshot4() {
                 ),
                 StateNode::singleton("Item3"),
             ]
-        ),
+        )
+        .into(),
         (
             ParentState::new("GameState", "Alpha", None),
             NamingScheme::Full

@@ -1,6 +1,6 @@
 ---
 source: src/generator/tests.rs
-expression: "generate_all_type_definitions(&StateNode::enumeration(\"Alpha\",\n[StateNode::singleton(\"Beta\")]), NamingScheme::Full.into())"
+expression: "generate_all_type_definitions(StateNode::enumeration(\"Alpha\",\n[StateNode::singleton(\"Beta\")]).into(), NamingScheme::Full.into())"
 ---
 #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
 pub enum Alpha {

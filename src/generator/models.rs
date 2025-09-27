@@ -6,10 +6,10 @@ use itertools::Itertools;
 use super::ToStringWith;
 
 #[derive(Clone, Debug, Deref, From)]
-pub(super) struct TypeDefinitions(Vec<TypeDef>);
+pub(super) struct TypeDefinitions(Vec<StateDef>);
 
 impl TypeDefinitions {
-    pub fn take(self) -> Vec<TypeDef> {
+    pub fn inner(self) -> Vec<StateDef> {
         self.0
     }
 }
@@ -32,18 +32,19 @@ impl Display for TypeDefinitions {
 }
 
 #[derive(Clone, Debug)]
-pub(super) struct TypeDef {
+pub(super) struct StateDef {
+    pub parent_name: Option<String>,
     pub typename: String,
     pub source: String,
 }
 
-impl Display for TypeDef {
+impl Display for StateDef {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.source)
     }
 }
 
-impl ToStringWith for TypeDef {
+impl ToStringWith for StateDef {
     fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String {
         self.source.lines().join(join.as_ref())
     }

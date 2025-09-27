@@ -227,16 +227,12 @@ fn test_parse_config_incomplete(
 }
 
 #[rstest]
-#[case("Name, Name2", "Root", ParseNode::enumeration("Root", [
+#[case("Name, Name2", vec![
     ParseNode::singleton("Name"),
     ParseNode::singleton("Name2"),
-]))]
-fn test_parse_states_file(
-    #[case] input: &str,
-    #[case] root_state_name: &str,
-    #[case] expected: ParseNode,
-) {
-    assert_that!(parse_states_text(input, root_state_name))
+])]
+fn test_parse_states_file(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
+    assert_that!(parse_states_text(input))
         .is_ok()
         .is_equal_to(expected);
 }

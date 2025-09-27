@@ -9,12 +9,14 @@ use std::rc::Rc;
 use context::Context;
 use indoc::formatdoc;
 use itertools::Itertools;
-use models::{TypeDef, TypeDefinitions};
+use models::{StateDef, TypeDefinitions};
 use nom::AsChar;
 
+use crate::config::PluginName;
 use crate::generator::naming::apply_naming_scheme;
-use crate::models::{ParentState, StateNode, SubTree};
+use crate::models::{DefinedStates, ParentState, StateNode, SubTree};
 use crate::parsing::parse_states_text;
+use crate::tokens::ParseNode;
 use crate::{NamingScheme, PluginConfig};
 
 pub(super) const REQUIRED_DERIVES: &[&str] =
@@ -31,7 +33,7 @@ fn get_typedef(
         parent_state,
         derives,
     }: Context,
-) -> TypeDef {
+) -> StateDef {
     let derives = derives.iter().unique().join(", ");
     let derives = parent_state
         .clone()
@@ -66,16 +68,20 @@ fn get_typedef(
             }}
         "}
     };
+    let parent_name = parent_state.map(|s| s.state_name());
     match node {
-        StateNode::List(_, _) => TypeDef {
+        StateNode::List(_, _) => StateDef {
+            parent_name,
             source: source_for_struct(),
             typename,
         },
-        StateNode::Singleton(_) => TypeDef {
+        StateNode::Singleton(_) => StateDef {
+            parent_name,
             source: source_for_struct(),
             typename,
         },
-        StateNode::Enum(_, variants) => TypeDef {
+        StateNode::Enum(_, variants) => StateDef {
+            parent_name,
             source: if variants.is_empty() {
                 source_for_struct()
             } else {
@@ -86,7 +92,7 @@ fn get_typedef(
     }
 }
 
-fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> TypeDefinitions {
+fn generate_type_definitions_rec(root_node: &StateNode, context: Context) -> TypeDefinitions {
     let root_typedef = get_typedef(root_node, context.clone());
     match root_node {
         StateNode::Singleton(_) => vec![root_typedef].into(),
@@ -96,14 +102,14 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                 .flat_map(|child_node| {
                     let parent_state = ParentState::new(
                         match context.naming_scheme {
+                            NamingScheme::Full => root_typedef.typename.clone(),
                             NamingScheme::Short => root_node.name().to_string(),
                             NamingScheme::None => root_node.name().to_string(),
-                            NamingScheme::Full => root_typedef.typename.clone(),
                         },
                         child_node.name(),
                         context.parent_state.clone(),
                     );
-                    generate_all_type_definitions(
+                    generate_type_definitions_rec(
                         child_node,
                         Context {
                             parent_state: Some(parent_state),
@@ -111,7 +117,7 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                             naming_scheme: context.naming_scheme,
                         },
                     )
-                    .take()
+                    .inner()
                 })
                 .collect_vec();
             {
@@ -127,7 +133,7 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                     |child_node| {
                         // NOTE: pass along current Context since List does not actually render
                         // into a struct, but refers to its parent
-                        generate_all_type_definitions(child_node, context.clone()).take()
+                        generate_type_definitions_rec(child_node, context.clone()).inner()
                     }
                 })
                 .collect_vec();
@@ -137,6 +143,22 @@ fn generate_all_type_definitions(root_node: &StateNode, context: Context) -> Typ
                 typedefs.into()
             }
         }
+    }
+}
+
+fn generate_all_type_definitions(
+    defined_states: DefinedStates,
+    context: Context,
+) -> TypeDefinitions {
+    match defined_states {
+        DefinedStates::Unrelated(states) => states
+            .iter()
+            .flat_map({
+                |child_node| generate_type_definitions_rec(child_node, context.clone()).inner()
+            })
+            .collect_vec()
+            .into(),
+        DefinedStates::Root(root_node) => generate_type_definitions_rec(&root_node, context),
     }
 }
 
@@ -159,10 +181,13 @@ pub fn generate_debug_info(src_path: &str, source: &str) -> String {
     "}
 }
 
-pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginConfig) -> String {
+pub(crate) fn generate_plugin_source(
+    defined_states: DefinedStates,
+    config: PluginConfig,
+) -> String {
     let PluginConfig {
         plugin_name,
-        state_name,
+        root_state_name,
         states_module_name,
         naming_scheme,
         additional_derives,
@@ -173,15 +198,56 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
         context.derives.push(derive.to_string());
     }
 
-    let type_definitions = generate_all_type_definitions(&root_state, context);
+    let type_definitions = generate_all_type_definitions(defined_states, context);
     let definitions_source = type_definitions.to_string_indented("    ");
-    let sub_states = type_definitions
-        .take()
-        .into_iter()
-        .skip(1) // skip the root
-        .map(|typedef| typedef.typename)
-        .map(|state_name| format!(".add_sub_state::<{states_module_name}::{state_name}>()"))
-        .join("\n            ");
+
+    let plugin_builder = if let Some(root_state_name) = root_state_name {
+        let init_state = format!(".init_state::<{states_module_name}::{root_state_name}>()");
+        let sub_states = type_definitions
+            .inner()
+            .into_iter()
+            .skip(1) // skip root
+            .map(|typedef| typedef.typename)
+            .map(|state_name| format!(".add_sub_state::<{states_module_name}::{state_name}>()"))
+            .join("\n            ");
+        format!("app{init_state}{sub_states};")
+    } else {
+        let states = type_definitions
+            .inner()
+            .into_iter()
+            .map(|sdef| {
+                if sdef.parent_name.is_some() {
+                    let state_name = sdef.typename;
+                    format!(".add_sub_state::<{states_module_name}::{state_name}>()")
+                } else {
+                    let state_name = sdef.typename;
+                    format!(".init_state::<{states_module_name}::{state_name}>()")
+                }
+            })
+            .join("\n            ");
+        format!("app{states};")
+    };
+
+    let plugin_def = match plugin_name {
+        PluginName::Struct(plugin_name) => {
+            formatdoc! {"
+                pub struct {plugin_name};
+                impl bevy::app::Plugin for {plugin_name} {{
+                    fn build(&self, app: &mut bevy::app::App) {{
+                        {plugin_builder}
+                    }}
+                }}
+            "}
+        }
+        PluginName::Function(plugin_name) => {
+            formatdoc! {"
+                pub fn {plugin_name}(app: &mut bevy::app::App) {{
+                    {plugin_builder}
+                }}
+            "}
+        }
+    };
+
     formatdoc! {"
         #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
@@ -189,14 +255,7 @@ pub(crate) fn generate_plugin_source(root_state: Rc<StateNode>, config: PluginCo
             use bevy::prelude::StateSet;
             {definitions_source}
         }}
-        pub struct {plugin_name};
-        impl bevy::app::Plugin for {plugin_name} {{
-            fn build(&self, app: &mut bevy::app::App) {{
-                app.init_state::<{states_module_name}::{state_name}>()
-                    {sub_states}
-                ;
-            }}
-        }}
+        {plugin_def}
     "}
 }
 
@@ -227,22 +286,36 @@ pub fn generate_state_plugin_source(
     plugin_config: PluginConfig,
     src_path: Option<&str>,
 ) -> Result<String, String> {
-    let parse_tree =
-        parse_states_text(source, plugin_config.state_name).map_err(|e| e.to_string())?;
+    let nodes = parse_states_text(source).map_err(|e| e.to_string())?;
+    let defined_states = if let Some(root_state_name) = plugin_config.root_state_name {
+        let parse_tree = if nodes.is_empty() {
+            ParseNode::singleton(root_state_name)
+        } else {
+            ParseNode::enumeration(root_state_name, nodes)
+        };
+        let parse_tree_size = parse_tree.get_tree_size();
+        let root_node: Rc<StateNode> = parse_tree
+            .try_into()
+            .map(Rc::new)
+            .map_err(|e| format!("{e:?}"))?;
+        let state_tree_size = root_node.get_tree_size();
 
-    let parse_tree_size = parse_tree.get_tree_size();
+        if state_tree_size > parse_tree_size {
+            return Err("state-tree exceeds parse-tree!".into());
+        }
 
-    let root_node: Rc<StateNode> = parse_tree
-        .try_into()
-        .map(Rc::new)
-        .map_err(|e| format!("{e:?}"))?;
-    let state_tree_size = root_node.get_tree_size();
+        DefinedStates::Root(root_node)
+    } else {
+        DefinedStates::Unrelated(
+            nodes
+                .into_iter()
+                .map(|node| node.try_into())
+                .collect::<Result<Vec<_>, _>>()
+                .unwrap(),
+        )
+    };
 
-    if state_tree_size > parse_tree_size {
-        return Err("state-tree exceeds parse-tree!".into());
-    }
-
-    let plugin_source = generate_plugin_source(root_node, plugin_config);
+    let plugin_source = generate_plugin_source(defined_states, plugin_config);
     let source = if let Some(src_path) = src_path {
         let debug_info = generate_debug_info(src_path, source);
         [debug_info, plugin_source].join("\n")

@@ -5,7 +5,7 @@
 use std::path::Path;
 use std::{fs, io};
 
-pub use config::{NamingScheme, PluginConfig};
+pub use config::{NamingScheme, PluginConfig, PluginName};
 use generator::generate_state_plugin_source;
 use itertools::Itertools;
 use lazy_regex::regex;
@@ -53,8 +53,9 @@ pub fn update_template(
                 } else {
                     break;
                 }
-            } else if regex!(r#"^\s*//\s*bspg:(\w+)\s+(\w+)\s*$"#).is_match(line) {
+            } else if let Some(m) = regex!(r#"^\s*//\s*bspg:(\w+)\s+(\w+)\s*$"#).find(line) {
                 // TODO: parse config
+                todo!("handle setting {m:?}");
             } else if regex!(r#"^\s*//\s*bspg:\s*$"#).is_match(line) {
                 in_template = true;
             } else {

@@ -1,6 +1,6 @@
 ---
 source: src/generator/tests.rs
-expression: "generate_plugin_source(Rc::new(states), Default::default())"
+expression: "generate_plugin_source(root_state.into(), Default::default())"
 ---
 #![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
@@ -65,8 +65,7 @@ pub mod states {
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>()
-            .add_sub_state::<states::GameStateLoading>()
+        app.init_state::<states::GameState>().add_sub_state::<states::GameStateLoading>()
             .add_sub_state::<states::GameStateReady>()
             .add_sub_state::<states::GameStateGameStateReadyMenu>()
             .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyMenuMain>()
@@ -74,7 +73,6 @@ impl bevy::app::Plugin for GeneratedStatesPlugin {
             .add_sub_state::<states::GameStateGameStateReadyGame>()
             .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyGamePlaying>()
             .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyGamePaused>()
-            .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyGameOver>()
-        ;
+            .add_sub_state::<states::GameStateGameStateReadyGameStateGameStateReadyGameOver>();
     }
 }
