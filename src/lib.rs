@@ -32,30 +32,39 @@ pub(crate) mod tokens;
 #[cfg_attr(coverage_nightly, coverage(off))]
 pub fn update_template(
     template_path: impl AsRef<Path>,
-    plugin_config: PluginConfig,
+    mut plugin_config: PluginConfig,
 ) -> io::Result<()> {
     let src_display = template_path.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&template_path)?;
 
-    let comment_block = source
+    let comment_block = &source
         .lines()
         .take_while(|line| line.starts_with("//"))
         .collect_vec();
 
-    let source = {
+    let processed_input = {
         let mut template_src = Vec::new();
         let mut in_template = false;
-        for line in &comment_block {
+        for line in comment_block {
             if in_template {
                 if let Some(line) = line.strip_prefix("//") {
                     template_src.push(line.trim());
                 } else {
                     break;
                 }
-            } else if let Some(m) = regex!(r#"^\s*//\s*bspg:(\w+)\s+(\w+)\s*$"#).find(line) {
-                // TODO: parse config
-                todo!("handle setting {m:?}");
+            } else if let Some(captures) =
+                regex!(r#"^\s*//\s*bspg:(\w+)\s+(\w+)\s*$"#).captures(line)
+            {
+                let (_, [name, value]) = captures.extract();
+                match name {
+                    "root_state_name" => {
+                        plugin_config.root_state_name = Some(value.to_string().into());
+                    }
+                    _ => {
+                        todo!("name: {name:?} value: {value:?}");
+                    }
+                }
             } else if regex!(r#"^\s*//\s*bspg:\s*$"#).is_match(line) {
                 in_template = true;
             } else {
@@ -65,7 +74,7 @@ pub fn update_template(
         template_src.join("\n")
     };
 
-    let plugin_source = match generate_state_plugin_source(&source, plugin_config, None) {
+    let plugin_source = match generate_state_plugin_source(&processed_input, plugin_config, None) {
         Ok(source) => source,
         Err(message) => message,
     };

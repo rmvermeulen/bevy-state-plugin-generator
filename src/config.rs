@@ -64,18 +64,18 @@ pub enum PluginName<'s> {
 }
 
 /// Configuration for the generated plugin
-#[derive(Clone, Copy, Debug)]
-pub struct PluginConfig<'a> {
+#[derive(Clone, Debug)]
+pub struct PluginConfig {
     /// name of the struct that implements [`bevy::plugin::Plugin`]
-    pub plugin_name: PluginName<'a>,
+    pub plugin_name: PluginName<'static>,
     /// name of the root enum/struct that represents the game state
-    pub root_state_name: Option<&'a str>,
+    pub root_state_name: Option<String>,
     /// name of the module that contains sub-states
-    pub states_module_name: &'a str,
+    pub states_module_name: String,
     /// naming scheme for the generated states
     pub naming_scheme: NamingScheme,
     /// add additional traits to the derive list
-    pub additional_derives: &'a [&'a str],
+    pub additional_derives: Vec<String>,
 }
 
 /// Default configuration for the generated plugin
@@ -83,23 +83,23 @@ pub struct PluginConfig<'a> {
 /// # use bevy_state_plugin_generator::*;
 /// let config = PluginConfig::default();
 /// assert_eq!(config.plugin_name, PluginName::Struct("GeneratedStatesPlugin"));
-/// assert_eq!(config.root_state_name, Some("GameState"));
-/// assert_eq!(config.states_module_name, "states");
+/// assert_eq!(config.root_state_name, Some("GameState".to_string()));
+/// assert_eq!(config.states_module_name, "states".to_string());
 /// assert_eq!(config.naming_scheme, NamingScheme::Full);
 /// ```
-impl Default for PluginConfig<'_> {
+impl Default for PluginConfig {
     fn default() -> Self {
         Self {
             plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
-            root_state_name: Some("GameState"),
-            states_module_name: "states",
+            root_state_name: Some("GameState".to_string()),
+            states_module_name: "states".to_string(),
             naming_scheme: Default::default(),
-            additional_derives: &[],
+            additional_derives: vec![],
         }
     }
 }
 
-impl From<NamingScheme> for PluginConfig<'_> {
+impl From<NamingScheme> for PluginConfig {
     fn from(naming_scheme: NamingScheme) -> Self {
         Self {
             naming_scheme,
