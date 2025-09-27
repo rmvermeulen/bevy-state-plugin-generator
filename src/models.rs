@@ -73,6 +73,24 @@ impl ParentState {
     }
 }
 
+#[derive(Debug)]
+pub(crate) enum DefinedStates {
+    Unrelated(Vec<StateNode>),
+    Root(Rc<StateNode>),
+}
+
+impl From<StateNode> for DefinedStates {
+    fn from(value: StateNode) -> Self {
+        Self::Root(Rc::new(value))
+    }
+}
+
+impl From<Vec<StateNode>> for DefinedStates {
+    fn from(value: Vec<StateNode>) -> Self {
+        Self::Unrelated(value)
+    }
+}
+
 #[derive(Clone, PartialEq)]
 pub enum StateNode {
     Singleton(String),

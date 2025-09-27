@@ -44,8 +44,8 @@ use bevy_state_plugin_generator::*;
 fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
-    plugin_name: "GeneratedStatesPlugin",
-    state_name: "GameState",
+    plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
+    root_state_name: Some("GameState"),
     states_module_name: "states",
     naming_scheme: NamingScheme::Full,
     additional_derives: &[],
@@ -73,8 +73,8 @@ use bevy_state_plugin_generator::*;
 fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
-    plugin_name: "GeneratedStatesPlugin",
-    state_name: "GameState",
+    plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
+    root_state_name: Some("GameState"),
     states_module_name: "states",
     naming_scheme: NamingScheme::Full,
     additional_derives: &[],
