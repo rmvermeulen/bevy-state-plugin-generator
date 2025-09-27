@@ -287,11 +287,12 @@ pub fn generate_state_plugin_source(
     src_path: Option<&str>,
 ) -> Result<String, String> {
     let nodes = parse_states_text(source).map_err(|e| e.to_string())?;
-    let defined_states = if let Some(root_state_name) = plugin_config.root_state_name {
+    let defined_states = if let Some(ref root_state_name) = plugin_config.root_state_name {
+        let root_state_name = root_state_name.to_string();
         let parse_tree = if nodes.is_empty() {
-            ParseNode::singleton(root_state_name)
+            ParseNode::singleton(root_state_name.as_str())
         } else {
-            ParseNode::enumeration(root_state_name, nodes)
+            ParseNode::enumeration(root_state_name.as_str(), nodes)
         };
         let parse_tree_size = parse_tree.get_tree_size();
         let root_node: Rc<StateNode> = parse_tree

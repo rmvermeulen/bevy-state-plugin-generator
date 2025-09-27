@@ -45,10 +45,10 @@ fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
     plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
-    root_state_name: Some("GameState"),
-    states_module_name: "states",
+    root_state_name: Some("GameState".to_string()),
+    states_module_name: "states".to_string(),
     naming_scheme: NamingScheme::Full,
-    additional_derives: &[],
+    additional_derives: vec![],
   };
   update_template("src/states.rs", config)
     .expect("Failed to update template!");
@@ -74,10 +74,10 @@ fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
     plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
-    root_state_name: Some("GameState"),
-    states_module_name: "states",
+    root_state_name: Some("GameState".to_string()),
+    states_module_name: "states".to_string(),
     naming_scheme: NamingScheme::Full,
-    additional_derives: &[],
+    additional_derives: vec![],
   };
   generate_plugin("src/states.txt", "src/generated_states.rs", config)
     .expect("Failed to generate plugin!");
