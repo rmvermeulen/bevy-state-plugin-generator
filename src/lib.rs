@@ -60,7 +60,7 @@ pub fn update_template(
                 let (_, [name, value]) = captures.extract();
                 match name {
                     "root_state_name" => {
-                        plugin_config.root_state_name = Some(value.to_string().into());
+                        plugin_config.root_state_name = Some(value.into());
                     }
                     _ => {
                         todo!("name: {name:?} value: {value:?}");
