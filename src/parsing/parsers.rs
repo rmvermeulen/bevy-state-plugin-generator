@@ -6,7 +6,7 @@ use nom::multi::many0;
 use nom::sequence::*;
 use nom::{IResult, Parser};
 
-use crate::tokens::{Comment, Identifier, ParseNode, Token};
+use crate::parsing::{Comment, Identifier, ParseNode, Token};
 
 pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
     comment(input).map_result(ParseNode::Comment)

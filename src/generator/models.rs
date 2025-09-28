@@ -3,18 +3,18 @@ use std::fmt::{self, Display};
 use derive_more::{Deref, From};
 use itertools::Itertools;
 
-use super::ToStringWith;
+use crate::generator::generate::ToStringWith;
 
 #[derive(Clone, Debug, Deref, From)]
-pub(super) struct TypeDefinitions(Vec<StateDef>);
+pub(super) struct StateDefinitions(Vec<StateDef>);
 
-impl TypeDefinitions {
+impl StateDefinitions {
     pub fn inner(self) -> Vec<StateDef> {
         self.0
     }
 }
 
-impl ToStringWith for TypeDefinitions {
+impl ToStringWith for StateDefinitions {
     fn to_string_indented<S: AsRef<str>>(&self, join: S) -> String {
         let inner = format!("\n{}", join.as_ref());
         let outer = format!("\n{inner}");
@@ -25,7 +25,7 @@ impl ToStringWith for TypeDefinitions {
     }
 }
 
-impl Display for TypeDefinitions {
+impl Display for StateDefinitions {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.to_string_indented(""))
     }

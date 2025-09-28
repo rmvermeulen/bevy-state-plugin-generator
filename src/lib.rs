@@ -5,11 +5,12 @@
 use std::path::Path;
 use std::{fs, io};
 
-pub use config::{NamingScheme, PluginConfig, PluginName};
-use generator::generate_state_plugin_source;
 use itertools::Itertools;
 use lazy_regex::regex;
-pub use parsing::{comment, config_is_valid};
+
+pub use crate::config::{NamingScheme, PluginConfig, PluginName};
+use crate::generator::generate_state_plugin_source;
+pub use crate::parsing::{comment, config_is_valid};
 
 /// config structs
 pub mod config;
@@ -18,7 +19,7 @@ pub(crate) mod models;
 pub(crate) mod parsing;
 #[cfg(test)]
 pub(crate) mod testing;
-pub(crate) mod tokens;
+pub(crate) mod tree;
 
 /// ```rust no_run
 /// use bevy_state_plugin_generator::*;

@@ -1,5 +1,7 @@
 use derive_more::{Deref, From};
 
+use crate::models::StateNode;
+
 #[derive(Debug, PartialEq)]
 pub enum Token {
     Separator,
@@ -9,7 +11,7 @@ pub enum Token {
     CloseList,
 }
 
-#[derive(Debug, Deref, From, PartialEq)]
+#[derive(Clone, Copy, Debug, Deref, From, PartialEq)]
 pub struct Identifier<'a>(&'a str);
 
 impl std::fmt::Display for Identifier<'_> {
@@ -18,10 +20,10 @@ impl std::fmt::Display for Identifier<'_> {
     }
 }
 
-#[derive(Debug, Deref, From, PartialEq)]
+#[derive(Clone, Copy, Debug, Deref, From, PartialEq)]
 pub struct Comment<'a>(&'a str);
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ParseNode<'a> {
     Singleton(Identifier<'a>),
     Enum(Identifier<'a>, Vec<ParseNode<'a>>),
@@ -53,6 +55,25 @@ impl<'a> ParseNode<'a> {
     #[cfg(test)]
     pub fn comment<C: Into<Comment<'a>>>(name: C) -> Self {
         Self::Comment(name.into())
+    }
+    fn identifier(&self) -> Option<&Identifier<'a>> {
+        match self {
+            Self::Singleton(id) | Self::Enum(id, _) | Self::List(id, _) => Some(id),
+            _ => None,
+        }
+    }
+    pub fn name(&self) -> Option<&str> {
+        self.identifier().map(|id| id.0)
+    }
+    pub fn children(&self) -> Vec<ParseNode<'a>> {
+        match self {
+            Self::Singleton(_) | Self::Comment(_) => Vec::new(),
+            Self::Enum(_, children) => children.clone(),
+            Self::List(_, children) => children.clone(),
+        }
+    }
+    pub fn try_into_state_node(self) -> Result<StateNode, ()> {
+        self.try_into()
     }
 }
 

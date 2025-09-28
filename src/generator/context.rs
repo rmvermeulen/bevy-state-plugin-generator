@@ -1,5 +1,5 @@
-use super::REQUIRED_DERIVES;
 use crate::NamingScheme;
+use crate::generator::generate::REQUIRED_DERIVES;
 use crate::models::ParentState;
 
 #[derive(Clone, Debug)]

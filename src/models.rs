@@ -2,8 +2,8 @@ use std::rc::Rc;
 
 use itertools::Itertools;
 
-use crate::generator::naming::NormalizeStateName;
-use crate::tokens::ParseNode;
+use crate::generator::NormalizeStateName;
+use crate::parsing::ParseNode;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct StateNodeName {
@@ -131,6 +131,13 @@ impl StateNode {
             StateNode::Singleton(name) | StateNode::Enum(name, _) => name,
         }
     }
+    pub fn children(&self) -> Vec<Rc<Self>> {
+        match self {
+            Self::Enum(_, children) => children.clone(),
+            Self::List(_, children) => children.clone(),
+            StateNode::Singleton(_) => Vec::new(),
+        }
+    }
 }
 
 impl std::fmt::Debug for StateNode {
@@ -171,60 +178,11 @@ impl TryFrom<ParseNode<'_>> for StateNode {
     }
 }
 
-pub trait SubTree {
-    fn get_tree_size(&self) -> usize;
-}
-
-impl SubTree for StateNode {
-    fn get_tree_size(&self) -> usize {
-        match self {
-            StateNode::Singleton(_) => 1,
-            StateNode::Enum(_, children) => {
-                children
-                    .iter()
-                    .map(|child| child.get_tree_size())
-                    .sum::<usize>()
-                    + 1
-            }
-            StateNode::List(_, children) => {
-                children
-                    .iter()
-                    .map(|child| child.get_tree_size())
-                    .sum::<usize>()
-                    + 1
-            }
-        }
-    }
-}
-
-impl SubTree for ParseNode<'_> {
-    fn get_tree_size(&self) -> usize {
-        match self {
-            ParseNode::Comment(_) => 1,
-            ParseNode::Singleton(_) => 1,
-            ParseNode::Enum(_, children) => {
-                children
-                    .iter()
-                    .map(|child| child.get_tree_size())
-                    .sum::<usize>()
-                    + 1
-            }
-            ParseNode::List(_, children) => {
-                children
-                    .iter()
-                    .map(|child| child.get_tree_size())
-                    .sum::<usize>()
-                    + 1
-            }
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use crate::models::StateNode;
+    use crate::parsing::ParseNode;
     use crate::testing::*;
-    use crate::tokens::ParseNode;
 
     #[rstest]
     #[case("Main", ParseNode::singleton("Main"))]

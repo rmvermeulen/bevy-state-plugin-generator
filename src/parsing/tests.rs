@@ -1,9 +1,9 @@
 use nom::Parser;
 use nom::branch::alt;
 
-use super::parsers::*;
+use crate::parsing::parsers::*;
+use crate::parsing::*;
 use crate::testing::*;
-use crate::tokens::*;
 
 #[rstest]
 #[case("Name", "Name")]

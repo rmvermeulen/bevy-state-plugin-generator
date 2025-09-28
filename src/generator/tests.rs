@@ -2,9 +2,14 @@ use std::convert::identity;
 use std::time::Duration;
 
 use insta::{assert_debug_snapshot, assert_snapshot};
+use itertools::Itertools;
 use rstest::{fixture, rstest};
 
-use super::*;
+use crate::generator::context::Context;
+use crate::generator::generate::{format_source, generate_debug_info, generate_plugin_source_inner};
+use crate::generator::generate_state_plugin_source;
+use crate::generator::state_defs::generate_all_state_definitions;
+use crate::models::{ParentState, StateNode};
 use crate::{NamingScheme, PluginConfig, set_snapshot_suffix};
 
 #[rstest]
@@ -47,7 +52,7 @@ fn test_generate_states_plugin() {
             ),
         ],
     );
-    assert_snapshot!(generate_plugin_source(
+    assert_snapshot!(generate_plugin_source_inner(
         root_state.into(),
         Default::default()
     ));
@@ -87,12 +92,12 @@ fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
         ]),
     ]),
 ]))]
-fn test_generate_plugin_source(#[case] src_path: &str, #[case] root_node: StateNode) {
+fn test_generate_plugin_source_inner(#[case] src_path: &str, #[case] root_node: StateNode) {
     let suffix = cfg!(feature = "rustfmt")
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("{src_path}{suffix}");
-    assert_snapshot!(format_source(generate_plugin_source(
+    assert_snapshot!(format_source(generate_plugin_source_inner(
         root_node.into(),
         Default::default()
     )));
@@ -177,7 +182,7 @@ fn test_generate_all_type_definitions_full(
     #[from(root_parent_state)] source: ParentState,
     #[from(nested_node)] node: StateNode,
 ) {
-    let typenames = generate_all_type_definitions(
+    let typenames = generate_all_state_definitions(
         node.into(),
         Context {
             parent_state: Some(source.clone()),
@@ -210,7 +215,7 @@ fn test_generate_all_type_definitions_shortened(
     #[from(nested_node)] node: StateNode,
 ) {
     assert_debug_snapshot!(
-        generate_all_type_definitions(node.into(), (source, NamingScheme::Short).into())
+        generate_all_state_definitions(node.into(), (source, NamingScheme::Short).into())
             .inner().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
@@ -233,7 +238,7 @@ fn test_generate_all_type_definitions_none(
     #[from(nested_node)] node: StateNode,
 ) {
     assert_debug_snapshot!(
-        generate_all_type_definitions(node.into(), (source, NamingScheme::None).into())
+        generate_all_state_definitions(node.into(), (source, NamingScheme::None).into())
             .inner().into_iter().map(|td| td.typename).collect_vec(),
         @r#"
     [
@@ -260,7 +265,7 @@ fn snapshots(
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("{naming_scheme:?}{suffix}");
-    assert_snapshot!(generate_all_type_definitions(
+    assert_snapshot!(generate_all_state_definitions(
         node.into(),
         (source, naming_scheme).into()
     ));
@@ -272,7 +277,7 @@ fn snapshot1() {
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot1{suffix}");
-    assert_snapshot!(generate_all_type_definitions(
+    assert_snapshot!(generate_all_state_definitions(
         StateNode::singleton("Alpha").into(),
         ParentState::new("GameState", "Alpha", None).into()
     ));
@@ -284,7 +289,7 @@ fn snapshot1a() {
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot1a{suffix}");
-    assert_snapshot!(generate_all_type_definitions(
+    assert_snapshot!(generate_all_state_definitions(
         StateNode::singleton("Alpha").into(),
         NamingScheme::Full.into()
     ));
@@ -296,7 +301,7 @@ fn snapshot2() {
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot2{suffix}");
-    assert_snapshot!(generate_all_type_definitions(
+    assert_snapshot!(generate_all_state_definitions(
         StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]).into(),
         (
             ParentState::new("GameState", "Alpha", None),
@@ -312,7 +317,7 @@ fn snapshot2a() {
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot2a{suffix}");
-    assert_snapshot!(generate_all_type_definitions(
+    assert_snapshot!(generate_all_state_definitions(
         StateNode::enumeration("Alpha", [StateNode::singleton("Beta")]).into(),
         NamingScheme::Full.into()
     ));
@@ -324,7 +329,7 @@ fn snapshot3() {
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot3{suffix}");
-    assert_snapshot!(generate_all_type_definitions(
+    assert_snapshot!(generate_all_state_definitions(
         StateNode::list("Alpha", [StateNode::singleton("Beta")]).into(),
         (
             ParentState::new("GameState", "Alpha", None),
@@ -340,7 +345,7 @@ fn snapshot4() {
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("snapshot4{suffix}");
-    assert_snapshot!(generate_all_type_definitions(
+    assert_snapshot!(generate_all_state_definitions(
         StateNode::list(
             "List",
             [
