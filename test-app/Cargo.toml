@@ -3,6 +3,13 @@ name = "test-app"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+all = ["short", "full", "inline"]
+short = []
+full = []
+inline = []
+
 [dependencies]
 bevy = { version = "0.16", default-features = false, features = ["bevy_state"] }
 bevy_app = "0.16"
