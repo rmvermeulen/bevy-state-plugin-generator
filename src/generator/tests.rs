@@ -6,7 +6,8 @@ use itertools::Itertools;
 use rstest::{fixture, rstest};
 
 use crate::generator::context::Context;
-use crate::generator::generate::{format_source, generate_debug_info, generate_plugin_source_inner};
+use crate::generator::generate::{format_source, generate_debug_info,
+                                 generate_plugin_source_from_defined_states};
 use crate::generator::generate_state_plugin_source;
 use crate::generator::state_defs::generate_all_state_definitions;
 use crate::models::{ParentState, StateNode};
@@ -52,7 +53,7 @@ fn test_generate_states_plugin() {
             ),
         ],
     );
-    assert_snapshot!(generate_plugin_source_inner(
+    assert_snapshot!(generate_plugin_source_from_defined_states(
         root_state.into(),
         Default::default()
     ));
@@ -97,7 +98,7 @@ fn test_generate_plugin_source_inner(#[case] src_path: &str, #[case] root_node: 
         .then_some("_rustfmt")
         .unwrap_or_default();
     set_snapshot_suffix!("{src_path}{suffix}");
-    assert_snapshot!(format_source(generate_plugin_source_inner(
+    assert_snapshot!(format_source(generate_plugin_source_from_defined_states(
         root_node.into(),
         Default::default()
     )));

@@ -38,7 +38,7 @@ pub fn generate_debug_info(src_path: &str, source: &str) -> String {
     "}
 }
 
-pub(crate) fn generate_plugin_source_inner(
+pub(crate) fn generate_plugin_source_from_defined_states(
     defined_states: DefinedStates,
     config: PluginConfig,
 ) -> String {
@@ -173,7 +173,7 @@ pub fn generate_state_plugin_source(
         )
     };
 
-    let plugin_source = generate_plugin_source_inner(defined_states, plugin_config);
+    let plugin_source = generate_plugin_source_from_defined_states(defined_states, plugin_config);
     let source = if let Some(src_path) = src_path {
         let debug_info = generate_debug_info(src_path, source);
         [debug_info, plugin_source].join("\n")
