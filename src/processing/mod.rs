@@ -3,8 +3,11 @@ mod tests;
 
 use std::collections::VecDeque;
 
+use bevy_platform::collections::HashSet;
+
 use crate::parsing::ParseNode;
 use crate::tree::SubTree;
+use crate::NamingScheme;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum NodeType {
@@ -60,4 +63,21 @@ pub fn flatten_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {
     }
 
     nodes
+}
+
+fn apply_naming_scheme(naming_scheme: NamingScheme, nodes: Vec<NodeData>) {
+    let mut names = HashSet::new();
+    for node in &nodes {
+        let base_name = &node.name;
+        let resolved_name = match naming_scheme {
+            NamingScheme::Full => todo!(),
+            NamingScheme::Short => todo!(),
+            NamingScheme::None => base_name.clone(),
+        };
+        assert!(
+            names.insert(resolved_name.clone()),
+            "Duplicate name {:?}",
+            &node.name
+        );
+    }
 }
