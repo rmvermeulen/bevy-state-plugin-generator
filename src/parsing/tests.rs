@@ -56,8 +56,8 @@ fn test_single_char_tokens(#[case] input: &str, #[case] expected: Token) {
 }
 
 #[rstest]
-#[case("Name,", ",", ParseNode::singleton("Name"))]
-#[case("  Name,", ",", ParseNode::singleton("Name"))]
+#[case("Root,", ",", ParseNode::singleton("Root"))]
+#[case("  Root,", ",", ParseNode::singleton("Root"))]
 #[case("First, Second", ", Second", ParseNode::singleton("First"))]
 fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: ParseNode) {
     assert_that!(parse_singleton(input).unwrap()).is_equal_to((rest, node));
@@ -65,79 +65,51 @@ fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: P
 
 #[rstest]
 fn test_parse_enum_empty() {
-    assert_compact_debug_snapshot!(parse_enum("Name{}").unwrap(), @r#"("", Enum(Identifier("Name"), []))"#);
-    assert_compact_debug_snapshot!(parse_enum("Name {}").unwrap(), @r#"("", Enum(Identifier("Name"), []))"#);
+    assert_compact_debug_snapshot!(parse_enum("Root{}").unwrap(), @r#"("", Enum(Identifier("Root"), []))"#);
+    assert_compact_debug_snapshot!(parse_enum("Root {}").unwrap(), @r#"("", Enum(Identifier("Root"), []))"#);
 }
 
 #[rstest]
-#[case("Name {A}",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
-#[case("Name { A}",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
-#[case("Name {A }",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
-#[case("Name { A }",  ParseNode::enumeration("Name", [ParseNode::singleton("A")]))]
+#[case("Root {A}", parse_node::enum_root_a())]
+#[case("Root { A}", parse_node::enum_root_a())]
+#[case("Root {A }", parse_node::enum_root_a())]
+#[case("Root { A }", parse_node::enum_root_a())]
 fn test_parse_enum_single(#[case] input: &str, #[case] node: ParseNode) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
 #[rstest]
-#[case("Name {A,B}", ParseNode::enumeration("Name", [
-    ParseNode::singleton("A"),
-    ParseNode::singleton("B")
-]))]
-#[case("Name { A B }",  ParseNode::enumeration("Name", [
-    ParseNode::singleton("A"),
-    ParseNode::singleton("B")
-]))]
-#[case("Name { A { B } }",  ParseNode::enumeration("Name", [
-    ParseNode::enumeration("A", [ParseNode::singleton("B")])
-]))]
-#[case("Name { A { B }, C }",  ParseNode::enumeration("Name", [
-    ParseNode::enumeration("A", [ParseNode::singleton("B")]),
-    ParseNode::singleton("C")
-]))]
+#[case("Root {A,B}", parse_node::enum_root_ab())]
+#[case("Root { A B }", parse_node::enum_root_ab())]
+#[case("Root { A { B } }", parse_node::enum_root_a_b())]
+#[case("Root { A { B } C }", parse_node::enum_root_a_b_up_c())]
+#[case("Root { A { B }, C }", parse_node::enum_root_a_b_up_c())]
 fn test_parse_enum_variants(#[case] input: &str, #[case] node: ParseNode) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
 #[rstest]
-#[case::just_a_comma("Name {,}", ParseNode::enumeration("Name", [ ]))]
-#[case::mora_commas("Name {,,,,}", ParseNode::enumeration("Name", [ ]))]
-#[case::comma_after_variant("Name {A,}",
-    ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-#[case::comma_before_variant("Name {,A}",
-    ParseNode::enumeration("Name", [ ParseNode::singleton("A") ]))]
-#[case::comma_between_variants("Name {A,B}",
-    ParseNode::enumeration("Name", [
-        ParseNode::singleton("A"),
-        ParseNode::singleton("B")
-    ])
-)]
+#[case::just_a_comma("Root {,}", ParseNode::enumeration("Root", [ ]))]
+#[case::mora_commas("Root {,,,,}", ParseNode::enumeration("Root", [ ]))]
+#[case::comma_after_variant("Root {A,}", parse_node::enum_root_a())]
+#[case::comma_before_variant("Root {,A}", parse_node::enum_root_a())]
+#[case::comma_between_variants("Root {A,B}", parse_node::enum_root_ab())]
 fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: ParseNode) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
 #[rstest]
-#[case("Name []", ParseNode::list_empty("Name"))]
-#[case("Name[]", ParseNode::list_empty("Name"))]
-#[case("Name[A]",  ParseNode::list("Name", [ParseNode::singleton("A")]))]
-#[case("Name[A,B]",  ParseNode::list("Name", [
-    ParseNode::singleton("A"),
-    ParseNode::singleton("B"),
-]))]
+#[case("Root []", ParseNode::list_empty("Root"))]
+#[case("Root[]", ParseNode::list_empty("Root"))]
+#[case("Root[A]", parse_node::list_root_a())]
+#[case("Root[A,B]", parse_node::list_root_ab())]
 fn test_parse_list(#[case] input: &str, #[case] node: ParseNode) {
     assert_that!(parse_list(input).unwrap()).is_equal_to(("", node));
 }
 
-macro_rules! set_snapshot_suffix {
-    ($($expr:expr),*) => {
-        let mut settings = insta::Settings::clone_current();
-        settings.set_snapshot_suffix(format!($($expr,)*));
-        let _guard = settings.bind_to_scope();
-    }
-}
-
 #[rstest]
-#[case("Name")]
-#[case("Name {A}")]
+#[case("Root")]
+#[case("Root {A}")]
 fn test_parse_node(#[case] input: &str) {
     set_snapshot_suffix!("{}", input.replace(" ", "_"));
     assert_compact_debug_snapshot!(parse_node(input));
@@ -145,7 +117,7 @@ fn test_parse_node(#[case] input: &str) {
 
 #[rstest]
 fn test_parse_node_nested_enums() {
-    let input = "Name { A { B, C {D E {F G}} H } I J }";
+    let input = "Root { A { B, C {D E {F G}} H } I J }";
     assert_debug_snapshot!(parse_node(input));
 }
 
@@ -158,18 +130,18 @@ fn test_parse_node_with_comments(#[case] input: &str, #[case] comment: ParseNode
 
 #[rstest]
 fn test_parse_node_messy_example() {
-    let input = "Name [ A { B, C [D E {F G}] H } I J ]";
+    let input = "Root [ A { B, C [D E {F G}] H } I J ]";
     assert_debug_snapshot!(parse_node(input));
 }
 
 #[rstest]
 fn test_parse_list_incomplete() {
-    assert_compact_debug_snapshot!(parse_list("Name [ A"), @r#"Err(Error(Error { input: "", code: Tag })) "#);
+    assert_compact_debug_snapshot!(parse_list("Root [ A"), @r#"Err(Error(Error { input: "", code: Tag })) "#);
 }
 
 #[rstest]
 fn test_parse_enum_incomplete() {
-    assert_compact_debug_snapshot!(parse_enum("Name { A"), @r#"Err(Error(Error { input: "", code: Tag }))"#);
+    assert_compact_debug_snapshot!(parse_enum("Root { A"), @r#"Err(Error(Error { input: "", code: Tag }))"#);
 }
 
 #[rstest]
@@ -227,9 +199,9 @@ fn test_parse_config_incomplete(
 }
 
 #[rstest]
-#[case("Name, Name2", vec![
-    ParseNode::singleton("Name"),
-    ParseNode::singleton("Name2"),
+#[case("Root, Root2", vec![
+    ParseNode::singleton("Root"),
+    ParseNode::singleton("Root2"),
 ])]
 fn test_parse_states_file(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
     assert_that!(parse_states_text(input))

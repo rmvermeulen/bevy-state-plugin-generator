@@ -1,0 +1,5 @@
+---
+source: src/parsing/tests.rs
+expression: parse_node(input)
+---
+Ok(("", Singleton(Identifier("Root"))))

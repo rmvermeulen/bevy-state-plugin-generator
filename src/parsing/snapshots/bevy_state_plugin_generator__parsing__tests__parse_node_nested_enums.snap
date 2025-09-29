@@ -7,7 +7,7 @@ Ok(
         "",
         Enum(
             Identifier(
-                "Name",
+                "Root",
             ),
             [
                 Enum(
