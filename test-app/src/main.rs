@@ -6,7 +6,7 @@ mod generated_states_none;
 #[cfg(feature = "short")]
 mod generated_states_short;
 
-use bevy::prelude::{App, AppExit};
+use bevy::prelude::*;
 use bevy::state::app::StatesPlugin;
 
 fn main() -> AppExit {

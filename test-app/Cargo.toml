@@ -11,8 +11,7 @@ full = []
 inline = []
 
 [dependencies]
-bevy = { version = "0.16", default-features = false, features = ["bevy_state"] }
-bevy_app = "0.16"
+bevy = { workspace = true, features = ["std", "bevy_state"] }
 
 [build-dependencies]
 bevy_state_plugin_generator = { path = "../" }
