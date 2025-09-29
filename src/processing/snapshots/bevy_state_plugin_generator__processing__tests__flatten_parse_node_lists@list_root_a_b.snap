@@ -1,5 +1,5 @@
 ---
-source: src/naming/tests.rs
+source: src/processing/tests.rs
 expression: flatten_parse_node(node)
 ---
 [
@@ -15,8 +15,17 @@ expression: flatten_parse_node(node)
         parent: Some(
             0,
         ),
-        node_type: Singleton,
+        node_type: List,
         depth: 1,
         name: "A",
+    },
+    NodeData {
+        index: 2,
+        parent: Some(
+            1,
+        ),
+        node_type: Singleton,
+        depth: 2,
+        name: "B",
     },
 ]

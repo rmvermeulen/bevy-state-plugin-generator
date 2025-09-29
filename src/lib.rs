@@ -16,8 +16,8 @@ pub use crate::parsing::{comment, config_is_valid};
 pub mod config;
 pub(crate) mod generator;
 pub(crate) mod models;
-pub(crate) mod naming;
 pub(crate) mod parsing;
+pub(crate) mod processing;
 #[cfg(test)]
 pub(crate) mod testing;
 pub(crate) mod tree;

@@ -1,12 +1,12 @@
 ---
-source: src/naming/tests.rs
+source: src/processing/tests.rs
 expression: flatten_parse_node(node)
 ---
 [
     NodeData {
         index: 0,
         parent: None,
-        node_type: List,
+        node_type: Enum,
         depth: 0,
         name: "Root",
     },
@@ -18,14 +18,5 @@ expression: flatten_parse_node(node)
         node_type: Singleton,
         depth: 1,
         name: "A",
-    },
-    NodeData {
-        index: 2,
-        parent: Some(
-            0,
-        ),
-        node_type: Singleton,
-        depth: 1,
-        name: "B",
     },
 ]

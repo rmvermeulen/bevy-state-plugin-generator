@@ -1,12 +1,12 @@
 ---
-source: src/naming/tests.rs
+source: src/processing/tests.rs
 expression: flatten_parse_node(node)
 ---
 [
     NodeData {
         index: 0,
         parent: None,
-        node_type: Enum,
+        node_type: List,
         depth: 0,
         name: "Root",
     },

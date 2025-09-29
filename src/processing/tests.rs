@@ -1,5 +1,5 @@
-use crate::naming::{NodeData, NodeType, flatten_parse_node};
 use crate::parsing::ParseNode;
+use crate::processing::{NodeData, NodeType, flatten_parse_node};
 use crate::testing::*;
 
 #[rstest]
