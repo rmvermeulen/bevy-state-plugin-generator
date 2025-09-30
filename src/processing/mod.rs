@@ -23,13 +23,13 @@ pub enum NodeType {
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct NodeData {
-    index: usize,
-    parent: Option<usize>,
-    node_type: NodeType,
-    depth: usize,
-    name: String,
-    resolved_name: Option<String>,
-    variants: Vec<String>,
+    pub index: usize,
+    pub parent: Option<usize>,
+    pub node_type: NodeType,
+    pub depth: usize,
+    pub name: String,
+    pub resolved_name: Option<String>,
+    pub variants: Vec<String>,
 }
 
 pub fn flatten_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {

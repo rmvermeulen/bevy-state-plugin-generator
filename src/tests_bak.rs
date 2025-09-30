@@ -1,32 +1,72 @@
-// #[rstest]
-// fn test_generate_all_type_definitions_full(#[from(state_node::ne)] node: StateNode) {
-//     let typenames = generate_all_state_definitions(
-//         node.into(),
-//         Context {
-//             parent_state: Some(source.clone()),
-//             naming_scheme: NamingScheme::Full,
-//             ..Default::default()
-//         },
-//     )
-//     .inner()
-//     .into_iter()
-//     .map(|td| td.typename)
-//     .collect_vec();
-//     assert_debug_snapshot!(typenames, @r#"
-//     [
-//         "GameMenu",
-//         "GameMenuMain",
-//         "GameMenuOptions",
-//         "GameMenuGameMenuOptionsGraphics",
-//         "GameMenuGameMenuOptionsAudio",
-//         "GameMenuGameMenuOptionsGameplay",
-//         "GameMenuContinue",
-//         "GameMenuGameMenuContinueSave",
-//         "GameMenuGameMenuContinueLoad",
-//     ]
-//     "#);
-// }
+use insta::assert_debug_snapshot;
+use itertools::Itertools;
+use rstest::rstest;
 
+use crate::NamingScheme;
+use crate::parsing::ParseNode;
+use crate::processing::{NodeData, apply_naming_scheme, flatten_parse_node};
+use crate::testing::parse_node;
+
+fn generate_all_type_definitions(
+    node: ParseNode<'_>,
+    naming_scheme: NamingScheme,
+) -> Vec<NodeData> {
+    let mut nodes = flatten_parse_node(node);
+    apply_naming_scheme(naming_scheme, &mut nodes).unwrap();
+    nodes
+}
+
+#[rstest]
+fn test_generate_all_type_definitions_full(
+    #[from(parse_node::nested_example)] node: &ParseNode<'_>,
+) {
+    let typenames = generate_all_type_definitions(node.clone(), NamingScheme::Full)
+        .into_iter()
+        .map(|node| (node.name, node.resolved_name.unwrap()))
+        .collect_vec();
+    assert_debug_snapshot!(typenames, @r#"
+    [
+        (
+            "Menu",
+            "Menu",
+        ),
+        (
+            "Main",
+            "MenuMain",
+        ),
+        (
+            "Options",
+            "MenuOptions",
+        ),
+        (
+            "Continue",
+            "MenuContinue",
+        ),
+        (
+            "Graphics",
+            "OptionsMenuGraphics",
+        ),
+        (
+            "Audio",
+            "OptionsMenuAudio",
+        ),
+        (
+            "Gameplay",
+            "OptionsMenuGameplay",
+        ),
+        (
+            "Save",
+            "ContinueMenuSave",
+        ),
+        (
+            "Load",
+            "ContinueMenuLoad",
+        ),
+    ]
+    "#);
+}
+
+// TODO:
 // #[rstest]
 // fn test_generate_all_type_definitions_shortened(
 //     #[from(root_parent_state)] source: ParentState,
@@ -50,6 +90,7 @@
 //     "#);
 // }
 
+// TODO:
 // #[rstest]
 // fn test_generate_all_type_definitions_none(
 //     #[from(root_parent_state)] source: ParentState,
@@ -73,6 +114,7 @@
 //     "#);
 // }
 
+// TODO:
 // #[rstest]
 // fn snapshots(
 //     #[values(NamingScheme::Full, NamingScheme::Short)] naming_scheme: NamingScheme,
@@ -89,6 +131,7 @@
 //     ));
 // }
 
+// TODO:
 // #[rstest]
 // fn snapshot1() {
 //     let suffix = cfg!(feature = "rustfmt")
@@ -101,6 +144,7 @@
 //     ));
 // }
 
+// TODO:
 // #[rstest]
 // fn snapshot1a() {
 //     let suffix = cfg!(feature = "rustfmt")
@@ -113,6 +157,7 @@
 //     ));
 // }
 
+// TODO:
 // #[rstest]
 // fn snapshot2() {
 //     let suffix = cfg!(feature = "rustfmt")
@@ -129,6 +174,7 @@
 //     ));
 // }
 
+// TODO:
 // #[rstest]
 // fn snapshot2a() {
 //     let suffix = cfg!(feature = "rustfmt")
@@ -141,6 +187,7 @@
 //     ));
 // }
 
+// TODO:
 // #[rstest]
 // fn snapshot3() {
 //     let suffix = cfg!(feature = "rustfmt")
@@ -157,6 +204,7 @@
 //     ));
 // }
 
+// TODO:
 // #[rstest]
 // fn snapshot4() {
 //     let suffix = cfg!(feature = "rustfmt")

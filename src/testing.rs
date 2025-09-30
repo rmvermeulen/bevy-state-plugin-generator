@@ -86,4 +86,27 @@ pub mod parse_node {
             ],
         )
     }
+
+    #[fixture]
+    #[once]
+    pub fn nested_example() -> ParseNode<'static> {
+        ParseNode::enumeration(
+            "Menu",
+            [
+                ParseNode::singleton("Main"),
+                ParseNode::enumeration(
+                    "Options",
+                    [
+                        ParseNode::singleton("Graphics"),
+                        ParseNode::singleton("Audio"),
+                        ParseNode::singleton("Gameplay"),
+                    ],
+                ),
+                ParseNode::enumeration(
+                    "Continue",
+                    [ParseNode::singleton("Save"), ParseNode::singleton("Load")],
+                ),
+            ],
+        )
+    }
 }
