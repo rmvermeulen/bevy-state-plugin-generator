@@ -89,7 +89,7 @@ pub fn apply_naming_scheme(
                     current = &nodes[p];
                     ancestors.push(current);
                 }
-                let ancestral_name = ancestors.into_iter().map(|a| &a.name).join("");
+                let ancestral_name = ancestors.into_iter().map(|a| &a.name).rev().join("");
                 format!("{ancestral_name}{base_name}")
             }
             NamingScheme::Short => {

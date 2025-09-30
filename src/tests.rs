@@ -1,9 +1,14 @@
 use std::time::Duration;
 
-use insta::assert_snapshot;
+use insta::{assert_debug_snapshot, assert_snapshot};
+use itertools::Itertools;
 use rstest::rstest;
 
 use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
+use crate::parsing::ParseNode;
+use crate::processing::{NodeData, apply_naming_scheme, flatten_parse_node,
+                        parse_node_into_final_source};
+use crate::testing::{node_data, parse_node};
 use crate::{NamingScheme, PluginConfig, set_snapshot_suffix};
 
 #[rstest]
@@ -18,38 +23,36 @@ async fn test_format_source() {
     assert_snapshot!(formatted);
 }
 
-// #[rstest]
-// fn test_generate_states_plugin() {
-//     let root_state = StateNode::enumeration(
-//         "GameState",
-//         [
-//             StateNode::singleton("Loading"),
-//             StateNode::enumeration(
-//                 "Ready",
-//                 [
-//                     StateNode::enumeration(
-//                         "Menu",
-//                         [
-//                             StateNode::singleton("Main"),
-//                             StateNode::singleton("Options"),
-//                         ],
-//                     ),
-//                     StateNode::enumeration(
-//                         "Game",
-//                         [
-//                             StateNode::singleton("Playing"),
-//                             StateNode::singleton("Paused"),
-//                             StateNode::singleton("GameOver"),
-//                         ],
-//                     ),
-//                 ],
-//             ),
-//         ],
-//     );
-//     assert_snapshot!(
-//         generate_state_plugin_source(root_state.into(), Default::default(), None).unwrap()
-//     );
-// }
+#[rstest]
+fn test_generate_states_plugin() {
+    let root_state = ParseNode::enumeration(
+        "GameState",
+        [
+            ParseNode::singleton("Loading"),
+            ParseNode::enumeration(
+                "Ready",
+                [
+                    ParseNode::enumeration(
+                        "Menu",
+                        [
+                            ParseNode::singleton("Main"),
+                            ParseNode::singleton("Options"),
+                        ],
+                    ),
+                    ParseNode::enumeration(
+                        "Game",
+                        [
+                            ParseNode::singleton("Playing"),
+                            ParseNode::singleton("Paused"),
+                            ParseNode::singleton("GameOver"),
+                        ],
+                    ),
+                ],
+            ),
+        ],
+    );
+    assert_snapshot!(parse_node_into_final_source(root_state, Default::default()).unwrap());
+}
 
 #[rstest]
 #[case("root.txt", "RootState")]
@@ -142,4 +145,73 @@ fn test_naming_scheme(
         )
         .unwrap()
     );
+}
+
+#[rstest]
+#[case("single_node", node_data::single_node())]
+#[case("nested_example", node_data::nested_example())]
+fn test_apply_naming_scheme(
+    #[case] id: &str,
+    #[case] mut nodes: Vec<NodeData>,
+    #[values(NamingScheme::Short, NamingScheme::Full, NamingScheme::None)]
+    naming_scheme: NamingScheme,
+) {
+    set_snapshot_suffix!("{id}_{naming_scheme}");
+    apply_naming_scheme(naming_scheme, &mut nodes).unwrap();
+    assert_debug_snapshot!(
+        nodes
+            .into_iter()
+            .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
+            .collect_vec()
+    );
+}
+
+fn generate_all_type_definitions(node: ParseNode<'_>, naming_scheme: NamingScheme) -> Vec<String> {
+    let mut nodes = flatten_parse_node(node);
+    apply_naming_scheme(naming_scheme, &mut nodes).unwrap();
+    nodes
+        .into_iter()
+        .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
+        .collect_vec()
+}
+
+#[rstest]
+fn test_generate_all_type_definitions_full(
+    #[from(parse_node::nested_example)] node: ParseNode<'_>,
+) {
+    let typenames = generate_all_type_definitions(node, NamingScheme::Full);
+    assert_debug_snapshot!(typenames, @r#"
+    [
+        "Menu -> Menu",
+        "Main -> MenuMain",
+        "Options -> MenuOptions",
+        "Game -> MenuGame",
+        "Graphics -> MenuOptionsGraphics",
+        "Audio -> MenuOptionsAudio",
+        "Gameplay -> MenuOptionsGameplay",
+        "Save -> MenuGameSave",
+        "Load -> MenuGameLoad",
+    ]
+    "#);
+}
+
+#[rstest]
+fn test_generate_all_type_definitions_shortened(
+    #[from(parse_node::nested_example)] node: ParseNode,
+) {
+    assert_debug_snapshot!(
+        generate_all_type_definitions(node, NamingScheme::Short),
+        @r#"
+    [
+        "Menu -> Menu",
+        "Main -> MenuMain",
+        "Options -> MenuOptions",
+        "Game -> MenuGame",
+        "Graphics -> OptionsGraphics",
+        "Audio -> OptionsAudio",
+        "Gameplay -> OptionsGameplay",
+        "Save -> GameSave",
+        "Load -> GameLoad",
+    ]
+    "#);
 }

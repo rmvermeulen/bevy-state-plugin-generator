@@ -1,0 +1,11 @@
+---
+source: src/tests.rs
+expression: "nodes.into_iter().map(|node|\nformat!(\"{} -> {}\", node.name, node.resolved_name.unwrap())).collect_vec()"
+---
+[
+    "RootState -> RootState",
+    "Menu -> RootStateMenu",
+    "Options -> MenuOptions",
+    "Audio -> OptionsAudio",
+    "Video -> OptionsVideo",
+]

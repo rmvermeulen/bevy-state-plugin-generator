@@ -14,18 +14,51 @@ macro_rules! set_snapshot_suffix {
     }
 }
 
+pub mod node_data {
+    use bevy_utils::default;
+
+    use super::*;
+    use crate::processing::NodeData;
+
+    fn node<S: ToString>(name: S, index: usize, depth: usize, parent: Option<usize>) -> NodeData {
+        let name = name.to_string();
+        NodeData {
+            index,
+            parent,
+            resolved_name: Some(name.clone()),
+            name,
+            depth,
+            ..default()
+        }
+    }
+
+    #[fixture]
+    pub fn single_node() -> Vec<NodeData> {
+        vec![node("RootState", 0, 0, None)]
+    }
+
+    #[fixture]
+    pub fn nested_example() -> Vec<NodeData> {
+        vec![
+            node("RootState", 0, 0, None),
+            node("Menu", 1, 1, Some(0)),
+            node("Options", 2, 2, Some(1)),
+            node("Audio", 3, 3, Some(2)),
+            node("Video", 4, 3, Some(2)),
+        ]
+    }
+}
+
 pub mod parse_node {
     use super::*;
     use crate::parsing::ParseNode;
 
     #[fixture]
-    #[once]
     pub fn enum_root_a() -> ParseNode<'static> {
         ParseNode::enumeration("Root", [ParseNode::singleton("A")])
     }
 
     #[fixture]
-    #[once]
     pub fn enum_root_ab() -> ParseNode<'static> {
         ParseNode::enumeration(
             "Root",
@@ -34,7 +67,6 @@ pub mod parse_node {
     }
 
     #[fixture]
-    #[once]
     pub fn enum_root_a_b() -> ParseNode<'static> {
         ParseNode::enumeration(
             "Root",
@@ -43,7 +75,6 @@ pub mod parse_node {
     }
 
     #[fixture]
-    #[once]
     pub fn enum_root_a_b_up_c() -> ParseNode<'static> {
         ParseNode::enumeration(
             "Root",
@@ -55,13 +86,11 @@ pub mod parse_node {
     }
 
     #[fixture]
-    #[once]
     pub fn list_root_a() -> ParseNode<'static> {
         ParseNode::list("Root", [ParseNode::singleton("A")])
     }
 
     #[fixture]
-    #[once]
     pub fn list_root_ab() -> ParseNode<'static> {
         ParseNode::list(
             "Root",
@@ -70,13 +99,11 @@ pub mod parse_node {
     }
 
     #[fixture]
-    #[once]
     pub fn list_root_a_b() -> ParseNode<'static> {
         ParseNode::list("Root", [ParseNode::list("A", [ParseNode::singleton("B")])])
     }
 
     #[fixture]
-    #[once]
     pub fn list_root_a_b_up_c() -> ParseNode<'static> {
         ParseNode::list(
             "Root",
@@ -88,7 +115,6 @@ pub mod parse_node {
     }
 
     #[fixture]
-    #[once]
     pub fn nested_example() -> ParseNode<'static> {
         ParseNode::enumeration(
             "Menu",
@@ -103,7 +129,7 @@ pub mod parse_node {
                     ],
                 ),
                 ParseNode::enumeration(
-                    "Continue",
+                    "Game",
                     [ParseNode::singleton("Save"), ParseNode::singleton("Load")],
                 ),
             ],
