@@ -10,84 +10,79 @@
 // }
 // Exiting
 
-#![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
+#[allow(missing_docs)]
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-pub struct GameState;
+    pub struct GameState;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameState = GameState::Loading)]
-pub struct Loading;
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Loading)]
+    pub struct Loading;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Loading = Loading::Configs)]
-pub struct Configs;
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Loading = Loading::Configs)]
+    pub struct Configs;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Loading = Loading::Assets)]
-pub struct Assets;
-
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Loading = Loading::Assets)]
+    pub struct Assets;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>().add_sub_state::<states::Loading>()
+        app.init_state::<states::GameState>()
+            .add_sub_state::<states::Loading>()
             .add_sub_state::<states::LoadingConfigs>()
             .add_sub_state::<states::LoadingAssets>();
     }
 }
 
-
-
-#![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
+#[allow(missing_docs)]
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-pub struct GameState;
+    pub struct GameState;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameState = GameState::Ready)]
-pub struct Ready;
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Ready)]
+    pub struct Ready;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Ready = Ready::Playing)]
-pub struct Playing;
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Ready = Ready::Playing)]
+    pub struct Playing;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Ready = Ready::Paused)]
-pub struct Paused;
-
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Ready = Ready::Paused)]
+    pub struct Paused;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>().add_sub_state::<states::Ready>()
+        app.init_state::<states::GameState>()
+            .add_sub_state::<states::Ready>()
             .add_sub_state::<states::ReadyPlaying>()
             .add_sub_state::<states::ReadyPaused>();
     }
 }
 
-
-
-#![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
+#[allow(missing_docs)]
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-pub struct GameState;
+    pub struct GameState;
 
-#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameState = GameState::Exiting)]
-pub struct Exiting;
-
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(GameState = GameState::Exiting)]
+    pub struct Exiting;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>().add_sub_state::<states::Exiting>();
+        app.init_state::<states::GameState>()
+            .add_sub_state::<states::Exiting>();
     }
 }
-

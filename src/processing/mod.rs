@@ -295,8 +295,8 @@ fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, Proc
     };
 
     Ok(formatdoc! {"
-        #![allow(missing_docs)]
         use bevy::prelude::AppExtStates;
+        #[allow(missing_docs)]
         pub mod {states_module_name} {{
             use bevy::prelude::StateSet;
             {definitions_source}

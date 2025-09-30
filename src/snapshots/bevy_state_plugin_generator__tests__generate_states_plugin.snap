@@ -2,8 +2,8 @@
 source: src/tests.rs
 expression: "parse_node_into_final_source(root_state, Default::default()).unwrap()"
 ---
-#![allow(missing_docs)]
 use bevy::prelude::AppExtStates;
+#[allow(missing_docs)]
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
