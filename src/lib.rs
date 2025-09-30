@@ -9,18 +9,31 @@ use itertools::Itertools;
 use lazy_regex::regex;
 
 pub use crate::config::{NamingScheme, PluginConfig, PluginName};
-use crate::generator::generate_state_plugin_source;
+use crate::generate::generate_state_plugin_source;
 pub use crate::parsing::{comment, config_is_valid};
+use crate::processing::ProcessingError;
 
 /// config structs
 pub mod config;
-pub(crate) mod generator;
-pub(crate) mod models;
+pub(crate) mod generate;
 pub(crate) mod parsing;
 pub(crate) mod processing;
 #[cfg(test)]
 pub(crate) mod testing;
+#[cfg(test)]
+mod tests;
 pub(crate) mod tree;
+
+/// The kinds of errors that can occur
+#[derive(Debug, thiserror::Error)]
+pub enum GeneratorError {
+    /// A fs-related error occurred
+    #[error("Io Error: {0}")]
+    Io(#[from] io::Error),
+    /// The content is wrong
+    #[error("Processing Error: {0}")]
+    Processing(#[from] ProcessingError),
+}
 
 /// ```rust no_run
 /// use bevy_state_plugin_generator::*;
@@ -35,7 +48,7 @@ pub(crate) mod tree;
 pub fn update_template(
     template_path: impl AsRef<Path>,
     mut plugin_config: PluginConfig,
-) -> io::Result<()> {
+) -> Result<(), GeneratorError> {
     let src_display = template_path.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&template_path)?;
@@ -76,10 +89,7 @@ pub fn update_template(
         template_src.join("\n")
     };
 
-    let plugin_source = match generate_state_plugin_source(&processed_input, plugin_config, None) {
-        Ok(source) => source,
-        Err(message) => message,
-    };
+    let plugin_source = generate_state_plugin_source(&processed_input, plugin_config, None)?;
 
     // TODO: also include `get_package_info()`
     let comment_block = comment_block.join("\n");
@@ -87,6 +97,7 @@ pub fn update_template(
         &template_path,
         format!("{comment_block}\n\n{plugin_source}"),
     )
+    .map_err(Into::into)
 }
 
 /// ```rust no_run
@@ -104,13 +115,10 @@ pub fn generate_plugin(
     src: impl AsRef<Path>,
     dst: impl AsRef<Path>,
     plugin_config: PluginConfig,
-) -> io::Result<()> {
+) -> Result<(), GeneratorError> {
     let src_display = src.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&src)?;
-    let source = match generate_state_plugin_source(&source, plugin_config, Some(&src_display)) {
-        Ok(source) => source,
-        Err(message) => message,
-    };
-    fs::write(dst, source)
+    let source = generate_state_plugin_source(&source, plugin_config, Some(&src_display))?;
+    fs::write(dst, source).map_err(Into::into)
 }

@@ -1,6 +1,0 @@
----
-source: src/generator/tests.rs
-expression: "generate_all_type_definitions(StateNode::singleton(\"Alpha\").into(),\nNamingScheme::Full.into())"
----
-#[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-pub struct Alpha;

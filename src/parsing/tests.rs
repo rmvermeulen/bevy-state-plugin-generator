@@ -208,3 +208,15 @@ fn test_parse_states_file(#[case] input: &str, #[case] expected: Vec<ParseNode>)
         .is_ok()
         .is_equal_to(expected);
 }
+
+#[rstest]
+#[case("Main", ParseNode::singleton("Main"))]
+#[case("Main{}", ParseNode::Enum("Main".into(), Default::default()))]
+#[case("Main{A}", ParseNode::enumeration("Main", [ParseNode::singleton("A")]))]
+#[case("Main{A,B}", ParseNode::enumeration("Main", [
+    ParseNode::singleton("A"),
+    ParseNode::singleton("B"),
+]))]
+fn test_parse_node_try_from_str(#[case] input: &str, #[case] expected: ParseNode) {
+    assert_that!(ParseNode::try_from(input)).is_ok_containing(expected);
+}

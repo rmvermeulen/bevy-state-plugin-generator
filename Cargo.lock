@@ -553,6 +553,7 @@ dependencies = [
  "async-std",
  "bevy",
  "bevy_platform",
+ "bevy_utils",
  "derive_more 2.0.1",
  "duct",
  "indoc",
@@ -562,6 +563,7 @@ dependencies = [
  "nom 8.0.0",
  "rstest",
  "speculoos",
+ "thiserror 2.0.17",
 ]
 
 [[package]]

@@ -4,7 +4,7 @@ use nom::character::complete::*;
 use nom::combinator::recognize;
 use nom::multi::many0;
 use nom::sequence::*;
-use nom::{IResult, Parser};
+use nom::{Err, IResult, Parser};
 
 use crate::parsing::{Comment, Identifier, ParseNode, Token};
 
@@ -90,9 +90,20 @@ pub(super) fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
     many0(delimited(many0(separator), parse_node, many0(separator))).parse(input)
 }
 
-pub fn parse_states_text<'a>(input: &'a str) -> Result<Vec<ParseNode<'a>>, String> {
+type NomError<I> = nom::error::Error<I>;
+
+#[derive(Debug, thiserror::Error)]
+pub enum ParsingError<'a> {
+    #[error("Missing root node")]
+    MissingRoot(ParseNode<'a>),
+    #[error("Failed to parse! Final state: {0:?}")]
+    Failed(#[from] Err<NomError<String>>),
+}
+
+pub fn parse_states_text<'a>(input: &'a str) -> Result<Vec<ParseNode<'a>>, ParsingError<'a>> {
     parse_config(input)
-        .map_err(|e| format!("{e:?}"))
+        .map_err(|e| e.map(|e| NomError::new(e.input.to_string(), e.code)))
+        .map_err(ParsingError::Failed)
         .map(|(_, nodes)| nodes)
 }
 

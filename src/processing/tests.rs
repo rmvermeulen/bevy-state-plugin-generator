@@ -1,3 +1,5 @@
+use bevy_utils::default;
+
 use crate::parsing::ParseNode;
 use crate::processing::{NodeData, NodeType, flatten_parse_node};
 use crate::testing::*;
@@ -11,6 +13,7 @@ fn test_flatten_parse_node_singleton() {
         node_type: NodeType::Singleton,
         depth: 0,
         name: "A".to_string(),
+        ..default()
     }]);
 }
 

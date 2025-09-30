@@ -1,7 +1,5 @@
 use derive_more::{Deref, From};
 
-use crate::models::StateNode;
-
 #[derive(Debug, PartialEq)]
 pub enum Token {
     Separator,
@@ -71,9 +69,6 @@ impl<'a> ParseNode<'a> {
             Self::Enum(_, children) => children.clone(),
             Self::List(_, children) => children.clone(),
         }
-    }
-    pub fn try_into_state_node(self) -> Result<StateNode, ()> {
-        self.try_into()
     }
 }
 

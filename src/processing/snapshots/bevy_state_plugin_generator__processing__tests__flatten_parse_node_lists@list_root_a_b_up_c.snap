@@ -9,6 +9,8 @@ expression: flatten_parse_node(node)
         node_type: List,
         depth: 0,
         name: "Root",
+        resolved_name: None,
+        variants: [],
     },
     NodeData {
         index: 1,
@@ -18,6 +20,8 @@ expression: flatten_parse_node(node)
         node_type: List,
         depth: 1,
         name: "A",
+        resolved_name: None,
+        variants: [],
     },
     NodeData {
         index: 2,
@@ -27,6 +31,8 @@ expression: flatten_parse_node(node)
         node_type: Singleton,
         depth: 1,
         name: "C",
+        resolved_name: None,
+        variants: [],
     },
     NodeData {
         index: 3,
@@ -36,5 +42,7 @@ expression: flatten_parse_node(node)
         node_type: Singleton,
         depth: 2,
         name: "B",
+        resolved_name: None,
+        variants: [],
     },
 ]

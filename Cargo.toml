@@ -5,6 +5,7 @@ members = [".", "test-app"]
 [workspace.dependencies]
 bevy = { version = "0.16.1", default-features = false }
 bevy_platform = "0.16.1"
+bevy_utils = "0.16.1"
 
 [package]
 name = "bevy_state_plugin_generator"
@@ -23,6 +24,7 @@ rustfmt = ["dep:duct"]
 
 [dependencies]
 bevy_platform = { workspace = true }
+bevy_utils = { workspace = true }
 derive_more = { version = "2.0.1", features = [
     "deref",
     "deref_mut",
@@ -34,6 +36,7 @@ indoc = "2.0.6"
 itertools = "0.14.0"
 lazy-regex = "3.4.1"
 nom = "8.0.0"
+thiserror = "2.0.17"
 
 [dev-dependencies]
 async-std = { version = "1.13.2", features = ["attributes"] }
