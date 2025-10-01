@@ -73,6 +73,10 @@ pub fn update_template(
                     "root_state_name" => {
                         plugin_config.root_state_name = Some(value.into());
                     }
+                    "naming_scheme" => {
+                        plugin_config.naming_scheme =
+                            NamingScheme::try_parse(value).expect("Invalid naming_scheme");
+                    }
                     _ => {
                         todo!("name: {name:?} value: {value:?}");
                     }

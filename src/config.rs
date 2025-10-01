@@ -34,6 +34,15 @@ impl NamingScheme {
     pub fn tag(&self) -> String {
         self.name().to_lowercase()
     }
+    /// Convert a string into a NamingScheme, if it's the name or tag
+    pub fn try_parse(input: &str) -> Option<Self> {
+        match input {
+            "full" | "Full" => Some(NamingScheme::Full),
+            "short" | "Short" => Some(NamingScheme::Short),
+            "none" | "None" => Some(NamingScheme::None),
+            _ => None,
+        }
+    }
 }
 
 impl Default for NamingScheme {
