@@ -7,7 +7,7 @@ use rstest::rstest;
 use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
 use crate::parsing::ParseNode;
 use crate::processing::{NodeData, apply_naming_scheme, flatten_parse_node,
-                        parse_node_into_final_source};
+                        try_parse_node_into_final_source};
 use crate::testing::{node_data, parse_node};
 use crate::{NamingScheme, PluginConfig, set_snapshot_suffix};
 
@@ -51,7 +51,7 @@ fn test_generate_states_plugin() {
             ),
         ],
     );
-    assert_snapshot!(parse_node_into_final_source(root_state, Default::default()).unwrap());
+    assert_snapshot!(try_parse_node_into_final_source(root_state, Default::default()).unwrap());
 }
 
 #[rstest]

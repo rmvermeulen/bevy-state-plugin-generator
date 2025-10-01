@@ -118,6 +118,8 @@ pub fn apply_naming_scheme(
     Ok(())
 }
 
+type NomError<T> = nom::Err<nom::error::Error<T>>;
+
 #[derive(Debug, thiserror::Error)]
 pub enum ProcessingError {
     #[error("Duplicate name: resolved_name='{resolved_name}' original_name='{original_name}'")]
@@ -129,6 +131,12 @@ pub enum ProcessingError {
     Custom(String),
     #[error("Failed to parse! Final state: {0:?}")]
     Parsing(#[from] nom::Err<nom::error::Error<String>>),
+}
+
+impl From<NomError<&str>> for ProcessingError {
+    fn from(value: NomError<&str>) -> Self {
+        Self::from(value.to_owned())
+    }
 }
 
 fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, ProcessingError> {
@@ -306,7 +314,7 @@ fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, Proc
     "})
 }
 
-pub fn parse_node_into_final_source(
+pub fn try_parse_node_into_final_source(
     node: ParseNode<'_>,
     config: PluginConfig,
 ) -> Result<String, ProcessingError> {

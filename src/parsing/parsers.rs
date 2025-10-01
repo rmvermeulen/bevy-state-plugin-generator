@@ -93,7 +93,9 @@ pub(super) fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
     many0(delimited(many0(separator), parse_node, many0(separator))).parse(input)
 }
 
-pub fn parse_states_text<'a>(input: &'a str) -> Result<Vec<ParseNode<'a>>, NomErr<NomError<&str>>> {
+pub fn parse_states_text<'a>(
+    input: &'a str,
+) -> Result<Vec<ParseNode<'a>>, NomErr<NomError<&'a str>>> {
     parse_config(input).map(|(_, nodes)| nodes)
 }
 

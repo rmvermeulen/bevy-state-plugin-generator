@@ -2,11 +2,12 @@ use indoc::formatdoc;
 use itertools::Itertools;
 use nom::AsChar;
 
+use crate::PluginConfig;
 use crate::parsing::parse_states_text;
-use crate::processing::ProcessingError;
-use crate::{PluginConfig, processing};
+use crate::processing::{ProcessingError, try_parse_node_into_final_source};
 
-pub const REQUIRED_DERIVES: &[&str] = &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
+pub(super) const REQUIRED_DERIVES: &[&str] =
+    &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
 
 pub fn get_package_info() -> String {
     let pkg = env!("CARGO_PKG_NAME");
@@ -26,6 +27,7 @@ pub fn generate_debug_info(src_path: &str, source: &str) -> String {
         {lines}
     "}
 }
+
 #[cfg(feature = "rustfmt")]
 fn try_format_source(source: &str) -> std::io::Result<String> {
     duct::cmd!("rustfmt")
@@ -34,7 +36,7 @@ fn try_format_source(source: &str) -> std::io::Result<String> {
         .read()
 }
 
-pub fn format_source<S: AsRef<str>>(source: S) -> String {
+pub(crate) fn format_source<S: AsRef<str>>(source: S) -> String {
     let source = source.as_ref();
     #[cfg(feature = "rustfmt")]
     let source = try_format_source(source).unwrap_or_else(|_| source.to_owned());
@@ -49,24 +51,19 @@ pub fn format_source<S: AsRef<str>>(source: S) -> String {
 }
 
 pub fn generate_state_plugin_source(
-    source_input: &str,
+    input_source: &str,
     plugin_config: PluginConfig,
     src_path: Option<&str>,
 ) -> Result<String, ProcessingError> {
-    let parse_nodes = parse_states_text(source_input)
-        .map_err(|e| e.to_owned())
-        .map_err(ProcessingError::from)?;
-
-    let mut sources = Vec::new();
-    for parse_node in parse_nodes {
-        let source = processing::parse_node_into_final_source(parse_node, plugin_config.clone())?;
-        sources.push(source);
+    let parse_nodes = parse_states_text(input_source)?;
+    let mut output = parse_nodes
+        .into_iter()
+        .map(|parse_node| try_parse_node_into_final_source(parse_node, plugin_config.clone()))
+        .collect::<Result<Vec<_>, _>>()?
+        .join("\n");
+    if let Some(src_path) = src_path {
+        let debug_info = generate_debug_info(src_path, input_source);
+        output = [debug_info, output].join("\n");
     }
-    let source_output = sources.join("\n\n");
-    Ok(format_source(if let Some(src_path) = src_path {
-        let debug_info = generate_debug_info(src_path, source_input);
-        [debug_info, source_output].join("\n")
-    } else {
-        source_output
-    }))
+    Ok(format_source(output))
 }
