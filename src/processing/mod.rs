@@ -45,6 +45,7 @@ pub fn flatten_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {
             ParseNode::Enum(_, _) => NodeType::Enum,
             ParseNode::List(_, _) => NodeType::List,
             ParseNode::Comment(_) => {
+                #[cfg_attr(coverage_nightly, coverage(off))]
                 unreachable!("Comment has no name")
             }
         };
