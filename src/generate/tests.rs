@@ -3,6 +3,8 @@ use std::time::Duration;
 use insta::{assert_debug_snapshot, assert_snapshot};
 use itertools::Itertools;
 use rstest::{Context, rstest};
+use speculoos::assert_that;
+use speculoos::prelude::VecAssertions;
 
 use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
 use crate::parsing::ParseNode;
@@ -52,7 +54,9 @@ fn test_generate_states_plugin() {
             ),
         ],
     );
-    assert_snapshot!(try_parse_node_into_final_source(root_state, Default::default()).unwrap());
+    let source = try_parse_node_into_final_source(root_state, Default::default()).unwrap();
+    assert_that!(source.matches(" mod ").collect_vec()).has_length(1);
+    assert_snapshot!(source);
 }
 
 #[rstest]
@@ -89,17 +93,18 @@ fn test_naming_scheme(
 ) {
     let src_path_display = src_path.unwrap_or("no_src");
     set_snapshot_suffix!("{src_path_display}_{naming_scheme}{RUSTFMT}");
-    assert_snapshot!(
-        generate_state_plugin_source(
-            "RootState",
-            PluginConfig {
-                naming_scheme,
-                ..Default::default()
-            },
-            src_path,
-        )
-        .unwrap()
-    );
+    let result = generate_state_plugin_source(
+        "RootState",
+        PluginConfig {
+            naming_scheme,
+            ..Default::default()
+        },
+        src_path,
+    )
+    .unwrap();
+
+    assert_that!(result.matches(" mod ").collect_vec()).has_length(1);
+    assert_snapshot!(result);
 }
 
 fn generate_all_type_definitions(
