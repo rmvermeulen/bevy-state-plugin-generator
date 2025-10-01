@@ -33,27 +33,6 @@ impl<'a> ParseNode<'a> {
     pub fn singleton<I: Into<Identifier<'a>>>(name: I) -> Self {
         Self::Singleton(name.into())
     }
-    pub fn enumeration<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
-        name: I,
-        variants: V,
-    ) -> Self {
-        Self::Enum(name.into(), variants.into_iter().collect())
-    }
-    #[cfg(test)]
-    pub fn list_empty<I: Into<Identifier<'a>>>(name: I) -> Self {
-        Self::List(name.into(), vec![])
-    }
-    #[cfg(test)]
-    pub fn list<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
-        name: I,
-        variants: V,
-    ) -> Self {
-        Self::List(name.into(), variants.into_iter().collect())
-    }
-    #[cfg(test)]
-    pub fn comment<C: Into<Comment<'a>>>(name: C) -> Self {
-        Self::Comment(name.into())
-    }
     fn identifier(&self) -> Option<&Identifier<'a>> {
         match self {
             Self::Singleton(id) | Self::Enum(id, _) | Self::List(id, _) => Some(id),
@@ -77,5 +56,29 @@ impl<'a> TryFrom<&'a str> for ParseNode<'a> {
 
     fn try_from(s: &'a str) -> Result<Self, Self::Error> {
         crate::parsing::parse_node(s).map(|(_, node)| node)
+    }
+}
+
+/// constructors used for testing
+#[cfg(test)]
+#[cfg_attr(coverage_nightly, coverage(off))]
+impl<'a> ParseNode<'a> {
+    pub fn enumeration<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
+        name: I,
+        variants: V,
+    ) -> Self {
+        Self::Enum(name.into(), variants.into_iter().collect())
+    }
+    pub fn list_empty<I: Into<Identifier<'a>>>(name: I) -> Self {
+        Self::List(name.into(), vec![])
+    }
+    pub fn list<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
+        name: I,
+        variants: V,
+    ) -> Self {
+        Self::List(name.into(), variants.into_iter().collect())
+    }
+    pub fn comment<C: Into<Comment<'a>>>(name: C) -> Self {
+        Self::Comment(name.into())
     }
 }
