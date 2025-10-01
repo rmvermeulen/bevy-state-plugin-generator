@@ -31,7 +31,7 @@ pub struct NodeData {
     pub variants: Vec<String>,
 }
 
-pub fn flatten_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {
+pub fn flatten_root_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {
     let node_count = root_node.get_tree_size();
     let mut nodes = Vec::with_capacity(node_count);
     let mut todo = VecDeque::from([(root_node, 0, None)]);
@@ -147,7 +147,10 @@ impl From<NomError<&str>> for ProcessingError {
     }
 }
 
-fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, ProcessingError> {
+fn build_plugin_source(
+    nodes: Vec<NodeData>,
+    config: PluginConfig,
+) -> Result<String, ProcessingError> {
     let PluginConfig {
         additional_derives: derives,
         plugin_name,
@@ -155,43 +158,6 @@ fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, Proc
         naming_scheme: _,
         states_module_name,
     } = config;
-
-    // add the implicit root_node according to config
-    let nodes = if let Some(root_state_name) = &root_state_name {
-        let root_node = NodeData {
-            index: 0,
-            parent: None,
-            name: root_state_name.clone(),
-            resolved_name: Some(root_state_name.clone()),
-            ..default()
-        };
-        let mut new_nodes = vec![root_node];
-        for mut node in nodes.into_iter() {
-            let root_node = &mut new_nodes[0];
-            // add all top-level nodes as a variant of the root_node
-            if node.depth == 0 {
-                root_node.variants.push(
-                    node.resolved_name
-                        .clone()
-                        .unwrap_or_else(|| panic!("Node name has not been resolved! {node:?}")),
-                );
-            }
-            // adjust indices, since we've added a root_node
-            node.index += 1;
-            node.depth += 1;
-            if let Some(parent_index) = &mut node.parent {
-                *parent_index += 1;
-            } else {
-                // parent this node to the root_node
-                _ = node.parent.insert(0);
-            }
-            assert!(node.parent.is_some());
-            new_nodes.push(node);
-        }
-        new_nodes
-    } else {
-        nodes
-    };
 
     let derives = concat([
         REQUIRED_DERIVES
@@ -323,12 +289,49 @@ fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, Proc
     "})
 }
 
-pub fn try_parse_node_into_final_source(
-    node: ParseNode<'_>,
+pub(crate) fn remove_root_node(nodes: &mut Vec<NodeData>) {
+    nodes.remove(0);
+    for node in nodes {
+        assert!(node.index > 0);
+        node.index -= 1;
+        assert!(node.depth > 0);
+        node.depth -= 1;
+        if let Some(parent_index) = &mut node.parent {
+            node.parent = (*parent_index > 0).then(|| *parent_index - 1);
+        }
+    }
+}
+
+pub(crate) fn process_parse_nodes(
+    parse_nodes: Vec<ParseNode<'_>>,
+    naming_scheme: NamingScheme,
+    root_state_name: Option<String>,
+) -> Result<Vec<NodeData>, ProcessingError> {
+    // add the implicit root_node according to config
+    let root_node = if let Some(root_state_name) = &root_state_name {
+        ParseNode::Enum(root_state_name.as_str().into(), parse_nodes)
+    } else {
+        // add a temporary root node
+        ParseNode::List("".into(), parse_nodes)
+    };
+    let mut nodes = flatten_root_parse_node(root_node);
+    // remove temporary root node
+    if root_state_name.is_none() {
+        remove_root_node(&mut nodes);
+    }
+    apply_naming_scheme(naming_scheme, &mut nodes)?;
+    Ok(nodes)
+}
+
+pub fn convert_parse_nodes_into_plugin_source(
+    parse_nodes: Vec<ParseNode<'_>>,
     config: PluginConfig,
 ) -> Result<String, ProcessingError> {
-    let mut nodes = flatten_parse_node(node);
-    apply_naming_scheme(config.naming_scheme, &mut nodes)?;
+    let nodes = process_parse_nodes(
+        parse_nodes,
+        config.naming_scheme,
+        config.root_state_name.clone(),
+    )?;
     assert!(nodes.iter().all(|node| node.resolved_name.is_some()));
-    get_source(nodes, config)
+    build_plugin_source(nodes, config)
 }

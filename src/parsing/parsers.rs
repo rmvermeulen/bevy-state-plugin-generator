@@ -96,7 +96,10 @@ pub(super) fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
 pub fn parse_states_text<'a>(
     input: &'a str,
 ) -> Result<Vec<ParseNode<'a>>, NomErr<NomError<&'a str>>> {
-    parse_config(input).map(|(_, nodes)| nodes)
+    parse_config(input).map(|(rest, nodes)| {
+        assert!(rest.trim().is_empty());
+        nodes
+    })
 }
 
 /// Validate that the input is a valid states file

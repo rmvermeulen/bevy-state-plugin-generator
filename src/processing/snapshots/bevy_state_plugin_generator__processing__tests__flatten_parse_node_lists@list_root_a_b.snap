@@ -1,6 +1,6 @@
 ---
 source: src/processing/tests.rs
-expression: flatten_parse_node(node)
+expression: flatten_root_parse_node(node)
 ---
 [
     NodeData {

@@ -7,7 +7,7 @@ use nom::AsChar;
 
 use crate::PluginConfig;
 use crate::parsing::parse_states_text;
-use crate::processing::{ProcessingError, try_parse_node_into_final_source};
+use crate::processing::{ProcessingError, convert_parse_nodes_into_plugin_source};
 
 pub(super) const REQUIRED_DERIVES: &[&str] =
     &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
@@ -59,16 +59,21 @@ pub fn generate_state_plugin_source(
     src_path: Option<&str>,
 ) -> Result<String, ProcessingError> {
     let parse_nodes = parse_states_text(input_source)?;
-    // TODO: add artificial root to multi-nodes
-    let mut output = parse_nodes
-        .into_iter()
-        // TODO: merge modules!!!
-        .map(|parse_node| try_parse_node_into_final_source(parse_node, plugin_config.clone()))
-        .collect::<Result<Vec<_>, _>>()?
-        .join("\n");
+    let mut output = convert_parse_nodes_into_plugin_source(parse_nodes, plugin_config)?;
+
+    #[cfg(test)]
+    {
+        use speculoos::assert_that;
+        use speculoos::prelude::VecAssertions;
+
+        assert_that!(output.matches(" mod ").collect_vec()).has_length(1);
+    }
+
+    // if we're writing to a file we add a header with some information
     if let Some(src_path) = src_path {
         let debug_info = generate_debug_info(src_path, input_source);
         output = [debug_info, output].join("\n");
     }
+
     Ok(format_source(output))
 }

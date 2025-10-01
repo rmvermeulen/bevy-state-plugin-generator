@@ -9,7 +9,7 @@ use speculoos::prelude::VecAssertions;
 
 use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
 use crate::parsing::ParseNode;
-use crate::processing::{apply_naming_scheme, flatten_parse_node, try_parse_node_into_final_source};
+use crate::processing::{convert_parse_nodes_into_plugin_source, process_parse_nodes};
 use crate::testing::parse_node;
 use crate::{GeneratorError, NamingScheme, PluginConfig, set_snapshot_suffix};
 
@@ -55,7 +55,8 @@ fn test_generate_states_plugin() {
             ),
         ],
     );
-    let source = try_parse_node_into_final_source(root_state, Default::default()).unwrap();
+    let source =
+        convert_parse_nodes_into_plugin_source(vec![root_state], Default::default()).unwrap();
     assert_that!(source.matches(" mod ").collect_vec()).has_length(1);
     assert_snapshot!(source);
 }
@@ -69,22 +70,25 @@ fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
 }
 
 #[rstest]
-#[case("RootState", 1)]
-#[case("A B C D E F G H I", 9)]
-#[case("A { B [C] } D { E F [ G H ] I }", 2)]
-fn test_parse_state_text(#[case] source: &str, #[case] root_count: usize) {
-    use crate::parsing::parse_states_text;
-    let parse_nodes = parse_states_text(source).unwrap();
-    assert_that!(parse_nodes).has_length(root_count);
-}
-
-#[rstest]
-#[case("root.txt", "RootState")]
-#[case("alpabet.txt", "A B C D E F G H I")]
-#[case("mixed-nested-states.txt", "A { B [C] } D { E F [ G H ] I }")]
-fn test_generate_full_source(#[case] src_path: &str, #[case] source: &str) {
-    set_snapshot_suffix!("{src_path}{RUSTFMT}");
-    assert_snapshot!(generate_state_plugin_source(source, default(), Some(src_path)).unwrap());
+#[case("root.txt", "RootState", default())]
+#[case("root.txt", "RootState", PluginConfig { root_state_name: None, ..default() })]
+#[case("alpabet.txt", "A B C D E F G H I", default())]
+#[case(
+    "mixed-nested-states.txt",
+    "A { B [C] } D { E F [ G H ] I }",
+    default()
+)]
+fn test_generate_full_source(
+    #[case] src_path: &str,
+    #[case] source: &str,
+    #[case] config: PluginConfig,
+) {
+    let root_state_name = config
+        .root_state_name
+        .clone()
+        .unwrap_or_else(|| "None".to_string());
+    set_snapshot_suffix!("{src_path}_{root_state_name}_{RUSTFMT}");
+    assert_snapshot!(generate_state_plugin_source(source, config, Some(src_path)).unwrap());
 }
 
 #[rstest]
@@ -128,12 +132,11 @@ fn test_naming_scheme(
 }
 
 fn generate_all_type_definitions(
-    node: ParseNode<'_>,
+    node: Vec<ParseNode<'_>>,
     naming_scheme: NamingScheme,
+    root_state_name: Option<String>,
 ) -> Result<Vec<String>, GeneratorError> {
-    let mut nodes = flatten_parse_node(node);
-    apply_naming_scheme(naming_scheme, &mut nodes)?;
-    Ok(nodes
+    Ok(process_parse_nodes(node, naming_scheme, root_state_name)?
         .into_iter()
         .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
         .collect_vec())
@@ -149,7 +152,11 @@ fn test_error_handling(
     #[case] node: ParseNode,
 ) {
     set_snapshot_suffix!("{}_{naming_scheme:?}", context.description.unwrap());
-    assert_debug_snapshot!(generate_all_type_definitions(node, naming_scheme));
+    assert_debug_snapshot!(generate_all_type_definitions(
+        vec![node],
+        naming_scheme,
+        None
+    ));
 }
 
 #[rstest]
@@ -172,5 +179,9 @@ fn snapshots(
         "{}_{naming_scheme:?}{RUSTFMT}",
         context.description.unwrap()
     );
-    assert_debug_snapshot!(generate_all_type_definitions(node, naming_scheme));
+    assert_debug_snapshot!(generate_all_type_definitions(
+        vec![node],
+        naming_scheme,
+        None
+    ));
 }

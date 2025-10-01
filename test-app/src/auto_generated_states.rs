@@ -16,7 +16,12 @@ use bevy::prelude::AppExtStates;
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    pub struct RootState;
+    pub enum RootState {
+        #[default]
+        Loading,
+        Ready,
+        Exiting,
+    }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(RootState = RootState::Loading)]
@@ -27,37 +32,24 @@ pub mod states {
     }
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Loading = Loading::Configs)]
-    pub struct Configs;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Loading = Loading::Assets)]
-    pub struct Assets;
-}
-pub struct GeneratedStatesPlugin;
-impl bevy::app::Plugin for GeneratedStatesPlugin {
-    fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::RootState>()
-            .add_sub_state::<states::Loading>()
-            .add_sub_state::<states::LoadingConfigs>()
-            .add_sub_state::<states::LoadingAssets>();
-    }
-}
-
-use bevy::prelude::AppExtStates;
-#[allow(missing_docs)]
-pub mod states {
-    use bevy::prelude::StateSet;
-    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    pub struct RootState;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(RootState = RootState::Ready)]
     pub enum Ready {
         #[default]
         Playing,
         Paused,
     }
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(RootState = RootState::Exiting)]
+    pub struct Exiting;
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Loading = Loading::Configs)]
+    pub struct Configs;
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(Loading = Loading::Assets)]
+    pub struct Assets;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(Ready = Ready::Playing)]
@@ -71,27 +63,12 @@ pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
         app.init_state::<states::RootState>()
-            .add_sub_state::<states::Ready>()
-            .add_sub_state::<states::ReadyPlaying>()
-            .add_sub_state::<states::ReadyPaused>();
-    }
-}
-
-use bevy::prelude::AppExtStates;
-#[allow(missing_docs)]
-pub mod states {
-    use bevy::prelude::StateSet;
-    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    pub struct RootState;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(RootState = RootState::Exiting)]
-    pub struct Exiting;
-}
-pub struct GeneratedStatesPlugin;
-impl bevy::app::Plugin for GeneratedStatesPlugin {
-    fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::RootState>()
-            .add_sub_state::<states::Exiting>();
+            .add_sub_state::<states::RootStateLoading>()
+            .add_sub_state::<states::RootStateReady>()
+            .add_sub_state::<states::RootStateExiting>()
+            .add_sub_state::<states::RootStateLoadingConfigs>()
+            .add_sub_state::<states::RootStateLoadingAssets>()
+            .add_sub_state::<states::RootStateReadyPlaying>()
+            .add_sub_state::<states::RootStateReadyPaused>();
     }
 }

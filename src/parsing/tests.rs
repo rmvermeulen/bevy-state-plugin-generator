@@ -199,17 +199,6 @@ fn test_parse_config_incomplete(
 }
 
 #[rstest]
-#[case("Root, Root2", vec![
-    ParseNode::singleton("Root"),
-    ParseNode::singleton("Root2"),
-])]
-fn test_parse_states_file(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
-    assert_that!(parse_states_text(input))
-        .is_ok()
-        .is_equal_to(expected);
-}
-
-#[rstest]
 #[case("Main", ParseNode::singleton("Main"))]
 #[case("Main{}", ParseNode::Enum("Main".into(), Default::default()))]
 #[case("Main{A}", ParseNode::enumeration("Main", [ParseNode::singleton("A")]))]
@@ -219,4 +208,14 @@ fn test_parse_states_file(#[case] input: &str, #[case] expected: Vec<ParseNode>)
 ]))]
 fn test_parse_node_try_from_str(#[case] input: &str, #[case] expected: ParseNode) {
     assert_that!(ParseNode::try_from(input)).is_ok_containing(expected);
+}
+
+#[rstest]
+#[case("RootState", 1)]
+#[case("Root, Root2", 2)]
+#[case("A B C D E F G H I", 9)]
+#[case("A { B [C] } D { E F [ G H ] I }", 2)]
+fn test_parse_state_text(#[case] source: &str, #[case] root_count: usize) {
+    let parse_nodes = parse_states_text(source).unwrap();
+    assert_that!(parse_nodes).has_length(root_count);
 }

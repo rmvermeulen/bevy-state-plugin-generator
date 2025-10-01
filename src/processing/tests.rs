@@ -3,12 +3,12 @@ use itertools::Itertools;
 
 use crate::NamingScheme;
 use crate::parsing::ParseNode;
-use crate::processing::{NodeData, NodeType, apply_naming_scheme, flatten_parse_node};
+use crate::processing::{NodeData, NodeType, apply_naming_scheme, flatten_root_parse_node};
 use crate::testing::*;
 
 #[rstest]
 fn test_flatten_parse_node_singleton() {
-    let results = flatten_parse_node(ParseNode::singleton("A"));
+    let results = flatten_root_parse_node(ParseNode::singleton("A"));
     assert_that!(results).is_equal_to(vec![NodeData {
         index: 0,
         parent: None,
@@ -26,7 +26,7 @@ fn test_flatten_parse_node_singleton() {
 #[case::enum_root_a_b_up_c(parse_node::enum_root_a_b_up_c())]
 fn test_flatten_parse_node_enums(#[context] context: Context, #[case] node: ParseNode) {
     set_snapshot_suffix!("{}", context.description.unwrap());
-    assert_debug_snapshot!(flatten_parse_node(node));
+    assert_debug_snapshot!(flatten_root_parse_node(node));
 }
 
 #[rstest]
@@ -36,7 +36,7 @@ fn test_flatten_parse_node_enums(#[context] context: Context, #[case] node: Pars
 #[case::list_root_a_b_up_c(parse_node::list_root_a_b_up_c())]
 fn test_flatten_parse_node_lists(#[context] context: Context, #[case] node: ParseNode) {
     set_snapshot_suffix!("{}", context.description.unwrap());
-    assert_debug_snapshot!(flatten_parse_node(node));
+    assert_debug_snapshot!(flatten_root_parse_node(node));
 }
 
 #[rstest]

@@ -1,6 +1,6 @@
 ---
 source: src/generate/tests.rs
-expression: "generate_all_type_definitions(node, naming_scheme)"
+expression: "generate_all_type_definitions(vec![node], naming_scheme, None)"
 ---
 Err(
     Processing(

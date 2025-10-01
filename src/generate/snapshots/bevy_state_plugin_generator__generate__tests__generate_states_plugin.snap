@@ -7,7 +7,10 @@ use bevy::prelude::AppExtStates;
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-pub struct GameState;
+pub enum GameState {
+    #[default]
+    GameState
+}
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::GameState)]
@@ -70,15 +73,15 @@ pub struct GameOver;
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>().add_sub_state::<states::GameState>()
-            .add_sub_state::<states::GameStateLoading>()
-            .add_sub_state::<states::GameStateReady>()
-            .add_sub_state::<states::GameStateReadyMenu>()
-            .add_sub_state::<states::GameStateReadyGame>()
-            .add_sub_state::<states::GameStateReadyMenuMain>()
-            .add_sub_state::<states::GameStateReadyMenuOptions>()
-            .add_sub_state::<states::GameStateReadyGamePlaying>()
-            .add_sub_state::<states::GameStateReadyGamePaused>()
-            .add_sub_state::<states::GameStateReadyGameGameOver>();
+        app.init_state::<states::GameState>().add_sub_state::<states::GameStateGameState>()
+            .add_sub_state::<states::GameStateGameStateLoading>()
+            .add_sub_state::<states::GameStateGameStateReady>()
+            .add_sub_state::<states::GameStateGameStateReadyMenu>()
+            .add_sub_state::<states::GameStateGameStateReadyGame>()
+            .add_sub_state::<states::GameStateGameStateReadyMenuMain>()
+            .add_sub_state::<states::GameStateGameStateReadyMenuOptions>()
+            .add_sub_state::<states::GameStateGameStateReadyGamePlaying>()
+            .add_sub_state::<states::GameStateGameStateReadyGamePaused>()
+            .add_sub_state::<states::GameStateGameStateReadyGameGameOver>();
     }
 }

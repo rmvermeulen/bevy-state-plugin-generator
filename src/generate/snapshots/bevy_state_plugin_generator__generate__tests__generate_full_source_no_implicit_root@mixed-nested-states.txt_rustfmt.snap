@@ -16,27 +16,6 @@ pub mod states {
         B,
     }
 
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(A = A::B)]
-    pub struct B;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(B = B::C)]
-    pub struct C;
-}
-pub struct GeneratedStatesPlugin;
-impl bevy::app::Plugin for GeneratedStatesPlugin {
-    fn build(&self, app: &mut bevy::app::App) {
-        app.add_state::<states::A>()
-            .add_sub_state::<states::AB>()
-            .add_sub_state::<states::ABC>();
-    }
-}
-
-use bevy::prelude::AppExtStates;
-#[allow(missing_docs)]
-pub mod states {
-    use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum D {
         #[default]
@@ -44,6 +23,10 @@ pub mod states {
         F,
         I,
     }
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(A = A::B)]
+    pub struct B;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(D = D::E)]
@@ -58,6 +41,10 @@ pub mod states {
     pub struct I;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+    #[source(B = B::C)]
+    pub struct C;
+
+    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(F = F::G)]
     pub struct G;
 
@@ -68,10 +55,13 @@ pub mod states {
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.add_state::<states::D>()
+        app.add_state::<states::A>()
+            .add_state::<states::D>()
+            .add_sub_state::<states::AB>()
             .add_sub_state::<states::DE>()
             .add_sub_state::<states::DF>()
             .add_sub_state::<states::DI>()
+            .add_sub_state::<states::ABC>()
             .add_sub_state::<states::DFG>()
             .add_sub_state::<states::DFH>();
     }
