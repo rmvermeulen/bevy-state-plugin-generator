@@ -24,7 +24,6 @@ pub(crate) mod testing;
 mod tests;
 #[cfg(test)]
 mod tests_bak;
-pub(crate) mod tree;
 
 /// The kinds of errors that can occur
 #[derive(Debug, thiserror::Error)]

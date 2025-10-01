@@ -10,7 +10,6 @@ use itertools::{Itertools, concat};
 
 use crate::generate::REQUIRED_DERIVES;
 use crate::parsing::ParseNode;
-use crate::tree::SubTree;
 use crate::{NamingScheme, PluginConfig, PluginName};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]

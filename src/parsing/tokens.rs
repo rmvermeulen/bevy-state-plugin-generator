@@ -49,6 +49,19 @@ impl<'a> ParseNode<'a> {
             Self::List(_, children) => children.clone(),
         }
     }
+    pub fn get_tree_size(&self) -> usize {
+        match self {
+            Self::Comment(_) => 1,
+            Self::Singleton(_) => 1,
+            Self::Enum(_, children) | Self::List(_, children) => {
+                children
+                    .iter()
+                    .map(|child| child.get_tree_size())
+                    .sum::<usize>()
+                    + 1
+            }
+        }
+    }
 }
 
 impl<'a> TryFrom<&'a str> for ParseNode<'a> {
