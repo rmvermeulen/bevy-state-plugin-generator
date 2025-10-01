@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use insta::{assert_debug_snapshot, assert_snapshot};
 use itertools::Itertools;
-use rstest::rstest;
+use rstest::{Context, rstest};
 
 use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
 use crate::parsing::ParseNode;
@@ -175,43 +175,30 @@ fn generate_all_type_definitions(node: ParseNode<'_>, naming_scheme: NamingSchem
         .collect_vec()
 }
 
-#[rstest]
-fn test_generate_all_type_definitions_full(
-    #[from(parse_node::nested_example)] node: ParseNode<'_>,
-) {
-    let typenames = generate_all_type_definitions(node, NamingScheme::Full);
-    assert_debug_snapshot!(typenames, @r#"
-    [
-        "Menu -> Menu",
-        "Main -> MenuMain",
-        "Options -> MenuOptions",
-        "Game -> MenuGame",
-        "Graphics -> MenuOptionsGraphics",
-        "Audio -> MenuOptionsAudio",
-        "Gameplay -> MenuOptionsGameplay",
-        "Save -> MenuGameSave",
-        "Load -> MenuGameLoad",
-    ]
-    "#);
-}
+#[cfg(feature = "rustfmt")]
+const RUSTFMT: &str = "_rustfmt";
+#[cfg(not(feature = "rustfmt"))]
+const RUSTFMT: &str = "_no_rustfmt";
 
 #[rstest]
-fn test_generate_all_type_definitions_shortened(
-    #[from(parse_node::nested_example)] node: ParseNode,
+#[case::enum_root_a(parse_node::enum_root_a())]
+#[case::enum_root_ab(parse_node::enum_root_ab())]
+#[case::enum_root_a_b(parse_node::enum_root_a_b())]
+#[case::enum_root_a_b_up_c(parse_node::enum_root_a_b_up_c())]
+#[case::list_root_a(parse_node::list_root_a())]
+#[case::list_root_ab(parse_node::list_root_ab())]
+#[case::list_root_a_b(parse_node::list_root_a_b())]
+#[case::list_root_a_b_up_c(parse_node::list_root_a_b_up_c())]
+#[case::nested_example(parse_node::nested_example())]
+fn snapshots(
+    #[context] context: Context,
+    #[values(NamingScheme::Full, NamingScheme::Short, NamingScheme::None)]
+    naming_scheme: NamingScheme,
+    #[case] node: ParseNode,
 ) {
-    assert_debug_snapshot!(
-        generate_all_type_definitions(node, NamingScheme::Short),
-        @r#"
-    [
-        "Menu -> Menu",
-        "Main -> MenuMain",
-        "Options -> MenuOptions",
-        "Game -> MenuGame",
-        "Graphics -> OptionsGraphics",
-        "Audio -> OptionsAudio",
-        "Gameplay -> OptionsGameplay",
-        "Save -> GameSave",
-        "Load -> GameLoad",
-    ]
-    "#);
+    set_snapshot_suffix!(
+        "{}_{naming_scheme:?}{RUSTFMT}",
+        context.description.unwrap()
+    );
+    assert_debug_snapshot!(generate_all_type_definitions(node, naming_scheme));
 }

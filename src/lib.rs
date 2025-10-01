@@ -22,8 +22,6 @@ pub(crate) mod processing;
 pub(crate) mod testing;
 #[cfg(test)]
 mod tests;
-#[cfg(test)]
-mod tests_bak;
 
 /// The kinds of errors that can occur
 #[derive(Debug, thiserror::Error)]

@@ -18,21 +18,21 @@ fn test_flatten_parse_node_singleton() {
 }
 
 #[rstest]
-#[case(parse_node::enum_root_a(), "enum_root_a")]
-#[case(parse_node::enum_root_ab(), "enum_root_ab")]
-#[case(parse_node::enum_root_a_b(), "enum_root_a_b")]
-#[case(parse_node::enum_root_a_b_up_c(), "enum_root_a_b_up_c")]
-fn test_flatten_parse_node_enums(#[case] node: ParseNode, #[case] name: &str) {
-    set_snapshot_suffix!("{name}");
+#[case::enum_root_a(parse_node::enum_root_a())]
+#[case::enum_root_ab(parse_node::enum_root_ab())]
+#[case::enum_root_a_b(parse_node::enum_root_a_b())]
+#[case::enum_root_a_b_up_c(parse_node::enum_root_a_b_up_c())]
+fn test_flatten_parse_node_enums(#[context] context: Context, #[case] node: ParseNode) {
+    set_snapshot_suffix!("{}", context.description.unwrap());
     assert_debug_snapshot!(flatten_parse_node(node));
 }
 
 #[rstest]
-#[case(parse_node::list_root_a(), "list_root_a")]
-#[case(parse_node::list_root_ab(), "list_root_ab")]
-#[case(parse_node::list_root_a_b(), "list_root_a_b")]
-#[case(parse_node::list_root_a_b_up_c(), "list_root_a_b_up_c")]
-fn test_flatten_parse_node_lists(#[case] node: ParseNode, #[case] name: &str) {
-    set_snapshot_suffix!("{name}");
+#[case::list_root_a(parse_node::list_root_a())]
+#[case::list_root_ab(parse_node::list_root_ab())]
+#[case::list_root_a_b(parse_node::list_root_a_b())]
+#[case::list_root_a_b_up_c(parse_node::list_root_a_b_up_c())]
+fn test_flatten_parse_node_lists(#[context] context: Context, #[case] node: ParseNode) {
+    set_snapshot_suffix!("{}", context.description.unwrap());
     assert_debug_snapshot!(flatten_parse_node(node));
 }

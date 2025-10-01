@@ -1,6 +1,6 @@
 ---
 source: src/tests.rs
-expression: "parse_node_into_final_source(root_state, Default::default()).unwrap()"
+expression: "try_parse_node_into_final_source(root_state, Default::default()).unwrap()"
 ---
 use bevy::prelude::AppExtStates;
 #[allow(missing_docs)]

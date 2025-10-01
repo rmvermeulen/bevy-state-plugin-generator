@@ -1,0 +1,9 @@
+---
+source: src/tests.rs
+expression: "generate_all_type_definitions(node, naming_scheme)"
+---
+[
+    "Root -> Root",
+    "A -> RootA",
+    "B -> RootB",
+]
