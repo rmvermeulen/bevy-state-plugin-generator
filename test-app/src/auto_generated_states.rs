@@ -1,5 +1,3 @@
-// bspg:State
-// bspg: tState
 // bspg:root_state    RootState
 // bspg:naming_scheme Full
 // bspg:
@@ -12,5 +10,3 @@
 //     Paused
 // }
 // Exiting
-
-
