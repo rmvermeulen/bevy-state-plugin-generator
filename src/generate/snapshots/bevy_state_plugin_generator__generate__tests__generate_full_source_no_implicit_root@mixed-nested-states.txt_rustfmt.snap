@@ -11,10 +11,6 @@ use bevy::prelude::AppExtStates;
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    pub struct GameState;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::A)]
     pub enum A {
         #[default]
         B,
@@ -31,8 +27,7 @@ pub mod states {
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>()
-            .add_sub_state::<states::A>()
+        app.add_state::<states::A>()
             .add_sub_state::<states::AB>()
             .add_sub_state::<states::ABC>();
     }
@@ -43,10 +38,6 @@ use bevy::prelude::AppExtStates;
 pub mod states {
     use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    pub struct GameState;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::D)]
     pub enum D {
         #[default]
         E,
@@ -77,8 +68,7 @@ pub mod states {
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>()
-            .add_sub_state::<states::D>()
+        app.add_state::<states::D>()
             .add_sub_state::<states::DE>()
             .add_sub_state::<states::DF>()
             .add_sub_state::<states::DI>()

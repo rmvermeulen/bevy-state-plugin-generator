@@ -1,5 +1,6 @@
 use std::time::Duration;
 
+use bevy_utils::default;
 use insta::{assert_debug_snapshot, assert_snapshot};
 use itertools::Itertools;
 use rstest::{Context, rstest};
@@ -68,13 +69,32 @@ fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
 }
 
 #[rstest]
-#[case("root.txt", "RootState", PluginConfig::default())]
+#[case("RootState", 1)]
+#[case("A B C D E F G H I", 9)]
+#[case("A { B [C] } D { E F [ G H ] I }", 2)]
+fn test_parse_state_text(#[case] source: &str, #[case] root_count: usize) {
+    use crate::parsing::parse_states_text;
+    let parse_nodes = parse_states_text(source).unwrap();
+    assert_that!(parse_nodes).has_length(root_count);
+}
+
+#[rstest]
+#[case("root.txt", "RootState")]
+#[case("alpabet.txt", "A B C D E F G H I")]
+#[case("mixed-nested-states.txt", "A { B [C] } D { E F [ G H ] I }")]
+fn test_generate_full_source(#[case] src_path: &str, #[case] source: &str) {
+    set_snapshot_suffix!("{src_path}{RUSTFMT}");
+    assert_snapshot!(generate_state_plugin_source(source, default(), Some(src_path)).unwrap());
+}
+
+#[rstest]
+#[case("root.txt", "RootState", PluginConfig { root_state_name: None, ..default() })]
 #[case(
     "mixed-nested-states.txt",
-    "A { B [C[ } D { E F [ G H ] I }",
-    PluginConfig::default()
+    "A { B [C] } D { E F [ G H ] I }",
+    PluginConfig { root_state_name: None, ..default() }
 )]
-fn test_generate_full_source(
+fn test_generate_full_source_no_implicit_root(
     #[case] src_path: &str,
     #[case] source: &str,
     #[case] plugin_config: PluginConfig,
