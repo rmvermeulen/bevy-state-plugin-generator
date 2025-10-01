@@ -107,3 +107,13 @@ impl From<NamingScheme> for PluginConfig {
         }
     }
 }
+
+#[cfg(test)]
+#[rstest::rstest]
+#[case(NamingScheme::None)]
+#[case(NamingScheme::Short)]
+#[case(NamingScheme::Full)]
+fn test_plugin_config_from_naming_scheme(#[case] naming_scheme: NamingScheme) {
+    let config = PluginConfig::from(naming_scheme);
+    assert_eq!(config.naming_scheme, naming_scheme);
+}

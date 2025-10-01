@@ -2,14 +2,16 @@
 source: src/generate/tests.rs
 expression: "generate_all_type_definitions(node, naming_scheme)"
 ---
-[
-    "Menu -> Menu",
-    "Main -> MenuMain",
-    "Options -> MenuOptions",
-    "Game -> MenuGame",
-    "Graphics -> OptionsGraphics",
-    "Audio -> OptionsAudio",
-    "Gameplay -> OptionsGameplay",
-    "Save -> GameSave",
-    "Load -> GameLoad",
-]
+Ok(
+    [
+        "Menu -> Menu",
+        "Main -> MenuMain",
+        "Options -> MenuOptions",
+        "Game -> MenuGame",
+        "Graphics -> OptionsGraphics",
+        "Audio -> OptionsAudio",
+        "Gameplay -> OptionsGameplay",
+        "Save -> GameSave",
+        "Load -> GameLoad",
+    ],
+)

@@ -1,0 +1,12 @@
+---
+source: src/generate/tests.rs
+expression: "generate_all_type_definitions(node, naming_scheme)"
+---
+Err(
+    Processing(
+        DuplicateName {
+            resolved_name: "A",
+            original_name: "A",
+        },
+    ),
+)

@@ -8,7 +8,7 @@ use crate::generate::{format_source, generate_debug_info, generate_state_plugin_
 use crate::parsing::ParseNode;
 use crate::processing::{apply_naming_scheme, flatten_parse_node, try_parse_node_into_final_source};
 use crate::testing::parse_node;
-use crate::{NamingScheme, PluginConfig, set_snapshot_suffix};
+use crate::{GeneratorError, NamingScheme, PluginConfig, set_snapshot_suffix};
 
 #[cfg(feature = "rustfmt")]
 const RUSTFMT: &str = "_rustfmt";
@@ -19,10 +19,7 @@ const RUSTFMT: &str = "_no_rustfmt";
 #[timeout(Duration::from_millis(250))]
 #[async_std::test]
 async fn test_format_source() {
-    let suffix = cfg!(feature = "rustfmt")
-        .then_some("_rustfmt")
-        .unwrap_or_default();
-    set_snapshot_suffix!("formatted{suffix}");
+    set_snapshot_suffix!("formatted{RUSTFMT}");
     let formatted = format_source("fn main(){println!(\"Hello, world!\");}");
     assert_snapshot!(formatted);
 }
@@ -62,10 +59,7 @@ fn test_generate_states_plugin() {
 #[case("root.txt", "RootState")]
 #[case("fruits.txt", "Apple Orange { O1 O2 }")]
 fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
-    let suffix = cfg!(feature = "rustfmt")
-        .then_some("_rustfmt")
-        .unwrap_or_default();
-    set_snapshot_suffix!("{src_path}{suffix}");
+    set_snapshot_suffix!("{src_path}{RUSTFMT}");
     assert_snapshot!(generate_debug_info(src_path, source));
 }
 
@@ -81,45 +75,56 @@ fn test_generate_full_source(
     #[case] source: &str,
     #[case] plugin_config: PluginConfig,
 ) {
-    let suffix = cfg!(feature = "rustfmt")
-        .then_some("_rustfmt")
-        .unwrap_or_default();
-    set_snapshot_suffix!("{src_path}{suffix}");
+    set_snapshot_suffix!("{src_path}{RUSTFMT}");
     assert_snapshot!(generate_state_plugin_source(source, plugin_config, Some(src_path)).unwrap());
 }
 
 #[rstest]
-#[case("root.txt", "RootState", NamingScheme::Full)]
-#[case("root.txt", "RootState", NamingScheme::Short)]
+#[case(Some("root.txt"))]
+#[case(None)]
 fn test_naming_scheme(
-    #[case] src_path: &str,
-    #[case] source: &str,
-    #[case] naming_scheme: NamingScheme,
+    #[case] src_path: Option<&str>,
+    #[values(NamingScheme::Full, NamingScheme::Short, NamingScheme::None)]
+    naming_scheme: NamingScheme,
 ) {
-    let suffix = cfg!(feature = "rustfmt")
-        .then_some("_rustfmt")
-        .unwrap_or_default();
-    set_snapshot_suffix!("{src_path}_{naming_scheme}{suffix}");
+    let src_path_display = src_path.unwrap_or("no_src");
+    set_snapshot_suffix!("{src_path_display}_{naming_scheme}{RUSTFMT}");
     assert_snapshot!(
         generate_state_plugin_source(
-            source,
+            "RootState",
             PluginConfig {
                 naming_scheme,
                 ..Default::default()
             },
-            Some(src_path),
+            src_path,
         )
         .unwrap()
     );
 }
 
-fn generate_all_type_definitions(node: ParseNode<'_>, naming_scheme: NamingScheme) -> Vec<String> {
+fn generate_all_type_definitions(
+    node: ParseNode<'_>,
+    naming_scheme: NamingScheme,
+) -> Result<Vec<String>, GeneratorError> {
     let mut nodes = flatten_parse_node(node);
-    apply_naming_scheme(naming_scheme, &mut nodes).unwrap();
-    nodes
+    apply_naming_scheme(naming_scheme, &mut nodes)?;
+    Ok(nodes
         .into_iter()
         .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
-        .collect_vec()
+        .collect_vec())
+}
+
+#[rstest]
+#[case::duplicates(parse_node::duplicate_names())]
+#[case::overlapping(parse_node::overlapping_names())]
+fn test_error_handling(
+    #[context] context: Context,
+    #[values(NamingScheme::Full, NamingScheme::Short, NamingScheme::None)]
+    naming_scheme: NamingScheme,
+    #[case] node: ParseNode,
+) {
+    set_snapshot_suffix!("{}_{naming_scheme:?}", context.description.unwrap());
+    assert_debug_snapshot!(generate_all_type_definitions(node, naming_scheme));
 }
 
 #[rstest]

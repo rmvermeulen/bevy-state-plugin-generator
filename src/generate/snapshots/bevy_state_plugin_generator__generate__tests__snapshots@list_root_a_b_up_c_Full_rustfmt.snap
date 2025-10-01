@@ -2,9 +2,11 @@
 source: src/generate/tests.rs
 expression: "generate_all_type_definitions(node, naming_scheme)"
 ---
-[
-    "Root -> Root",
-    "A -> RootA",
-    "C -> RootC",
-    "B -> RootAB",
-]
+Ok(
+    [
+        "Root -> Root",
+        "A -> RootA",
+        "C -> RootC",
+        "B -> RootAB",
+    ],
+)

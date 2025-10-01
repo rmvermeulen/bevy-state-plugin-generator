@@ -36,17 +36,16 @@ pub fn flatten_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {
     let mut nodes = Vec::with_capacity(node_count);
     let mut todo = VecDeque::from([(root_node, 0, None)]);
     while let Some((parse_node, depth, parent)) = todo.pop_front() {
-        let Some(name) = parse_node.name() else {
-            continue;
-        };
         let node_type = match parse_node {
             ParseNode::Singleton(_) => NodeType::Singleton,
             ParseNode::Enum(_, _) => NodeType::Enum,
             ParseNode::List(_, _) => NodeType::List,
             ParseNode::Comment(_) => {
-                #[cfg_attr(coverage_nightly, coverage(off))]
-                unreachable!("Comment has no name")
+                continue;
             }
+        };
+        let Some(name) = parse_node.name() else {
+            continue;
         };
         let index = nodes.len();
         nodes.push(NodeData {

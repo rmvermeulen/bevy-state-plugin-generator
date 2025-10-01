@@ -54,6 +54,25 @@ pub mod parse_node {
     use crate::parsing::ParseNode;
 
     #[fixture]
+    pub fn duplicate_names() -> ParseNode<'static> {
+        ParseNode::list(
+            "Root",
+            [ParseNode::singleton("A"), ParseNode::singleton("A")],
+        )
+    }
+
+    #[fixture]
+    pub fn overlapping_names() -> ParseNode<'static> {
+        ParseNode::list(
+            "Root",
+            [
+                ParseNode::enumeration("Root", [ParseNode::singleton("A")]),
+                ParseNode::singleton("A"),
+            ],
+        )
+    }
+
+    #[fixture]
     pub fn enum_root_a() -> ParseNode<'static> {
         ParseNode::enumeration("Root", [ParseNode::singleton("A")])
     }
@@ -120,6 +139,7 @@ pub mod parse_node {
             "Menu",
             [
                 ParseNode::singleton("Main"),
+                ParseNode::comment("these are the options"),
                 ParseNode::enumeration(
                     "Options",
                     [

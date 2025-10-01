@@ -5,7 +5,8 @@ expression: "generate_all_type_definitions(node, naming_scheme)"
 Ok(
     [
         "Root -> Root",
+        "Root -> RootRoot",
         "A -> RootA",
-        "B -> RootB",
+        "A -> RootRootA",
     ],
 )
