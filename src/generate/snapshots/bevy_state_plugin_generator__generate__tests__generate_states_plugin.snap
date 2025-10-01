@@ -1,6 +1,6 @@
 ---
 source: src/generate/tests.rs
-expression: "try_parse_node_into_final_source(root_state, Default::default()).unwrap()"
+expression: source
 ---
 use bevy::prelude::AppExtStates;
 #[allow(missing_docs)]
@@ -11,7 +11,11 @@ pub struct GameState;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::GameState)]
-pub struct GameState;
+pub enum GameState {
+    #[default]
+    Loading,
+      Ready
+}
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Loading)]
@@ -19,15 +23,28 @@ pub struct Loading;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::Ready)]
-pub struct Ready;
+pub enum Ready {
+    #[default]
+    Menu,
+      Game
+}
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(Ready = Ready::Menu)]
-pub struct Menu;
+pub enum Menu {
+    #[default]
+    Main,
+      Options
+}
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(Ready = Ready::Game)]
-pub struct Game;
+pub enum Game {
+    #[default]
+    Playing,
+      Paused,
+      GameOver
+}
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(Menu = Menu::Main)]

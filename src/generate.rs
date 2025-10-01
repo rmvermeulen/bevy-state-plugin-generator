@@ -59,8 +59,10 @@ pub fn generate_state_plugin_source(
     src_path: Option<&str>,
 ) -> Result<String, ProcessingError> {
     let parse_nodes = parse_states_text(input_source)?;
+    // TODO: add artificial root to multi-nodes
     let mut output = parse_nodes
         .into_iter()
+        // TODO: merge modules!!!
         .map(|parse_node| try_parse_node_into_final_source(parse_node, plugin_config.clone()))
         .collect::<Result<Vec<_>, _>>()?
         .join("\n");

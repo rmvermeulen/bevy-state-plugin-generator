@@ -61,11 +61,21 @@ pub fn flatten_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {
         }
     }
 
+    for i in 0..nodes.len() {
+        let (ancestors, children) = nodes.split_at_mut(i);
+        let node = &children[0];
+        if let Some(parent_index) = node.parent {
+            assert!(parent_index < i);
+            let parent = &mut ancestors[parent_index];
+            parent.variants.push(node.name.clone());
+        }
+    }
+
+    #[cfg(debug_assertions)]
     for (i, node) in nodes.iter().enumerate() {
         assert_eq!(node.index, i);
-        if let Some(parent) = node.parent {
-            assert!(parent <= node.index);
-            assert!(node.depth > nodes[parent].depth);
+        if let Some(parent_index) = node.parent {
+            assert!(parent_index <= node.index);
         }
     }
 
@@ -158,6 +168,7 @@ fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, Proc
         let mut new_nodes = vec![root_node];
         for mut node in nodes.into_iter() {
             let root_node = &mut new_nodes[0];
+            // add all top-level nodes as a variant of the root_node
             if node.depth == 0 {
                 root_node.variants.push(
                     node.resolved_name

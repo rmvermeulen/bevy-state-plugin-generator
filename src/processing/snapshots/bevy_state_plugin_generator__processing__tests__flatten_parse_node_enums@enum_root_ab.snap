@@ -10,7 +10,10 @@ expression: flatten_parse_node(node)
         depth: 0,
         name: "Root",
         resolved_name: None,
-        variants: [],
+        variants: [
+            "A",
+            "B",
+        ],
     },
     NodeData {
         index: 1,
