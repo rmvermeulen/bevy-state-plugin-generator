@@ -128,7 +128,7 @@ pub enum ProcessingError {
     #[error("Unspecified error: {0}")]
     Custom(String),
     #[error("Failed to parse! Final state: {0:?}")]
-    Parsing(String),
+    Parsing(#[from] nom::Err<nom::error::Error<String>>),
 }
 
 fn get_source(nodes: Vec<NodeData>, config: PluginConfig) -> Result<String, ProcessingError> {

@@ -53,8 +53,9 @@ pub fn generate_state_plugin_source(
     plugin_config: PluginConfig,
     src_path: Option<&str>,
 ) -> Result<String, ProcessingError> {
-    let parse_nodes =
-        parse_states_text(source_input).map_err(|e| ProcessingError::Parsing(e.to_string()))?;
+    let parse_nodes = parse_states_text(source_input)
+        .map_err(|e| e.to_owned())
+        .map_err(ProcessingError::from)?;
 
     let mut sources = Vec::new();
     for parse_node in parse_nodes {
