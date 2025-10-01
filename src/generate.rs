@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use indoc::formatdoc;
 use itertools::Itertools;
 use nom::AsChar;

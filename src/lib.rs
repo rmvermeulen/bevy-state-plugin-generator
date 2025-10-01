@@ -20,8 +20,6 @@ pub(crate) mod parsing;
 pub(crate) mod processing;
 #[cfg(test)]
 pub(crate) mod testing;
-#[cfg(test)]
-mod tests;
 
 /// The kinds of errors that can occur
 #[derive(Debug, thiserror::Error)]

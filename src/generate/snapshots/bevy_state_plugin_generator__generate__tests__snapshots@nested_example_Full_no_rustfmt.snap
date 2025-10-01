@@ -1,0 +1,15 @@
+---
+source: src/generate/tests.rs
+expression: "generate_all_type_definitions(node, naming_scheme)"
+---
+[
+    "Menu -> Menu",
+    "Main -> MenuMain",
+    "Options -> MenuOptions",
+    "Game -> MenuGame",
+    "Graphics -> MenuOptionsGraphics",
+    "Audio -> MenuOptionsAudio",
+    "Gameplay -> MenuOptionsGameplay",
+    "Save -> MenuGameSave",
+    "Load -> MenuGameLoad",
+]
