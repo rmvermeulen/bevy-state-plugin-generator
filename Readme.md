@@ -6,7 +6,7 @@ in a `Plugin`.
 
 ## Probably do not use
 
-It has many bugs and the versions mean nothing. It will not save you time.
+I made this without checking if and/or how it would be a good idea. But it's somewhat usable now.
 
 ## versions
 
@@ -16,27 +16,18 @@ It has many bugs and the versions mean nothing. It will not save you time.
 | 0.16.0 | 1.3.0      |
 | 0.17.0 | 1.4.0      |
 
-## bugs
-
-```rust
-// TODO: naming-scheme collision detection
-// TODO: incorrect names containing `State`
-// TODO: fix parent-names being incorrect if they contain `State`
-```
-
 ## usage
 
 ### single-file mode
 
 Create a `states.rs` in `src/` and add the following comment at the top:
 
-````rs
-// bspg: ```
+```rs
+// bspg:
 // Loading
 // Ready { Menu Game }
 // Exiting
-// ```
-````
+```
 
 Set up your `build.rs` like this:
 
@@ -139,3 +130,32 @@ PlayerState {
 | `BadState`    | `PlayerStateBadState`        | `PlayerBadState`        |
 | `OnFire`      | `PlayerStateBadStateOnFire`  | `PlayerBadOnFireState`  |
 | `InWater`     | `PlayerStateBadStateInWater` | `PlayerBadInWaterState` |
+
+## todo
+
+Apply a smarted correct `NamingScheme`.
+
+## split at case-boundaries, but maintain inner name
+
+| input   | names   | parts      | notes                                |
+| ------- | ------- | ---------- | ------------------------------------ |
+| `ABC`   |         | `ABC`      | consecutive capitals are joined      |
+| `ABBox` |         | `ABBox`    | lowercase sections are joined to the |
+|         |         |            | preceding capital(s)                 |
+| `AbBox` |         | `Ab`,`Box` | split at case-boundaries             |
+| `AbBox` | `AbBox` | `Ab`,`Box` | do not split a name                  |
+
+## normalization
+
+- always suffix the enum/struct with `State` but not the variants, e.g.
+  `Map::Fishing` -> `MapState::Fishing` with sub-state `MapStateFishingState`
+  |origin name| result| sub-state
+
+### TODO: merge
+
+- if `config.merge=true` remove `State` from the end of names when joining
+  them e.g. `Map::Fishing` -> `MapState::Fishing` with sub-state `MapFishingState`
+
+## collisions
+
+Abort on any collisions.
