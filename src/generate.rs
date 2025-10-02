@@ -6,13 +6,13 @@ use itertools::Itertools;
 use nom::AsChar;
 
 use crate::PluginConfig;
-use crate::parsing::parse_states_text;
+use crate::parsing::parse_config;
 use crate::processing::{ProcessingError, convert_parse_nodes_into_plugin_source};
 
-pub(super) const REQUIRED_DERIVES: &[&str] =
+pub(crate) const REQUIRED_DERIVES: &[&str] =
     &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
 
-pub fn get_package_info() -> String {
+pub(crate) fn get_package_info() -> String {
     let pkg = env!("CARGO_PKG_NAME");
     #[cfg(not(test))]
     let version = env!("CARGO_PKG_VERSION");
@@ -21,7 +21,7 @@ pub fn get_package_info() -> String {
     format!("{pkg} v{version}")
 }
 
-pub fn generate_debug_info(src_path: &str, source: &str) -> String {
+pub(crate) fn generate_debug_info(src_path: &str, source: &str) -> String {
     let lines = source.lines().map(|line| format!("// {line}")).join("\n");
     let pkg_info = get_package_info();
     formatdoc! {"
@@ -53,12 +53,12 @@ pub(crate) fn format_source<S: AsRef<str>>(source: S) -> String {
     }
 }
 
-pub fn generate_state_plugin_source(
+pub(crate) fn generate_state_plugin_source(
     input_source: &str,
     plugin_config: PluginConfig,
     src_path: Option<&str>,
 ) -> Result<String, ProcessingError> {
-    let parse_nodes = parse_states_text(input_source)?;
+    let (unparsed, parse_nodes) = parse_config(input_source)?;
     let mut output = convert_parse_nodes_into_plugin_source(parse_nodes, plugin_config)?;
 
     #[cfg(test)]
@@ -70,10 +70,15 @@ pub fn generate_state_plugin_source(
     }
 
     // if we're writing to a file we add a header with some information
-    if let Some(src_path) = src_path {
+    output = if let Some(src_path) = src_path {
+        if !unparsed.trim().is_empty() {
+            return Err(ProcessingError::InvalidConfig(unparsed.to_string()));
+        }
         let debug_info = generate_debug_info(src_path, input_source);
-        output = [debug_info, output].join("\n");
-    }
+        [debug_info, output].join("\n")
+    } else {
+        [unparsed, &output].join("\n")
+    };
 
     Ok(format_source(output))
 }

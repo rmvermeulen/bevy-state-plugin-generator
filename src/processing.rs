@@ -139,6 +139,8 @@ pub enum ProcessingError {
     Custom(String),
     #[error("Failed to parse! Final state: {0:?}")]
     Parsing(#[from] nom::Err<nom::error::Error<String>>),
+    #[error("Invalid configuration: {0}")]
+    InvalidConfig(String),
 }
 
 impl From<NomError<&str>> for ProcessingError {

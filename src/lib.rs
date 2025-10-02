@@ -5,11 +5,11 @@
 use std::path::Path;
 use std::{fs, io};
 
-use itertools::Itertools;
-use lazy_regex::regex;
+use itertools::{Itertools, concat};
 
 pub use crate::config::{NamingScheme, PluginConfig, PluginName};
 use crate::generate::generate_state_plugin_source;
+use crate::parsing::parse_template_header;
 pub use crate::parsing::{comment, config_is_valid};
 use crate::processing::ProcessingError;
 
@@ -49,56 +49,25 @@ pub fn update_template(
     let src_display = template_path.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&template_path)?;
-
-    let comment_block = &source
-        .lines()
-        .take_while(|line| line.starts_with("//"))
-        .collect_vec();
-
-    let processed_input = {
-        let mut template_src = Vec::new();
-        let mut in_template = false;
-        for line in comment_block {
-            if in_template {
-                if let Some(line) = line.strip_prefix("//") {
-                    template_src.push(line.trim());
-                } else {
-                    break;
-                }
-            } else if let Some(captures) =
-                regex!(r#"^\s*//\s*bspg:(\w+)\s+(\w+)\s*$"#).captures(line)
-            {
-                let (_, [name, value]) = captures.extract();
-                match name {
-                    "root_state_name" => {
-                        plugin_config.root_state_name = Some(value.into());
-                    }
-                    "naming_scheme" => {
-                        plugin_config.naming_scheme =
-                            NamingScheme::try_parse(value).expect("Invalid naming_scheme");
-                    }
-                    _ => {
-                        todo!("name: {name:?} value: {value:?}");
-                    }
-                }
-            } else if regex!(r#"^\s*//\s*bspg:\s*$"#).is_match(line) {
-                in_template = true;
-            } else {
-                break;
-            }
-        }
-        template_src.join("\n")
-    };
+    let (processed_input, comment_block, info_and_warnings) =
+        parse_template_header(&source, &mut plugin_config);
 
     let plugin_source = generate_state_plugin_source(&processed_input, plugin_config, None)?;
 
-    // TODO: also include `get_package_info()`
-    let comment_block = comment_block.join("\n");
-    fs::write(
-        &template_path,
-        format!("{comment_block}\n\n{plugin_source}"),
-    )
-    .map_err(Into::into)
+    let header = concat([
+        info_and_warnings
+            .into_iter()
+            .map(|line| format!("// {line}"))
+            .collect_vec(),
+        // vec![
+        //     format!("comment_block={comment_block:?}"),
+        //     format!("info_and_warnings={info_and_warnings:?}"),
+        // ],
+        comment_block.into_iter().map(String::from).collect_vec(),
+    ])
+    .join("\n");
+
+    fs::write(&template_path, format!("{header}\n\n{plugin_source}")).map_err(Into::into)
 }
 
 /// ```rust no_run

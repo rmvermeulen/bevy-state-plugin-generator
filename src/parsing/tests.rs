@@ -1,5 +1,6 @@
 use nom::Parser;
 use nom::branch::alt;
+use speculoos::prelude::*;
 
 use crate::parsing::parsers::*;
 use crate::parsing::*;
@@ -216,6 +217,6 @@ fn test_parse_node_try_from_str(#[case] input: &str, #[case] expected: ParseNode
 #[case("A B C D E F G H I", 9)]
 #[case("A { B [C] } D { E F [ G H ] I }", 2)]
 fn test_parse_state_text(#[case] source: &str, #[case] root_count: usize) {
-    let parse_nodes = parse_states_text(source).unwrap();
+    let (_, parse_nodes) = parse_config(source).unwrap();
     assert_that!(parse_nodes).has_length(root_count);
 }
