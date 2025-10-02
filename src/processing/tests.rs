@@ -40,15 +40,15 @@ fn test_flatten_parse_node_lists(#[context] context: Context, #[case] node: Pars
 }
 
 #[rstest]
-#[case("single_node", node_data::single_node())]
-#[case("nested_example", node_data::nested_example())]
+#[case::single_node(node_data::single_node())]
+#[case::nested_example(node_data::nested_example())]
 fn test_apply_naming_scheme(
-    #[case] id: &str,
+    #[context] context: Context,
     #[case] mut nodes: Vec<NodeData>,
     #[values(NamingScheme::Short, NamingScheme::Full, NamingScheme::None)]
     naming_scheme: NamingScheme,
 ) {
-    set_snapshot_suffix!("{id}_{naming_scheme}");
+    set_snapshot_suffix!("{}_{naming_scheme}", context.description.unwrap());
     apply_naming_scheme(naming_scheme, &mut nodes).unwrap();
     assert_debug_snapshot!(
         nodes
@@ -56,4 +56,22 @@ fn test_apply_naming_scheme(
             .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
             .collect_vec()
     );
+}
+
+#[rstest]
+fn test_apply_naming_scheme_differences(
+    #[from(node_data::nested_example)] mut nodes: Vec<NodeData>,
+) {
+    let outputs = [NamingScheme::Short, NamingScheme::Full, NamingScheme::None]
+        .into_iter()
+        .map(|naming_scheme| {
+            apply_naming_scheme(naming_scheme, &mut nodes).unwrap();
+            nodes
+                .iter()
+                .map(|node| format!("{} -> {}", node.name, node.resolved_name.clone().unwrap()))
+                .collect_vec()
+        })
+        .collect_vec();
+    assert_that!(outputs).has_length(3);
+    assert_debug_snapshot!(outputs);
 }

@@ -56,8 +56,8 @@ pub struct H;
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.add_state::<states::A>()
-            .add_state::<states::D>()
+        app.init_state::<states::A>()
+            .init_state::<states::D>()
             .add_sub_state::<states::AB>()
             .add_sub_state::<states::DE>()
             .add_sub_state::<states::DF>()

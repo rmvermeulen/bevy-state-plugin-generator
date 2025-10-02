@@ -253,7 +253,7 @@ fn build_plugin_source(
                 if node.parent.map(|p| nodes[p].clone()).is_some() {
                     format!(".add_sub_state::<{states_module_name}::{resolved_name}>()")
                 } else {
-                    format!(".add_state::<{states_module_name}::{resolved_name}>()")
+                    format!(".init_state::<{states_module_name}::{resolved_name}>()")
                 }
             })
             .join("\n            ");
