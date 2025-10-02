@@ -1,3 +1,4 @@
+pub(crate) mod header;
 mod parsers;
 #[cfg(test)]
 mod tests;

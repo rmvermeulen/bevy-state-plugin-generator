@@ -9,7 +9,7 @@ use itertools::{Itertools, concat};
 
 pub use crate::config::{NamingScheme, PluginConfig, PluginName};
 use crate::generate::generate_state_plugin_source;
-use crate::parsing::parse_template_header;
+use crate::parsing::header::parse_template_header;
 pub use crate::parsing::{comment, config_is_valid};
 use crate::processing::ProcessingError;
 
