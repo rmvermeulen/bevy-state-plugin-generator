@@ -21,6 +21,7 @@ repository = "https://github.com/rmvermeulen/bevy-state-plugin-generator.git"
 [features]
 default = ["rustfmt"]
 rustfmt = ["dep:duct"]
+dev = []
 
 [dependencies]
 bevy_platform = { workspace = true }
@@ -49,5 +50,5 @@ features = ["bevy_state"]
 workspace = true
 
 [package.metadata.cargo-feature-combinations]
-exclude_features = ["default"]
+exclude_features = ["default", "dev"]
 exclude_packages = ["test-app"]
