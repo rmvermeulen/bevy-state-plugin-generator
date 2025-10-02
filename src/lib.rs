@@ -1,3 +1,4 @@
+#![feature(trim_prefix_suffix)]
 #![feature(coverage_attribute)]
 #![warn(missing_docs)]
 #![doc = include_str!("../Readme.md")]
@@ -49,13 +50,14 @@ pub fn update_template(
     let src_display = template_path.as_ref().to_string_lossy();
     println!("cargo:rerun-if-changed={src_display}");
     let source = std::fs::read_to_string(&template_path)?;
-    let (processed_input, comment_block, info_and_warnings) =
-        parse_template_header(&source, &mut plugin_config);
+    let header = parse_template_header(&source, &mut plugin_config);
 
-    let plugin_source = generate_state_plugin_source(&processed_input, plugin_config, None)?;
+    let plugin_source =
+        generate_state_plugin_source(&header.template.join("\n"), plugin_config, None)?;
 
     let header = concat([
-        info_and_warnings
+        header
+            .info_block
             .into_iter()
             .map(|line| format!("// {line}"))
             .collect_vec(),
@@ -63,7 +65,11 @@ pub fn update_template(
         //     format!("comment_block={comment_block:?}"),
         //     format!("info_and_warnings={info_and_warnings:?}"),
         // ],
-        comment_block.into_iter().map(String::from).collect_vec(),
+        header
+            .comments_block
+            .into_iter()
+            .map(String::from)
+            .collect_vec(),
     ])
     .join("\n");
 
