@@ -2394,6 +2394,7 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_state_plugin_generator",
+ "cfg-if",
 ]
 
 [[package]]

@@ -14,35 +14,35 @@ pub enum GameState {
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::GameState)]
-pub enum GameState {
+pub enum GameStateGameState {
     #[default]
     Loading,
       Ready
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameState = GameState::Loading)]
-pub struct Loading;
+#[source(GameStateGameState = GameStateGameState::Loading)]
+pub struct GameStateGameStateLoading;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameState = GameState::Ready)]
-pub enum Ready {
+#[source(GameStateGameState = GameStateGameState::Ready)]
+pub enum GameStateGameStateReady {
     #[default]
     Menu,
       Game
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Ready = Ready::Menu)]
-pub enum Menu {
+#[source(GameStateGameStateReady = GameStateGameStateReady::Menu)]
+pub enum GameStateGameStateReadyMenu {
     #[default]
     Main,
       Options
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Ready = Ready::Game)]
-pub enum Game {
+#[source(GameStateGameStateReady = GameStateGameStateReady::Game)]
+pub enum GameStateGameStateReadyGame {
     #[default]
     Playing,
       Paused,
@@ -50,24 +50,24 @@ pub enum Game {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Main)]
-pub struct Main;
+#[source(GameStateGameStateReadyMenu = GameStateGameStateReadyMenu::Main)]
+pub struct GameStateGameStateReadyMenuMain;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Menu = Menu::Options)]
-pub struct Options;
+#[source(GameStateGameStateReadyMenu = GameStateGameStateReadyMenu::Options)]
+pub struct GameStateGameStateReadyMenuOptions;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Playing)]
-pub struct Playing;
+#[source(GameStateGameStateReadyGame = GameStateGameStateReadyGame::Playing)]
+pub struct GameStateGameStateReadyGamePlaying;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::Paused)]
-pub struct Paused;
+#[source(GameStateGameStateReadyGame = GameStateGameStateReadyGame::Paused)]
+pub struct GameStateGameStateReadyGamePaused;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(Game = Game::GameOver)]
-pub struct GameOver;
+#[source(GameStateGameStateReadyGame = GameStateGameStateReadyGame::GameOver)]
+pub struct GameStateGameStateReadyGameGameOver;
 
 }
 pub struct GeneratedStatesPlugin;

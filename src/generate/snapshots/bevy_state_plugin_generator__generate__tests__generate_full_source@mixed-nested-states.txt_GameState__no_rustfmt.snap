@@ -19,14 +19,14 @@ pub enum GameState {
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::A)]
-pub enum A {
+pub enum GameStateA {
     #[default]
     B
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(GameState = GameState::D)]
-pub enum D {
+pub enum GameStateD {
     #[default]
     E,
       F,
@@ -34,32 +34,32 @@ pub enum D {
 }
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(A = A::B)]
-pub struct B;
+#[source(GameStateA = GameStateA::B)]
+pub struct GameStateAB;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(D = D::E)]
-pub struct E;
+#[source(GameStateD = GameStateD::E)]
+pub struct GameStateDE;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(D = D::F)]
-pub struct F;
+#[source(GameStateD = GameStateD::F)]
+pub struct GameStateDF;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(D = D::I)]
-pub struct I;
+#[source(GameStateD = GameStateD::I)]
+pub struct GameStateDI;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(B = B::C)]
-pub struct C;
+#[source(GameStateAB = GameStateAB::C)]
+pub struct GameStateABC;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(F = F::G)]
-pub struct G;
+#[source(GameStateDF = GameStateDF::G)]
+pub struct GameStateDFG;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(F = F::H)]
-pub struct H;
+#[source(GameStateDF = GameStateDF::H)]
+pub struct GameStateDFH;
 
 }
 pub struct GeneratedStatesPlugin;

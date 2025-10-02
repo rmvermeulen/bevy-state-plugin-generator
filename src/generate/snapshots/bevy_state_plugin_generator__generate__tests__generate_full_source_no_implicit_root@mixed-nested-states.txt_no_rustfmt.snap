@@ -26,31 +26,31 @@ pub enum D {
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(A = A::B)]
-pub struct B;
+pub struct AB;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(D = D::E)]
-pub struct E;
+pub struct DE;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(D = D::F)]
-pub struct F;
+pub struct DF;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
 #[source(D = D::I)]
-pub struct I;
+pub struct DI;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(B = B::C)]
-pub struct C;
+#[source(AB = AB::C)]
+pub struct ABC;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(F = F::G)]
-pub struct G;
+#[source(DF = DF::G)]
+pub struct DFG;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(F = F::H)]
-pub struct H;
+#[source(DF = DF::H)]
+pub struct DFH;
 
 }
 pub struct GeneratedStatesPlugin;

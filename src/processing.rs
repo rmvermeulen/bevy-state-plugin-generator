@@ -177,28 +177,28 @@ fn build_plugin_source(
             let derives = node
                 .parent
                 .map(|parent_id| {
-                    let parent = &nodes[parent_id];
+                    let source = nodes[parent_id].resolved_name.as_ref().unwrap();
                     formatdoc! {"
                         #[derive(bevy::prelude::SubStates, {derives})]
                         #[source({source} = {source}::{variant})]
-                    ", variant = node.name, source = parent.name
+                    ", variant = node.name
                     }
                 })
                 .unwrap_or_else(|| formatdoc! {"#[derive(bevy::prelude::States, {derives})]"})
                 .trim()
                 .to_string();
-            let typename = &node.name;
+            let resolved_name = node.resolved_name.as_ref().unwrap();
 
             let source_for_singleton = || {
                 formatdoc! {"
                 {derives}
-                pub struct {typename};
+                pub struct {resolved_name};
             "}
             };
             let source_for_enum = |variants: &[&str]| {
                 formatdoc! {"
                 {derives}
-                pub enum {typename} {{
+                pub enum {resolved_name} {{
                     #[default]
                     {variants}
                 }}

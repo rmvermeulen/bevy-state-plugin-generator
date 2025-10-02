@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-default = []
 all = ["short", "full", "inline"]
 short = []
 full = []
@@ -12,6 +11,10 @@ inline = []
 
 [dependencies]
 bevy = { workspace = true, features = ["std", "bevy_state"] }
+cfg-if = "1.0.3"
 
 [build-dependencies]
 bevy_state_plugin_generator = { path = "../" }
+
+[package.metadata.cargo-feature-combinations]
+exclude_features = ["all"]

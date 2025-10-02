@@ -24,7 +24,7 @@ pub mod states {
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Loading)]
-    pub enum Loading {
+    pub enum GameStateLoading {
         #[default]
         Configs,
         Assets,
@@ -32,7 +32,7 @@ pub mod states {
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Ready)]
-    pub enum Ready {
+    pub enum GameStateReady {
         #[default]
         Playing,
         Paused,
@@ -40,23 +40,23 @@ pub mod states {
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(GameState = GameState::Exiting)]
-    pub struct Exiting;
+    pub struct GameStateExiting;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Loading = Loading::Configs)]
-    pub struct Configs;
+    #[source(GameStateLoading = GameStateLoading::Configs)]
+    pub struct GameStateLoadingConfigs;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Loading = Loading::Assets)]
-    pub struct Assets;
+    #[source(GameStateLoading = GameStateLoading::Assets)]
+    pub struct GameStateLoadingAssets;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Ready = Ready::Playing)]
-    pub struct Playing;
+    #[source(GameStateReady = GameStateReady::Playing)]
+    pub struct GameStateReadyPlaying;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Ready = Ready::Paused)]
-    pub struct Paused;
+    #[source(GameStateReady = GameStateReady::Paused)]
+    pub struct GameStateReadyPaused;
 }
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
