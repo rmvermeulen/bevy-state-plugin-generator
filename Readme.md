@@ -14,6 +14,7 @@ It has many bugs and the versions mean nothing. It will not save you time.
 | ------ | ---------- |
 | 0.15.0 | 1.2.0      |
 | 0.16.0 | 1.3.0      |
+| 0.17.0 | 1.4.0      |
 
 ## bugs
 
