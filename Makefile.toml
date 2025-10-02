@@ -21,28 +21,10 @@ install_crate = "cargo-llvm-cov"
 command = "cargo"
 args = ["llvm-cov", "nextest"]
 
-[tasks.generate-report]
+[tasks.report]
 install_crate = "cargo-llvm-cov"
 command = "cargo"
-args = ["llvm-cov", "--doctests", "--html"]
-
-[tasks.replace-report]
-cwd = "."
-script = """
-    #!/bin/bash
-    set -exu
-    # clean old report
-    rm -rf report/
-    # copy new report
-    cp -r target/llvm-cov/html report/
-    # format using prettier
-    npx -y prettier --write report/
-    # remove `Created` timestamps
-    fd -tf html report | xargs sed -i 's/<h4>Created.\\+<\\/h4>//'
-"""
-
-[tasks.report]
-run_task = [{ name = ["generate-report", "replace-report"] }]
+args = ["llvm-cov", "--doctests", "--html", "--open"]
 
 [tasks.test-app-build]
 cwd = "test-app/"

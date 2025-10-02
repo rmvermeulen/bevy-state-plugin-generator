@@ -1,9 +1,6 @@
 target
 *.snap.new
 *.pending-snap
-report/*.js
-report/*.css
-.report/
 hooks/post-applypatch
 hooks/post-checkout
 hooks/post-commit
