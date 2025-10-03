@@ -11,4 +11,8 @@ if [ ! -z "$unformatted" ]; then
 	exit 1
 fi
 
+# also build test-app and it's generated_states modules
+cargo build --all
+
+# test until first error
 just test-fast
