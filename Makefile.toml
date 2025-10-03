@@ -19,7 +19,7 @@ args = ["insta", "review"]
 [tasks.cover]
 install_crate = "cargo-llvm-cov"
 command = "cargo"
-args = ["llvm-cov", "nextest"]
+args = ["llvm-cov", "--doctests"]
 
 [tasks.report]
 install_crate = "cargo-llvm-cov"

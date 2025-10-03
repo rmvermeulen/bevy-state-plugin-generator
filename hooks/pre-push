@@ -10,7 +10,7 @@ if [ "$branch" != "main" ]; then
 	exit 0
 fi
 
-makers report
+makers cover
 status=$(git status -s)
 if [ -n "$status" ]; then
 	echo "You have uncommitted changes; aborting push"
