@@ -8,9 +8,9 @@ use bevy_utils::default;
 use indoc::formatdoc;
 use itertools::{Itertools, concat};
 
-use crate::generate::REQUIRED_DERIVES;
+use crate::config::{NamingScheme, PluginConfig, PluginName};
+use crate::generate::core::REQUIRED_DERIVES;
 use crate::parsing::ParseNode;
-use crate::{NamingScheme, PluginConfig, PluginName};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub enum NodeType {

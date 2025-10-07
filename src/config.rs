@@ -12,7 +12,7 @@ pub enum NamingScheme {
 impl NamingScheme {
     /// Get the name of the naming scheme
     /// ```rust
-    /// # use bevy_state_plugin_generator::NamingScheme;
+    /// # use bevy_state_plugin_generator::prelude::NamingScheme;
     /// assert_eq!(NamingScheme::Full.name(), "Full");
     /// assert_eq!(NamingScheme::Short.name(), "Short");
     /// assert_eq!(NamingScheme::None.name(), "None");
@@ -26,7 +26,7 @@ impl NamingScheme {
     }
     /// Get the identifying tag for this scheme
     /// ```rust
-    /// # use bevy_state_plugin_generator::NamingScheme;
+    /// # use bevy_state_plugin_generator::prelude::NamingScheme;
     /// assert_eq!(NamingScheme::Full.tag(), "full");
     /// assert_eq!(NamingScheme::Short.tag(), "short");
     /// assert_eq!(NamingScheme::None.tag(), "none");
@@ -61,12 +61,12 @@ impl std::fmt::Display for NamingScheme {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum PluginName<'s> {
     /// ```rust
-    /// use bevy_state_plugin_generator::config::PluginName;
+    /// use bevy_state_plugin_generator::prelude::PluginName;
     /// PluginName::Struct("MyPlugin");
     /// ```
     Struct(&'s str),
     /// ```rust
-    /// use bevy_state_plugin_generator::config::PluginName;
+    /// use bevy_state_plugin_generator::prelude::PluginName;
     /// PluginName::Function("my_plugin");
     /// ```
     Function(&'s str),
@@ -89,7 +89,7 @@ pub struct PluginConfig {
 
 /// Default configuration for the generated plugin
 /// ```rust
-/// # use bevy_state_plugin_generator::*;
+/// # use bevy_state_plugin_generator::prelude::*;
 /// let config = PluginConfig::default();
 /// assert_eq!(config.plugin_name, PluginName::Struct("GeneratedStatesPlugin"));
 /// assert_eq!(config.root_state_name, Some("GameState".to_string()));

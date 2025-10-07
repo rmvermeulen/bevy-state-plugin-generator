@@ -1,12 +1,9 @@
-#[cfg(test)]
-mod tests;
-
 use indoc::formatdoc;
 use itertools::Itertools;
 use nom::AsChar;
 
-use crate::PluginConfig;
 use crate::parsing::parse_config;
+use crate::prelude::PluginConfig;
 use crate::processing::{ProcessingError, convert_parse_nodes_into_plugin_source};
 
 pub(crate) const REQUIRED_DERIVES: &[&str] =

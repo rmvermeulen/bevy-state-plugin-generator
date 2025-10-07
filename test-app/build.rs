@@ -1,4 +1,5 @@
-use bevy_state_plugin_generator::*;
+use bevy_state_plugin_generator::prelude::*;
+
 fn main() {
     let plugin_config = PluginConfig {
         naming_scheme: NamingScheme::Short,

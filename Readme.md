@@ -6,7 +6,7 @@ in a `Plugin`.
 
 ## Probably do not use
 
-I made this without checking if and/or how it would be a good idea. But it's somewhat usable now.
+I made this without checking if and/or how it would be a good idea.
 
 ## versions
 
@@ -32,7 +32,7 @@ Create a `states.rs` in `src/` and add the following comment at the top:
 Set up your `build.rs` like this:
 
 ```rust no_run
-use bevy_state_plugin_generator::*;
+use bevy_state_plugin_generator::prelude::*;
 fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
@@ -61,7 +61,7 @@ Exiting                                 // singleton
 Set up your `build.rs` like this:
 
 ```rust no_run
-use bevy_state_plugin_generator::*;
+use bevy_state_plugin_generator::prelude::*;
 fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
@@ -105,13 +105,6 @@ impl bevy::app::Plugin for GeneratedStatesPlugin {
 }
 ```
 
-```rust
-# use bevy_state_plugin_generator::config_is_valid;
-# assert!(config_is_valid("Read { Config Assets }"));
-# assert!(config_is_valid("Loading [ Config Assets ]"));
-# assert!(config_is_valid("Loading // Comments"));
-```
-
 ## naming
 
 Consider the following sample:
@@ -130,32 +123,3 @@ PlayerState {
 | `BadState`    | `PlayerStateBadState`        | `PlayerBadState`        |
 | `OnFire`      | `PlayerStateBadStateOnFire`  | `PlayerBadOnFireState`  |
 | `InWater`     | `PlayerStateBadStateInWater` | `PlayerBadInWaterState` |
-
-## todo
-
-Apply a smarted correct `NamingScheme`.
-
-## split at case-boundaries, but maintain inner name
-
-| input   | names   | parts      | notes                                |
-| ------- | ------- | ---------- | ------------------------------------ |
-| `ABC`   |         | `ABC`      | consecutive capitals are joined      |
-| `ABBox` |         | `ABBox`    | lowercase sections are joined to the |
-|         |         |            | preceding capital(s)                 |
-| `AbBox` |         | `Ab`,`Box` | split at case-boundaries             |
-| `AbBox` | `AbBox` | `Ab`,`Box` | do not split a name                  |
-
-## normalization
-
-- always suffix the enum/struct with `State` but not the variants, e.g.
-  `Map::Fishing` -> `MapState::Fishing` with sub-state `MapStateFishingState`
-  |origin name| result| sub-state
-
-### TODO: merge
-
-- if `config.merge=true` remove `State` from the end of names when joining
-  them e.g. `Map::Fishing` -> `MapState::Fishing` with sub-state `MapFishingState`
-
-## collisions
-
-Abort on any collisions.

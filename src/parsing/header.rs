@@ -1,8 +1,8 @@
 use itertools::Itertools;
 use lazy_regex::regex;
 
-use crate::generate::get_package_info;
-use crate::{NamingScheme, PluginConfig};
+use crate::generate::core::get_package_info;
+use crate::prelude::{NamingScheme, PluginConfig};
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub(crate) struct TemplateHeader<'a> {
@@ -106,7 +106,7 @@ mod tests {
     use speculoos::prelude::{ContainingIntoIterAssertions, VecAssertions};
 
     use crate::parsing::header::parse_template_header;
-    use crate::{NamingScheme, PluginConfig};
+    use crate::prelude::{NamingScheme, PluginConfig};
 
     #[rstest]
     #[case(String::new())]

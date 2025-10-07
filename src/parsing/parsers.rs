@@ -12,13 +12,6 @@ pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
     comment(input).map_result(ParseNode::Comment)
 }
 
-/// ```rust
-/// # use bevy_state_plugin_generator::comment;
-/// assert_eq!(comment("//comment"), Ok(("", "comment".into())));
-/// assert_eq!(comment("// comment "), Ok(("", "comment".into())));
-/// assert_eq!(comment(" // comment "), Ok(("", "comment".into())));
-/// assert_eq!(comment("//\ncomment "), Ok(("comment ", "".into())));
-/// ```
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     use nom::combinator::eof;
 
@@ -88,20 +81,6 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
 
 pub fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
     many0(delimited(many0(separator), parse_node, many0(separator))).parse(input)
-}
-
-/// Validate that the input is a valid states file
-/// ```rust
-/// # use bevy_state_plugin_generator::config_is_valid;
-/// assert!(config_is_valid("Name, Name2"));
-/// assert!(config_is_valid("Name { A, B }"));
-/// assert!(config_is_valid("Name { ,,,, }  "));
-/// assert!(!config_is_valid("{]"));
-/// ```
-pub fn config_is_valid(input: &str) -> bool {
-    parse_config(input)
-        .map(|(rest, _)| rest.trim().is_empty())
-        .unwrap_or(false)
 }
 
 pub fn parse_node(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {

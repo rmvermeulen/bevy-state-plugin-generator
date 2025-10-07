@@ -1,7 +1,7 @@
 use bevy_utils::default;
 use itertools::Itertools;
 
-use crate::NamingScheme;
+use crate::config::NamingScheme;
 use crate::parsing::ParseNode;
 use crate::processing::{NodeData, NodeType, apply_naming_scheme, flatten_root_parse_node};
 use crate::testing::*;
