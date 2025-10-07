@@ -51,107 +51,92 @@ pub mod node_data {
 
 pub mod parse_node {
     use super::*;
-    use crate::parsing::ParseNode;
+    use crate::parsing::Node;
 
     #[fixture]
-    pub fn duplicate_names() -> ParseNode<'static> {
-        ParseNode::list(
-            "Root",
-            [ParseNode::singleton("A"), ParseNode::singleton("A")],
-        )
+    pub fn duplicate_names() -> Node<'static> {
+        Node::list("Root", [Node::singleton("A"), Node::singleton("A")])
     }
 
     #[fixture]
-    pub fn overlapping_names() -> ParseNode<'static> {
-        ParseNode::list(
+    pub fn overlapping_names() -> Node<'static> {
+        Node::list(
             "Root",
             [
-                ParseNode::enumeration("Root", [ParseNode::singleton("A")]),
-                ParseNode::singleton("A"),
+                Node::enumeration("Root", [Node::singleton("A")]),
+                Node::singleton("A"),
             ],
         )
     }
 
     #[fixture]
-    pub fn enum_root_a() -> ParseNode<'static> {
-        ParseNode::enumeration("Root", [ParseNode::singleton("A")])
+    pub fn enum_root_a() -> Node<'static> {
+        Node::enumeration("Root", [Node::singleton("A")])
     }
 
     #[fixture]
-    pub fn enum_root_ab() -> ParseNode<'static> {
-        ParseNode::enumeration(
-            "Root",
-            [ParseNode::singleton("A"), ParseNode::singleton("B")],
-        )
+    pub fn enum_root_ab() -> Node<'static> {
+        Node::enumeration("Root", [Node::singleton("A"), Node::singleton("B")])
     }
 
     #[fixture]
-    pub fn enum_root_a_b() -> ParseNode<'static> {
-        ParseNode::enumeration(
-            "Root",
-            [ParseNode::enumeration("A", [ParseNode::singleton("B")])],
-        )
+    pub fn enum_root_a_b() -> Node<'static> {
+        Node::enumeration("Root", [Node::enumeration("A", [Node::singleton("B")])])
     }
 
     #[fixture]
-    pub fn enum_root_a_b_up_c() -> ParseNode<'static> {
-        ParseNode::enumeration(
+    pub fn enum_root_a_b_up_c() -> Node<'static> {
+        Node::enumeration(
             "Root",
             [
-                ParseNode::enumeration("A", [ParseNode::singleton("B")]),
-                ParseNode::singleton("C"),
+                Node::enumeration("A", [Node::singleton("B")]),
+                Node::singleton("C"),
             ],
         )
     }
 
     #[fixture]
-    pub fn list_root_a() -> ParseNode<'static> {
-        ParseNode::list("Root", [ParseNode::singleton("A")])
+    pub fn list_root_a() -> Node<'static> {
+        Node::list("Root", [Node::singleton("A")])
     }
 
     #[fixture]
-    pub fn list_root_ab() -> ParseNode<'static> {
-        ParseNode::list(
-            "Root",
-            [ParseNode::singleton("A"), ParseNode::singleton("B")],
-        )
+    pub fn list_root_ab() -> Node<'static> {
+        Node::list("Root", [Node::singleton("A"), Node::singleton("B")])
     }
 
     #[fixture]
-    pub fn list_root_a_b() -> ParseNode<'static> {
-        ParseNode::list("Root", [ParseNode::list("A", [ParseNode::singleton("B")])])
+    pub fn list_root_a_b() -> Node<'static> {
+        Node::list("Root", [Node::list("A", [Node::singleton("B")])])
     }
 
     #[fixture]
-    pub fn list_root_a_b_up_c() -> ParseNode<'static> {
-        ParseNode::list(
+    pub fn list_root_a_b_up_c() -> Node<'static> {
+        Node::list(
             "Root",
             [
-                ParseNode::list("A", [ParseNode::singleton("B")]),
-                ParseNode::singleton("C"),
+                Node::list("A", [Node::singleton("B")]),
+                Node::singleton("C"),
             ],
         )
     }
 
     #[fixture]
-    pub fn nested_example() -> ParseNode<'static> {
-        ParseNode::enumeration(
+    pub fn nested_example() -> Node<'static> {
+        Node::enumeration(
             "Menu",
             [
-                ParseNode::singleton("Main"),
-                ParseNode::comment("these are the options"),
-                ParseNode::enumeration(
+                Node::singleton("Main"),
+                Node::comment("these are the options"),
+                Node::enumeration(
                     "Options",
                     [
-                        ParseNode::singleton("Graphics"),
-                        ParseNode::singleton("Audio"),
-                        ParseNode::singleton("Gameplay"),
+                        Node::singleton("Graphics"),
+                        Node::singleton("Audio"),
+                        Node::singleton("Gameplay"),
                     ],
                 ),
-                ParseNode::enumeration(
-                    "Game",
-                    [ParseNode::singleton("Save"), ParseNode::singleton("Load")],
-                ),
+                Node::enumeration("Game", [Node::singleton("Save"), Node::singleton("Load")]),
             ],
         )
     }

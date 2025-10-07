@@ -8,7 +8,7 @@ use speculoos::assert_that;
 use speculoos::prelude::VecAssertions;
 
 use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
-use crate::parsing::ParseNode;
+use crate::parsing::Node;
 use crate::processing::{convert_parse_nodes_into_plugin_source, process_parse_nodes};
 use crate::testing::parse_node;
 use crate::{GeneratorError, NamingScheme, PluginConfig, set_snapshot_suffix};
@@ -29,26 +29,26 @@ async fn test_format_source() {
 
 #[rstest]
 fn test_generate_states_plugin() {
-    let root_state = ParseNode::enumeration(
+    let root_state = Node::enumeration(
         "GameState",
         [
-            ParseNode::singleton("Loading"),
-            ParseNode::enumeration(
+            Node::singleton("Loading"),
+            Node::enumeration(
                 "Ready",
                 [
-                    ParseNode::enumeration(
+                    Node::enumeration(
                         "Menu",
                         [
-                            ParseNode::singleton("Main"),
-                            ParseNode::singleton("Options"),
+                            Node::singleton("Main"),
+                            Node::singleton("Options"),
                         ],
                     ),
-                    ParseNode::enumeration(
+                    Node::enumeration(
                         "Game",
                         [
-                            ParseNode::singleton("Playing"),
-                            ParseNode::singleton("Paused"),
-                            ParseNode::singleton("GameOver"),
+                            Node::singleton("Playing"),
+                            Node::singleton("Paused"),
+                            Node::singleton("GameOver"),
                         ],
                     ),
                 ],
@@ -132,7 +132,7 @@ fn test_naming_scheme(
 }
 
 fn generate_all_type_definitions(
-    node: Vec<ParseNode<'_>>,
+    node: Vec<Node<'_>>,
     naming_scheme: NamingScheme,
     root_state_name: Option<String>,
 ) -> Result<Vec<String>, GeneratorError> {
@@ -149,7 +149,7 @@ fn test_error_handling(
     #[context] context: Context,
     #[values(NamingScheme::Full, NamingScheme::Short, NamingScheme::None)]
     naming_scheme: NamingScheme,
-    #[case] node: ParseNode,
+    #[case] node: Node,
 ) {
     set_snapshot_suffix!("{}_{naming_scheme:?}", context.description.unwrap());
     assert_debug_snapshot!(generate_all_type_definitions(
@@ -173,7 +173,7 @@ fn snapshots(
     #[context] context: Context,
     #[values(NamingScheme::Full, NamingScheme::Short, NamingScheme::None)]
     naming_scheme: NamingScheme,
-    #[case] node: ParseNode,
+    #[case] node: Node,
 ) {
     set_snapshot_suffix!(
         "{}_{naming_scheme:?}{RUSTFMT}",

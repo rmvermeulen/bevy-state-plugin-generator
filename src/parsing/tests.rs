@@ -40,7 +40,7 @@ fn test_parse_comment(#[case] input: &str, #[case] expected: &str) {
     assert_that!(parse_comment(input))
         .is_ok()
         .map(|(_, token)| token)
-        .is_equal_to(ParseNode::comment(expected));
+        .is_equal_to(Node::comment(expected));
 }
 
 #[rstest]
@@ -57,10 +57,10 @@ fn test_single_char_tokens(#[case] input: &str, #[case] expected: Token) {
 }
 
 #[rstest]
-#[case("Root,", ",", ParseNode::singleton("Root"))]
-#[case("  Root,", ",", ParseNode::singleton("Root"))]
-#[case("First, Second", ", Second", ParseNode::singleton("First"))]
-fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: ParseNode) {
+#[case("Root,", ",", Node::singleton("Root"))]
+#[case("  Root,", ",", Node::singleton("Root"))]
+#[case("First, Second", ", Second", Node::singleton("First"))]
+fn test_parse_singleton(#[case] input: &str, #[case] rest: &str, #[case] node: Node) {
     assert_that!(parse_singleton(input).unwrap()).is_equal_to((rest, node));
 }
 
@@ -75,7 +75,7 @@ fn test_parse_enum_empty() {
 #[case("Root { A}", parse_node::enum_root_a())]
 #[case("Root {A }", parse_node::enum_root_a())]
 #[case("Root { A }", parse_node::enum_root_a())]
-fn test_parse_enum_single(#[case] input: &str, #[case] node: ParseNode) {
+fn test_parse_enum_single(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
@@ -85,26 +85,26 @@ fn test_parse_enum_single(#[case] input: &str, #[case] node: ParseNode) {
 #[case("Root { A { B } }", parse_node::enum_root_a_b())]
 #[case("Root { A { B } C }", parse_node::enum_root_a_b_up_c())]
 #[case("Root { A { B }, C }", parse_node::enum_root_a_b_up_c())]
-fn test_parse_enum_variants(#[case] input: &str, #[case] node: ParseNode) {
+fn test_parse_enum_variants(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
 #[rstest]
-#[case::just_a_comma("Root {,}", ParseNode::enumeration("Root", [ ]))]
-#[case::mora_commas("Root {,,,,}", ParseNode::enumeration("Root", [ ]))]
+#[case::just_a_comma("Root {,}", Node::enumeration("Root", [ ]))]
+#[case::mora_commas("Root {,,,,}", Node::enumeration("Root", [ ]))]
 #[case::comma_after_variant("Root {A,}", parse_node::enum_root_a())]
 #[case::comma_before_variant("Root {,A}", parse_node::enum_root_a())]
 #[case::comma_between_variants("Root {A,B}", parse_node::enum_root_ab())]
-fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: ParseNode) {
+fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
 #[rstest]
-#[case("Root []", ParseNode::list_empty("Root"))]
-#[case("Root[]", ParseNode::list_empty("Root"))]
+#[case("Root []", Node::list_empty("Root"))]
+#[case("Root[]", Node::list_empty("Root"))]
 #[case("Root[A]", parse_node::list_root_a())]
 #[case("Root[A,B]", parse_node::list_root_ab())]
-fn test_parse_list(#[case] input: &str, #[case] node: ParseNode) {
+fn test_parse_list(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_list(input).unwrap()).is_equal_to(("", node));
 }
 
@@ -123,9 +123,9 @@ fn test_parse_node_nested_enums() {
 }
 
 #[rstest]
-#[case("//Comment", ParseNode::comment("Comment"))]
-#[case("// Comment", ParseNode::comment("Comment"))]
-fn test_parse_node_with_comments(#[case] input: &str, #[case] comment: ParseNode) {
+#[case("//Comment", Node::comment("Comment"))]
+#[case("// Comment", Node::comment("Comment"))]
+fn test_parse_node_with_comments(#[case] input: &str, #[case] comment: Node) {
     assert_that!(parse_node(input)).is_ok_containing(("", comment));
 }
 
@@ -146,33 +146,33 @@ fn test_parse_enum_incomplete() {
 }
 
 #[rstest]
-#[case("A", vec![ParseNode::singleton("A")])]
-#[case("A B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
-#[case("A,B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
-#[case("A, B", vec![ParseNode::singleton("A"), ParseNode::singleton("B")] )]
-#[case("A{B}", vec![ParseNode::enumeration("A", [ ParseNode::singleton("B") ])] )]
-#[case("A{B,C D,}", vec![ParseNode::enumeration("A", [
-    ParseNode::singleton("B"),
-    ParseNode::singleton("C"),
-    ParseNode::singleton("D")
+#[case("A", vec![Node::singleton("A")])]
+#[case("A B", vec![Node::singleton("A"), Node::singleton("B")] )]
+#[case("A,B", vec![Node::singleton("A"), Node::singleton("B")] )]
+#[case("A, B", vec![Node::singleton("A"), Node::singleton("B")] )]
+#[case("A{B}", vec![Node::enumeration("A", [ Node::singleton("B") ])] )]
+#[case("A{B,C D,}", vec![Node::enumeration("A", [
+    Node::singleton("B"),
+    Node::singleton("C"),
+    Node::singleton("D")
 ])])]
-#[case("A{B{C{D{E{F}}}}}", vec![ParseNode::enumeration("A", [
-    ParseNode::enumeration("B", [
-        ParseNode::enumeration("C", [
-            ParseNode::enumeration("D", [
-                ParseNode::enumeration("E", [
-                    ParseNode::singleton("F")
+#[case("A{B{C{D{E{F}}}}}", vec![Node::enumeration("A", [
+    Node::enumeration("B", [
+        Node::enumeration("C", [
+            Node::enumeration("D", [
+                Node::enumeration("E", [
+                    Node::singleton("F")
                 ])
             ])
         ])
     ])
 ])])]
-#[ case("//A//{ B C }", vec![ ParseNode::comment("A//{ B C }") ])]
+#[ case("//A//{ B C }", vec![ Node::comment("A//{ B C }") ])]
 #[ case("A//{ B C }", vec![
-    ParseNode::singleton("A"),
-    ParseNode::comment("{ B C }")
+    Node::singleton("A"),
+    Node::comment("{ B C }")
 ])]
-fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
+fn test_parse_config(#[case] input: &str, #[case] expected: Vec<Node>) {
     assert_that!(parse_config(input))
         .named(&format!("\"{input}\""))
         .is_ok()
@@ -181,16 +181,16 @@ fn test_parse_config(#[case] input: &str, #[case] expected: Vec<ParseNode>) {
 
 #[rstest]
 #[case("A//\n{ B C }", vec![
-    ParseNode::singleton("A"),
-    ParseNode::comment("")
+    Node::singleton("A"),
+    Node::comment("")
 ], "{ B C }")]
-#[case("A {\n // B\n C\n}...", vec![ ParseNode::enumeration("A", [
-    ParseNode::comment("B"),
-    ParseNode::singleton("C")
+#[case("A {\n // B\n C\n}...", vec![ Node::enumeration("A", [
+    Node::comment("B"),
+    Node::singleton("C")
 ]) ], "...")]
 fn test_parse_config_incomplete(
     #[case] input: &str,
-    #[case] expected: Vec<ParseNode>,
+    #[case] expected: Vec<Node>,
     #[case] rest: &str,
 ) {
     assert_that!(parse_config(input))
@@ -200,15 +200,15 @@ fn test_parse_config_incomplete(
 }
 
 #[rstest]
-#[case("Main", ParseNode::singleton("Main"))]
-#[case("Main{}", ParseNode::Enum("Main".into(), Default::default()))]
-#[case("Main{A}", ParseNode::enumeration("Main", [ParseNode::singleton("A")]))]
-#[case("Main{A,B}", ParseNode::enumeration("Main", [
-    ParseNode::singleton("A"),
-    ParseNode::singleton("B"),
+#[case("Main", Node::singleton("Main"))]
+#[case("Main{}", Node::Enum("Main".into(), Default::default()))]
+#[case("Main{A}", Node::enumeration("Main", [Node::singleton("A")]))]
+#[case("Main{A,B}", Node::enumeration("Main", [
+    Node::singleton("A"),
+    Node::singleton("B"),
 ]))]
-fn test_parse_node_try_from_str(#[case] input: &str, #[case] expected: ParseNode) {
-    assert_that!(ParseNode::try_from(input)).is_ok_containing(expected);
+fn test_parse_node_try_from_str(#[case] input: &str, #[case] expected: Node) {
+    assert_that!(Node::try_from(input)).is_ok_containing(expected);
 }
 
 #[rstest]

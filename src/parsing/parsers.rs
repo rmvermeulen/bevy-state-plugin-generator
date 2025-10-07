@@ -6,10 +6,10 @@ use nom::multi::many0;
 use nom::sequence::*;
 use nom::{IResult, Parser};
 
-use crate::parsing::{Comment, Identifier, ParseNode, Token};
+use crate::parsing::{Comment, Identifier, Node, Token};
 
-pub fn parse_comment(input: &str) -> IResult<&str, ParseNode<'_>> {
-    comment(input).map_result(ParseNode::Comment)
+pub fn parse_comment(input: &str) -> IResult<&str, Node<'_>> {
+    comment(input).map_result(Node::Comment)
 }
 
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
@@ -79,36 +79,34 @@ impl<I, O1, O2> MapResult<'_, I, O1, O2> for IResult<I, O1> {
     }
 }
 
-pub fn parse_config(input: &str) -> IResult<&str, Vec<ParseNode<'_>>> {
+pub fn parse_config(input: &str) -> IResult<&str, Vec<Node<'_>>> {
     many0(delimited(many0(separator), parse_node, many0(separator))).parse(input)
 }
 
-pub fn parse_node(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
+pub fn parse_node(input: &'_ str) -> IResult<&'_ str, Node<'_>> {
     alt((parse_enum, parse_list, parse_comment, parse_singleton)).parse(input)
 }
 
-pub fn parse_singleton(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
-    skip_to(identifier)
-        .parse(input)
-        .map_result(ParseNode::singleton)
+pub fn parse_singleton(input: &'_ str) -> IResult<&'_ str, Node<'_>> {
+    skip_to(identifier).parse(input).map_result(Node::singleton)
 }
 
-pub fn parse_enum(input: &str) -> IResult<&str, ParseNode<'_>> {
+pub fn parse_enum(input: &str) -> IResult<&str, Node<'_>> {
     let (input, name) = terminated(skip_to(identifier), skip_to(open_enum)).parse(input)?;
     let (input, children) = skip_to(parse_elements_until(close_enum)).parse(input)?;
-    Ok((input, ParseNode::Enum(name, children)))
+    Ok((input, Node::Enum(name, children)))
 }
 
-pub fn parse_list(input: &'_ str) -> IResult<&'_ str, ParseNode<'_>> {
+pub fn parse_list(input: &'_ str) -> IResult<&'_ str, Node<'_>> {
     let (input, name) = skip_to(identifier).parse(input)?;
     let (input, children) =
         skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
-    Ok((input, ParseNode::List(name, children)))
+    Ok((input, Node::List(name, children)))
 }
 
 pub fn parse_elements_until<'a>(
     until: impl Fn(&'a str) -> IResult<&'a str, Token> + Copy,
-) -> impl Fn(&'a str) -> IResult<&'a str, Vec<ParseNode<'a>>> {
+) -> impl Fn(&'a str) -> IResult<&'a str, Vec<Node<'a>>> {
     move |input: &'a str| {
         delimited(
             // ignore any leading whitespace and commas

@@ -10,7 +10,7 @@ use itertools::{Itertools, concat};
 
 use crate::config::{NamingScheme, PluginConfig, PluginName};
 use crate::generate::core::REQUIRED_DERIVES;
-use crate::parsing::ParseNode;
+use crate::parsing::Node;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub enum NodeType {
@@ -31,16 +31,16 @@ pub struct NodeData {
     pub variants: Vec<String>,
 }
 
-pub fn flatten_root_parse_node(root_node: ParseNode<'_>) -> Vec<NodeData> {
+pub fn flatten_root_parse_node(root_node: Node<'_>) -> Vec<NodeData> {
     let node_count = root_node.get_tree_size();
     let mut nodes = Vec::with_capacity(node_count);
     let mut todo = VecDeque::from([(root_node, 0, None)]);
     while let Some((parse_node, depth, parent)) = todo.pop_front() {
         let node_type = match parse_node {
-            ParseNode::Singleton(_) => NodeType::Singleton,
-            ParseNode::Enum(_, _) => NodeType::Enum,
-            ParseNode::List(_, _) => NodeType::List,
-            ParseNode::Comment(_) => {
+            Node::Singleton(_) => NodeType::Singleton,
+            Node::Enum(_, _) => NodeType::Enum,
+            Node::List(_, _) => NodeType::List,
+            Node::Comment(_) => {
                 continue;
             }
         };
@@ -305,16 +305,16 @@ pub(crate) fn remove_root_node(nodes: &mut Vec<NodeData>) {
 }
 
 pub(crate) fn process_parse_nodes(
-    parse_nodes: Vec<ParseNode<'_>>,
+    parse_nodes: Vec<Node<'_>>,
     naming_scheme: NamingScheme,
     root_state_name: Option<String>,
 ) -> Result<Vec<NodeData>, ProcessingError> {
     // add the implicit root_node according to config
     let root_node = if let Some(root_state_name) = &root_state_name {
-        ParseNode::Enum(root_state_name.as_str().into(), parse_nodes)
+        Node::Enum(root_state_name.as_str().into(), parse_nodes)
     } else {
         // add a temporary root node
-        ParseNode::List("".into(), parse_nodes)
+        Node::List("".into(), parse_nodes)
     };
     let mut nodes = flatten_root_parse_node(root_node);
     // remove temporary root node
@@ -326,7 +326,7 @@ pub(crate) fn process_parse_nodes(
 }
 
 pub fn convert_parse_nodes_into_plugin_source(
-    parse_nodes: Vec<ParseNode<'_>>,
+    parse_nodes: Vec<Node<'_>>,
     config: PluginConfig,
 ) -> Result<String, ProcessingError> {
     let nodes = process_parse_nodes(

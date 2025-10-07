@@ -22,14 +22,14 @@ impl std::fmt::Display for Identifier<'_> {
 pub struct Comment<'a>(&'a str);
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum ParseNode<'a> {
+pub enum Node<'a> {
     Singleton(Identifier<'a>),
-    Enum(Identifier<'a>, Vec<ParseNode<'a>>),
-    List(Identifier<'a>, Vec<ParseNode<'a>>),
+    Enum(Identifier<'a>, Vec<Node<'a>>),
+    List(Identifier<'a>, Vec<Node<'a>>),
     Comment(Comment<'a>),
 }
 
-impl<'a> ParseNode<'a> {
+impl<'a> Node<'a> {
     pub fn singleton<I: Into<Identifier<'a>>>(name: I) -> Self {
         Self::Singleton(name.into())
     }
@@ -42,7 +42,7 @@ impl<'a> ParseNode<'a> {
     pub fn name(&self) -> Option<&str> {
         self.identifier().map(|id| id.0)
     }
-    pub fn children(&self) -> Vec<ParseNode<'a>> {
+    pub fn children(&self) -> Vec<Node<'a>> {
         match self {
             Self::Singleton(_) | Self::Comment(_) => Vec::new(),
             Self::Enum(_, children) => children.clone(),
@@ -64,7 +64,7 @@ impl<'a> ParseNode<'a> {
     }
 }
 
-impl<'a> TryFrom<&'a str> for ParseNode<'a> {
+impl<'a> TryFrom<&'a str> for Node<'a> {
     type Error = nom::Err<nom::error::Error<&'a str>>;
 
     fn try_from(s: &'a str) -> Result<Self, Self::Error> {
@@ -75,8 +75,8 @@ impl<'a> TryFrom<&'a str> for ParseNode<'a> {
 /// constructors used for testing
 #[cfg(test)]
 #[cfg_attr(coverage_nightly, coverage(off))]
-impl<'a> ParseNode<'a> {
-    pub fn enumeration<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
+impl<'a> Node<'a> {
+    pub fn enumeration<I: Into<Identifier<'a>>, V: IntoIterator<Item = Node<'a>>>(
         name: I,
         variants: V,
     ) -> Self {
@@ -85,7 +85,7 @@ impl<'a> ParseNode<'a> {
     pub fn list_empty<I: Into<Identifier<'a>>>(name: I) -> Self {
         Self::List(name.into(), vec![])
     }
-    pub fn list<I: Into<Identifier<'a>>, V: IntoIterator<Item = ParseNode<'a>>>(
+    pub fn list<I: Into<Identifier<'a>>, V: IntoIterator<Item = Node<'a>>>(
         name: I,
         variants: V,
     ) -> Self {
