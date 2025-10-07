@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-all = ["short", "full", "inline"]
+all = ["short", "full", "inline", "rustfmt"]
 short = []
 full = []
 inline = []
+rustfmt = ["bevy_state_plugin_generator/rustfmt"]
 
 [dependencies]
 bevy = { workspace = true, features = ["std", "bevy_state"] }
@@ -18,3 +19,17 @@ bevy_state_plugin_generator = { path = "../" }
 
 [package.metadata.cargo-feature-combinations]
 exclude_features = ["all"]
+exclude_feature_sets = [
+    [
+        "full",
+        "short",
+    ],
+    [
+        "inline",
+        "short",
+    ],
+    [
+        "full",
+        "inline",
+    ],
+]

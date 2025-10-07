@@ -9,3 +9,7 @@ test-fast: (test "--fail-fast")
 # check-snapshots action="reject":
 #     cargo insta test --all-features --unreferenced {{action}}
 # clean-snapshots: (check-snapshots "delete")
+
+build:
+    cargo-feature-combinations build
+    just -f test-app/justfile build
