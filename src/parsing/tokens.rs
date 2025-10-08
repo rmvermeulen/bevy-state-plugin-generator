@@ -1,4 +1,8 @@
 use derive_more::{Deref, From};
+use nom::error::ErrorKind;
+
+pub type NomError<'a, I = &'a str> = nom::error::Error<I>;
+pub type NomErr<'a, E = NomError<'a>> = nom::Err<E>;
 
 #[derive(Debug, PartialEq)]
 pub enum Token {
@@ -68,7 +72,12 @@ impl<'a> TryFrom<&'a str> for Node<'a> {
     type Error = nom::Err<nom::error::Error<&'a str>>;
 
     fn try_from(s: &'a str) -> Result<Self, Self::Error> {
-        crate::parsing::parse_node(s).map(|(_, node)| node)
+        crate::parsing::parse_node(s).and_then(|(rest, node)| {
+            rest.trim()
+                .is_empty()
+                .then_some(node)
+                .ok_or_else(|| nom::Err::Failure(nom::error::Error::new(s, ErrorKind::Complete)))
+        })
     }
 }
 

@@ -71,20 +71,20 @@ fn test_parse_enum_empty() {
 }
 
 #[rstest]
-#[case("Root {A}", parse_node::enum_root_a())]
-#[case("Root { A}", parse_node::enum_root_a())]
-#[case("Root {A }", parse_node::enum_root_a())]
-#[case("Root { A }", parse_node::enum_root_a())]
+#[case("Root {A}", node::enum_root_a())]
+#[case("Root { A}", node::enum_root_a())]
+#[case("Root {A }", node::enum_root_a())]
+#[case("Root { A }", node::enum_root_a())]
 fn test_parse_enum_single(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
 
 #[rstest]
-#[case("Root {A,B}", parse_node::enum_root_ab())]
-#[case("Root { A B }", parse_node::enum_root_ab())]
-#[case("Root { A { B } }", parse_node::enum_root_a_b())]
-#[case("Root { A { B } C }", parse_node::enum_root_a_b_up_c())]
-#[case("Root { A { B }, C }", parse_node::enum_root_a_b_up_c())]
+#[case("Root {A,B}", node::enum_root_ab())]
+#[case("Root { A B }", node::enum_root_ab())]
+#[case("Root { A { B } }", node::enum_root_a_b())]
+#[case("Root { A { B } C }", node::enum_root_a_b_up_c())]
+#[case("Root { A { B }, C }", node::enum_root_a_b_up_c())]
 fn test_parse_enum_variants(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
@@ -92,9 +92,9 @@ fn test_parse_enum_variants(#[case] input: &str, #[case] node: Node) {
 #[rstest]
 #[case::just_a_comma("Root {,}", Node::enumeration("Root", [ ]))]
 #[case::mora_commas("Root {,,,,}", Node::enumeration("Root", [ ]))]
-#[case::comma_after_variant("Root {A,}", parse_node::enum_root_a())]
-#[case::comma_before_variant("Root {,A}", parse_node::enum_root_a())]
-#[case::comma_between_variants("Root {A,B}", parse_node::enum_root_ab())]
+#[case::comma_after_variant("Root {A,}", node::enum_root_a())]
+#[case::comma_before_variant("Root {,A}", node::enum_root_a())]
+#[case::comma_between_variants("Root {A,B}", node::enum_root_ab())]
 fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_enum(input).unwrap()).is_equal_to(("", node));
 }
@@ -102,8 +102,8 @@ fn test_parse_enum_optional_commas(#[case] input: &str, #[case] node: Node) {
 #[rstest]
 #[case("Root []", Node::list_empty("Root"))]
 #[case("Root[]", Node::list_empty("Root"))]
-#[case("Root[A]", parse_node::list_root_a())]
-#[case("Root[A,B]", parse_node::list_root_ab())]
+#[case("Root[A]", node::list_root_a())]
+#[case("Root[A,B]", node::list_root_ab())]
 fn test_parse_list(#[case] input: &str, #[case] node: Node) {
     assert_that!(parse_list(input).unwrap()).is_equal_to(("", node));
 }

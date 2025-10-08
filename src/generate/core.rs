@@ -4,7 +4,7 @@ use nom::AsChar;
 
 use crate::parsing::parse_config;
 use crate::prelude::PluginConfig;
-use crate::processing::{ProcessingError, convert_parse_nodes_into_plugin_source};
+use crate::processing::{ProcessingError, convert_nodes_into_plugin_source};
 
 pub(crate) const REQUIRED_DERIVES: &[&str] =
     &["Hash", "Default", "Debug", "Clone", "PartialEq", "Eq"];
@@ -55,8 +55,8 @@ pub(crate) fn generate_state_plugin_source(
     plugin_config: PluginConfig,
     src_path: Option<&str>,
 ) -> Result<String, ProcessingError> {
-    let (unparsed, parse_nodes) = parse_config(input_source)?;
-    let mut output = convert_parse_nodes_into_plugin_source(parse_nodes, plugin_config)?;
+    let (unparsed, nodes) = parse_config(input_source)?;
+    let mut output = convert_nodes_into_plugin_source(nodes, plugin_config)?;
 
     #[cfg(test)]
     {

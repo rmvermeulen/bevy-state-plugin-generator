@@ -9,8 +9,8 @@ use speculoos::prelude::VecAssertions;
 
 use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
 use crate::parsing::Node;
-use crate::processing::{convert_parse_nodes_into_plugin_source, process_parse_nodes};
-use crate::testing::parse_node;
+use crate::processing::{convert_nodes_into_plugin_source, process_nodes};
+use crate::testing::node;
 use crate::{GeneratorError, NamingScheme, PluginConfig, set_snapshot_suffix};
 
 #[cfg(feature = "rustfmt")]
@@ -56,7 +56,7 @@ fn test_generate_states_plugin() {
         ],
     );
     let source =
-        convert_parse_nodes_into_plugin_source(vec![root_state], Default::default()).unwrap();
+        convert_nodes_into_plugin_source(vec![root_state], Default::default()).unwrap();
     assert_that!(source.matches(" mod ").collect_vec()).has_length(1);
     assert_snapshot!(source);
 }
@@ -136,15 +136,15 @@ fn generate_all_type_definitions(
     naming_scheme: NamingScheme,
     root_state_name: Option<String>,
 ) -> Result<Vec<String>, GeneratorError> {
-    Ok(process_parse_nodes(node, naming_scheme, root_state_name)?
+    Ok(process_nodes(node, naming_scheme, root_state_name)?
         .into_iter()
         .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
         .collect_vec())
 }
 
 #[rstest]
-#[case::duplicates(parse_node::duplicate_names())]
-#[case::overlapping(parse_node::overlapping_names())]
+#[case::duplicates(node::duplicate_names())]
+#[case::overlapping(node::overlapping_names())]
 fn test_error_handling(
     #[context] context: Context,
     #[values(NamingScheme::Full, NamingScheme::Short, NamingScheme::None)]
@@ -160,15 +160,15 @@ fn test_error_handling(
 }
 
 #[rstest]
-#[case::enum_root_a(parse_node::enum_root_a())]
-#[case::enum_root_ab(parse_node::enum_root_ab())]
-#[case::enum_root_a_b(parse_node::enum_root_a_b())]
-#[case::enum_root_a_b_up_c(parse_node::enum_root_a_b_up_c())]
-#[case::list_root_a(parse_node::list_root_a())]
-#[case::list_root_ab(parse_node::list_root_ab())]
-#[case::list_root_a_b(parse_node::list_root_a_b())]
-#[case::list_root_a_b_up_c(parse_node::list_root_a_b_up_c())]
-#[case::nested_example(parse_node::nested_example())]
+#[case::enum_root_a(node::enum_root_a())]
+#[case::enum_root_ab(node::enum_root_ab())]
+#[case::enum_root_a_b(node::enum_root_a_b())]
+#[case::enum_root_a_b_up_c(node::enum_root_a_b_up_c())]
+#[case::list_root_a(node::list_root_a())]
+#[case::list_root_ab(node::list_root_ab())]
+#[case::list_root_a_b(node::list_root_a_b())]
+#[case::list_root_a_b_up_c(node::list_root_a_b_up_c())]
+#[case::nested_example(node::nested_example())]
 fn snapshots(
     #[context] context: Context,
     #[values(NamingScheme::Full, NamingScheme::Short, NamingScheme::None)]

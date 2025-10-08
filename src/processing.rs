@@ -10,7 +10,7 @@ use itertools::{Itertools, concat};
 
 use crate::config::{NamingScheme, PluginConfig, PluginName};
 use crate::generate::core::REQUIRED_DERIVES;
-use crate::parsing::Node;
+use crate::parsing::{Node, NomErr};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub enum NodeType {
@@ -31,12 +31,12 @@ pub struct NodeData {
     pub variants: Vec<String>,
 }
 
-pub fn flatten_root_parse_node(root_node: Node<'_>) -> Vec<NodeData> {
+pub fn flatten_root_node(root_node: Node<'_>) -> Vec<NodeData> {
     let node_count = root_node.get_tree_size();
     let mut nodes = Vec::with_capacity(node_count);
     let mut todo = VecDeque::from([(root_node, 0, None)]);
-    while let Some((parse_node, depth, parent)) = todo.pop_front() {
-        let node_type = match parse_node {
+    while let Some((node, depth, parent)) = todo.pop_front() {
+        let node_type = match node {
             Node::Singleton(_) => NodeType::Singleton,
             Node::Enum(_, _) => NodeType::Enum,
             Node::List(_, _) => NodeType::List,
@@ -44,7 +44,7 @@ pub fn flatten_root_parse_node(root_node: Node<'_>) -> Vec<NodeData> {
                 continue;
             }
         };
-        let Some(name) = parse_node.name() else {
+        let Some(name) = node.name() else {
             continue;
         };
         let index = nodes.len();
@@ -56,7 +56,7 @@ pub fn flatten_root_parse_node(root_node: Node<'_>) -> Vec<NodeData> {
             name: name.to_string(),
             ..default()
         });
-        for child in parse_node.children() {
+        for child in node.children() {
             todo.push_back((child, depth + 1, Some(index)));
         }
     }
@@ -126,8 +126,6 @@ pub fn apply_naming_scheme(
     Ok(())
 }
 
-type NomError<T> = nom::Err<nom::error::Error<T>>;
-
 #[derive(Debug, thiserror::Error)]
 pub enum ProcessingError {
     #[error("Duplicate name: resolved_name='{resolved_name}' original_name='{original_name}'")]
@@ -143,8 +141,8 @@ pub enum ProcessingError {
     InvalidConfig(String),
 }
 
-impl From<NomError<&str>> for ProcessingError {
-    fn from(value: NomError<&str>) -> Self {
+impl<'a> From<NomErr<'a>> for ProcessingError {
+    fn from(value: NomErr<'a>) -> Self {
         Self::from(value.to_owned())
     }
 }
@@ -312,19 +310,19 @@ pub(crate) fn remove_root_node(nodes: &mut Vec<NodeData>) {
     }
 }
 
-pub(crate) fn process_parse_nodes(
-    parse_nodes: Vec<Node<'_>>,
+pub(crate) fn process_nodes(
+    nodes: Vec<Node<'_>>,
     naming_scheme: NamingScheme,
     root_state_name: Option<String>,
 ) -> Result<Vec<NodeData>, ProcessingError> {
     // add the implicit root_node according to config
     let root_node = if let Some(root_state_name) = &root_state_name {
-        Node::Enum(root_state_name.as_str().into(), parse_nodes)
+        Node::Enum(root_state_name.as_str().into(), nodes)
     } else {
         // add a temporary root node
-        Node::List("".into(), parse_nodes)
+        Node::List("".into(), nodes)
     };
-    let mut nodes = flatten_root_parse_node(root_node);
+    let mut nodes = flatten_root_node(root_node);
     // remove temporary root node
     if root_state_name.is_none() {
         remove_root_node(&mut nodes);
@@ -333,15 +331,11 @@ pub(crate) fn process_parse_nodes(
     Ok(nodes)
 }
 
-pub fn convert_parse_nodes_into_plugin_source(
-    parse_nodes: Vec<Node<'_>>,
+pub fn convert_nodes_into_plugin_source(
+    nodes: Vec<Node<'_>>,
     config: PluginConfig,
 ) -> Result<String, ProcessingError> {
-    let nodes = process_parse_nodes(
-        parse_nodes,
-        config.naming_scheme,
-        config.root_state_name.clone(),
-    )?;
+    let nodes = process_nodes(nodes, config.naming_scheme, config.root_state_name.clone())?;
     assert!(nodes.iter().all(|node| node.resolved_name.is_some()));
     build_plugin_source(nodes, config)
 }

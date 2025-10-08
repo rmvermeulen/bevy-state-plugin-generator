@@ -1,0 +1,40 @@
+---
+source: src/processing/tests.rs
+expression: flatten_root_node(node)
+---
+[
+    NodeData {
+        index: 0,
+        parent: None,
+        node_type: List,
+        depth: 0,
+        name: "Root",
+        resolved_name: None,
+        variants: [
+            "A",
+            "B",
+        ],
+    },
+    NodeData {
+        index: 1,
+        parent: Some(
+            0,
+        ),
+        node_type: Singleton,
+        depth: 1,
+        name: "A",
+        resolved_name: None,
+        variants: [],
+    },
+    NodeData {
+        index: 2,
+        parent: Some(
+            0,
+        ),
+        node_type: Singleton,
+        depth: 1,
+        name: "B",
+        resolved_name: None,
+        variants: [],
+    },
+]

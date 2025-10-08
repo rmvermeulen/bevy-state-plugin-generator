@@ -49,7 +49,7 @@ pub mod node_data {
     }
 }
 
-pub mod parse_node {
+pub mod node {
     use super::*;
     use crate::parsing::Node;
 
