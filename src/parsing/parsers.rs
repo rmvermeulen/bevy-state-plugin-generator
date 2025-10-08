@@ -15,7 +15,7 @@ pub fn parse_comment(input: &str) -> IResult<&str, Node<'_>> {
 pub fn comment(input: &str) -> IResult<&str, Comment<'_>> {
     use nom::combinator::eof;
 
-    delimited(skip_to(tag("//")), not_line_ending, alt((eof, line_ending)))
+    delimited(skip(tag("//")), not_line_ending, alt((eof, line_ending)))
         .parse(input)
         .map_result(|c| c.trim().into())
 }
@@ -29,7 +29,7 @@ pub fn identifier(input: &str) -> IResult<&str, Identifier<'_>> {
     .map_result(Identifier::from)
 }
 
-fn skip_to<P, T, O, E>(parser: P) -> impl Parser<T, Output = O, Error = E>
+fn skip<P, T, O, E>(parser: P) -> impl Parser<T, Output = O, Error = E>
 where
     T: nom::Input,
     P: Parser<T, Output = O, Error = E>,
@@ -40,33 +40,23 @@ where
 }
 
 pub fn separator(input: &str) -> IResult<&str, Token> {
-    skip_to(tag(","))
-        .parse(input)
-        .map_result(|_| Token::Separator)
+    skip(tag(",")).parse(input).map_result(|_| Token::Separator)
 }
 
 pub fn open_enum(input: &str) -> IResult<&str, Token> {
-    skip_to(tag("{"))
-        .parse(input)
-        .map_result(|_| Token::OpenEnum)
+    skip(tag("{")).parse(input).map_result(|_| Token::OpenEnum)
 }
 
 pub fn close_enum(input: &str) -> IResult<&str, Token> {
-    skip_to(tag("}"))
-        .parse(input)
-        .map_result(|_| Token::CloseEnum)
+    skip(tag("}")).parse(input).map_result(|_| Token::CloseEnum)
 }
 
 pub fn open_list(input: &str) -> IResult<&str, Token> {
-    skip_to(tag("["))
-        .parse(input)
-        .map_result(|_| Token::OpenList)
+    skip(tag("[")).parse(input).map_result(|_| Token::OpenList)
 }
 
 pub fn close_list(input: &str) -> IResult<&str, Token> {
-    skip_to(tag("]"))
-        .parse(input)
-        .map_result(|_| Token::CloseList)
+    skip(tag("]")).parse(input).map_result(|_| Token::CloseList)
 }
 
 pub trait MapResult<'a, I, O1, O2> {
@@ -88,19 +78,19 @@ pub fn parse_node(input: &'_ str) -> IResult<&'_ str, Node<'_>> {
 }
 
 pub fn parse_singleton(input: &'_ str) -> IResult<&'_ str, Node<'_>> {
-    skip_to(identifier).parse(input).map_result(Node::singleton)
+    skip(identifier).parse(input).map_result(Node::singleton)
 }
 
 pub fn parse_enum(input: &str) -> IResult<&str, Node<'_>> {
-    let (input, name) = terminated(skip_to(identifier), skip_to(open_enum)).parse(input)?;
-    let (input, children) = skip_to(parse_elements_until(close_enum)).parse(input)?;
+    let (input, name) = terminated(skip(identifier), skip(open_enum)).parse(input)?;
+    let (input, children) = skip(parse_elements_until(close_enum)).parse(input)?;
     Ok((input, Node::Enum(name, children)))
 }
 
 pub fn parse_list(input: &'_ str) -> IResult<&'_ str, Node<'_>> {
-    let (input, name) = skip_to(identifier).parse(input)?;
+    let (input, name) = skip(identifier).parse(input)?;
     let (input, children) =
-        skip_to(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
+        skip(preceded(open_list, parse_elements_until(close_list))).parse(input)?;
     Ok((input, Node::List(name, children)))
 }
 
