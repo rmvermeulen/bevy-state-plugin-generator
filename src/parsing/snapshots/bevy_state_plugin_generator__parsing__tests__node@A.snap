@@ -1,5 +1,0 @@
----
-source: src/parsing/tests.rs
-expression: parse_node(input)
----
-Err(Incomplete(Size(1)))

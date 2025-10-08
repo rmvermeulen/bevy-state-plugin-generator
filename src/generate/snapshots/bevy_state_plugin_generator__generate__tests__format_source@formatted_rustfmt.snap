@@ -1,7 +1,0 @@
----
-source: src/generate/tests.rs
-expression: formatted
----
-fn main() {
-    println!("Hello, world!");
-}

@@ -1,5 +1,0 @@
----
-source: src/parsing/tests.rs
-expression: parse_node(input)
----
-Ok(("", Enum(Identifier("Root"), [Singleton(Identifier("A"))])))

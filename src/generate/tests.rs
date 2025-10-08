@@ -16,17 +16,11 @@ use crate::processing::{convert_nodes_into_plugin_source, process_nodes};
 use crate::set_snapshot_suffix;
 use crate::testing::node;
 
-#[cfg(feature = "rustfmt")]
-const RUSTFMT: &str = "_rustfmt";
-#[cfg(not(feature = "rustfmt"))]
-const RUSTFMT: &str = "_no_rustfmt";
-
 #[rstest]
 #[timeout(Duration::from_millis(250))]
 #[async_std::test]
 async fn test_format_source() {
-    set_snapshot_suffix!("formatted{RUSTFMT}");
-    let formatted = format_source("fn main(){println!(\"Hello, world!\");}");
+    let formatted = format_source("fn main(){println!(\"Hello, world!\");}").unwrap();
     assert_snapshot!(formatted);
 }
 
@@ -64,7 +58,7 @@ fn test_generate_states_plugin() {
 #[case("root.txt", "RootState")]
 #[case("fruits.txt", "Apple Orange { O1 O2 }")]
 fn test_generate_debug_info(#[case] src_path: &str, #[case] source: &str) {
-    set_snapshot_suffix!("{src_path}{RUSTFMT}");
+    set_snapshot_suffix!("{src_path}");
     assert_snapshot!(generate_debug_info(src_path, source));
 }
 
@@ -86,7 +80,7 @@ fn test_generate_full_source(
         .root_state_name
         .clone()
         .unwrap_or(Cow::Borrowed("None"));
-    set_snapshot_suffix!("{src_path}_{root_state_name}_{RUSTFMT}");
+    set_snapshot_suffix!("{src_path}_{root_state_name}");
     assert_snapshot!(generate_state_plugin_source(source, config, Some(src_path)).unwrap());
 }
 
@@ -102,7 +96,7 @@ fn test_generate_full_source_no_implicit_root(
     #[case] source: &str,
     #[case] plugin_config: PluginConfig,
 ) {
-    set_snapshot_suffix!("{src_path}{RUSTFMT}");
+    set_snapshot_suffix!("{src_path}");
     assert_snapshot!(generate_state_plugin_source(source, plugin_config, Some(src_path)).unwrap());
 }
 
@@ -115,7 +109,7 @@ fn test_naming_scheme(
     naming_scheme: NamingScheme,
 ) {
     let src_path_display = src_path.unwrap_or("no_src");
-    set_snapshot_suffix!("{src_path_display}_{naming_scheme}{RUSTFMT}");
+    set_snapshot_suffix!("{src_path_display}_{naming_scheme}");
     let result = generate_state_plugin_source(
         "RootState",
         PluginConfig {
@@ -176,10 +170,7 @@ fn snapshots(
     naming_scheme: NamingScheme,
     #[case] node: Node,
 ) {
-    set_snapshot_suffix!(
-        "{}_{naming_scheme:?}{RUSTFMT}",
-        context.description.unwrap()
-    );
+    set_snapshot_suffix!("{}_{naming_scheme:?}", context.description.unwrap());
     assert_debug_snapshot!(generate_all_type_definitions(
         vec![node],
         naming_scheme,
