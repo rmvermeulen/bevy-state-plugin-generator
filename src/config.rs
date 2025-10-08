@@ -161,7 +161,7 @@ pub struct PluginConfig {
     /// Name of the root enum/struct. `None` means NO root node.
     pub root_state_name: Option<Cow<'static, str>>,
     /// Name for the inner module containing the generated states
-    pub states_module_name: Cow<'static, str>,
+    pub states_module_name: Option<Cow<'static, str>>,
     /// How generated states are named
     pub naming_scheme: NamingScheme,
     /// These additional traits will be added to the derive list
@@ -172,8 +172,8 @@ impl PluginConfig {
     const fn const_default() -> Self {
         Self {
             plugin_name: PluginName::Struct(Cow::Borrowed("GeneratedStatesPlugin")),
-            root_state_name: Some(Cow::Borrowed("GameState")),
-            states_module_name: Cow::Borrowed("states"),
+            root_state_name: None,
+            states_module_name: None,
             naming_scheme: NamingScheme::Full,
             additional_derives: vec![],
         }
@@ -190,7 +190,7 @@ impl PluginConfig {
     }
     /// Set the name of the inner module containing the generated states
     pub fn with_states_module_name<S: ToString>(mut self, name: S) -> Self {
-        self.states_module_name = Cow::Owned(name.to_string());
+        self.states_module_name = Some(Cow::Owned(name.to_string()));
         self
     }
     /// Set the name of the root enum/struct. `None` means NO root node.
@@ -230,9 +230,10 @@ impl PluginConfig {
 /// # use bevy_state_plugin_generator::prelude::*;
 /// let config = PluginConfig::default();
 /// assert_eq!(config.plugin_name, PluginName::new_struct("GeneratedStatesPlugin"));
-/// assert_eq!(config.root_state_name, Some(Cow::from("GameState")));
-/// assert_eq!(config.states_module_name, Cow::from("states"));
+/// assert_eq!(config.root_state_name, None);
+/// assert_eq!(config.states_module_name, None);
 /// assert_eq!(config.naming_scheme, NamingScheme::Full);
+/// assert_eq!(config.additional_derives, Vec::<Cow<str>>::new());
 /// ```
 impl Default for PluginConfig {
     fn default() -> Self {

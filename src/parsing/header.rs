@@ -72,7 +72,7 @@ pub(crate) fn apply_directive(
             }
         }
         "states_module_name" => {
-            plugin_config.states_module_name = Cow::from(value.to_string());
+            plugin_config.states_module_name = Some(Cow::from(value.to_string()));
         }
         "additional_derives" => {
             let mut to_add = value

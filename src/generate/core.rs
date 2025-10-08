@@ -51,14 +51,6 @@ pub(crate) fn generate_state_plugin_source(
     let (unparsed, nodes) = parse_config(input_source)?;
     let mut output = convert_nodes_into_plugin_source(nodes, plugin_config)?;
 
-    #[cfg(test)]
-    {
-        use speculoos::assert_that;
-        use speculoos::prelude::VecAssertions;
-
-        assert_that!(output.matches(" mod ").collect_vec()).has_length(1);
-    }
-
     // if we're writing to a file we add a header with some information
     output = if let Some(src_path) = src_path {
         if !unparsed.trim().is_empty() {

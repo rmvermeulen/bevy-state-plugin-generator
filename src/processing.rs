@@ -173,7 +173,7 @@ pub(crate) fn build_plugin_source(
             .copied()
             .map(Cow::Borrowed)
             .collect_vec(),
-        derives.into_iter().map(Cow::from).collect_vec(),
+        derives,
     ])
     .into_iter()
     .unique()
@@ -244,8 +244,11 @@ pub(crate) fn build_plugin_source(
         .join("\n");
 
     let plugin_builder = if let Some(root_state_name) = root_state_name.as_ref() {
-        let states_module_name: &str = states_module_name.as_ref();
-        let init_state = format!(".init_state::<{states_module_name}::{root_state_name}>()");
+        let prefix = states_module_name
+            .as_ref()
+            .map(|name| format!("{name}::"))
+            .unwrap_or_default();
+        let init_state = format!(".init_state::<{prefix}{root_state_name}>()");
         let sub_states = nodes
             .iter()
             .flat_map(|node| {
@@ -254,9 +257,7 @@ pub(crate) fn build_plugin_source(
                     .as_ref()
                     .expect("Node name has not been resolved!");
                 if node.parent.map(|p| nodes[p].clone()).is_some() {
-                    Some(format!(
-                        ".add_sub_state::<{states_module_name}::{resolved_name}>()"
-                    ))
+                    Some(format!(".add_sub_state::<{prefix}{resolved_name}>()"))
                 } else {
                     None
                 }
@@ -264,7 +265,10 @@ pub(crate) fn build_plugin_source(
             .join("\n            ");
         format!("app{init_state}{sub_states};")
     } else {
-        let states_module_name = states_module_name.as_ref();
+        let prefix = states_module_name
+            .as_ref()
+            .map(|name| format!("{name}::"))
+            .unwrap_or_default();
         let states = nodes
             .iter()
             .map(|node| {
@@ -273,9 +277,9 @@ pub(crate) fn build_plugin_source(
                     .clone()
                     .expect("Node name has not been resolved!");
                 if node.parent.map(|p| nodes[p].clone()).is_some() {
-                    format!(".add_sub_state::<{states_module_name}::{resolved_name}>()")
+                    format!(".add_sub_state::<{prefix}{resolved_name}>()")
                 } else {
-                    format!(".init_state::<{states_module_name}::{resolved_name}>()")
+                    format!(".init_state::<{prefix}{resolved_name}>()")
                 }
             })
             .join("\n            ");
@@ -302,15 +306,25 @@ pub(crate) fn build_plugin_source(
         }
     };
 
-    Ok(formatdoc! {"
-        use bevy::prelude::AppExtStates;
-        #[allow(missing_docs)]
-        pub mod {states_module_name} {{
+    Ok(if let Some(module_name) = states_module_name {
+        formatdoc! {"
+            use bevy::prelude::AppExtStates;
+            #[allow(missing_docs)]
+            pub mod {module_name} {{
+                use bevy::prelude::StateSet;
+                {definitions_source}
+            }}
+            {plugin_def}
+        "}
+    } else {
+        formatdoc! {"
+            #![allow(missing_docs)]
+            use bevy::prelude::AppExtStates;
             use bevy::prelude::StateSet;
             {definitions_source}
-        }}
-        {plugin_def}
-    "})
+            {plugin_def}
+        "}
+    })
 }
 
 pub(crate) fn remove_root_node(nodes: &mut Vec<NodeData>) {

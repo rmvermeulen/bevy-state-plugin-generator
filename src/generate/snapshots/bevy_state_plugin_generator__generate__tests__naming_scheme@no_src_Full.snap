@@ -1,0 +1,15 @@
+---
+source: src/generate/tests.rs
+expression: result
+---
+#![allow(missing_docs)]
+use bevy::prelude::{AppExtStates, StateSet};
+#[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+pub struct RootState;
+
+pub struct GeneratedStatesPlugin;
+impl bevy::app::Plugin for GeneratedStatesPlugin {
+    fn build(&self, app: &mut bevy::app::App) {
+        app.init_state::<RootState>();
+    }
+}

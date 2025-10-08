@@ -89,7 +89,7 @@ fn test_parse_template_header_states_module_name() {
     let mut plugin_config = PluginConfig::default();
     let warning = apply_directive(&mut plugin_config, "states_module_name", "Bob");
     assert_that!(warning).is_none();
-    assert_that!(plugin_config.states_module_name.as_ref()).is_equal_to("Bob");
+    assert_that!(plugin_config.states_module_name.unwrap().as_ref()).is_equal_to("Bob");
 }
 
 #[rstest]

@@ -37,8 +37,8 @@ fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
     plugin_name: PluginName::new_struct("GeneratedStatesPlugin"),
-    root_state_name: Some(Cow::from("GameState")),
-    states_module_name: Cow::from("states"),
+    root_state_name: None,
+    states_module_name: None,
     naming_scheme: NamingScheme::Full,
     additional_derives: vec![],
   };

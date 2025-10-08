@@ -137,7 +137,7 @@ fn test_parse_node_messy_example() {
 
 #[rstest]
 fn test_parse_list_incomplete() {
-    assert_compact_debug_snapshot!(parse_list("Root [ A"), @r#"Err(Error(Error { input: "", code: Tag })) "#);
+    assert_compact_debug_snapshot!(parse_list("Root [ A"), @r#"Err(Error(Error { input: "", code: Tag }))"#);
 }
 
 #[rstest]

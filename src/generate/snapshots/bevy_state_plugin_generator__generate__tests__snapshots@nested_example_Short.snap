@@ -1,0 +1,17 @@
+---
+source: src/generate/tests.rs
+expression: "generate_all_type_definitions(vec![node], naming_scheme, None)"
+---
+Ok(
+    [
+        "Menu -> Menu",
+        "Main -> MenuMain",
+        "Options -> MenuOptions",
+        "Game -> MenuGame",
+        "Graphics -> OptionsGraphics",
+        "Audio -> OptionsAudio",
+        "Gameplay -> OptionsGameplay",
+        "Save -> GameSave",
+        "Load -> GameLoad",
+    ],
+)

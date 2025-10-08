@@ -18,161 +18,151 @@
 //     Exiting
 // }
 
-use bevy::prelude::AppExtStates;
-#[allow(missing_docs)]
-pub mod states {
-    use bevy::prelude::StateSet;
-    #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    pub enum GameState {
-        #[default]
-        Game,
-    }
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(GameState = GameState::Game)]
-    pub enum Game {
-        #[default]
-        Loading,
-        Ready,
-        Exiting,
-    }
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Loading)]
-    pub enum Loading {
-        #[default]
-        Configuration,
-        Assets,
-    }
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Ready)]
-    pub enum Ready {
-        #[default]
-        Paused,
-        Playing,
-    }
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Game = Game::Exiting)]
-    pub struct Exiting;
-
-    // configuration, including which assets to load
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Loading = Loading::Configuration)]
-    pub struct Configuration;
-
-    // load actual assets; images, sounds, etc.
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Loading = Loading::Assets)]
-    pub struct Assets;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Ready = Ready::Paused)]
-    pub struct Paused;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Ready = Ready::Playing)]
-    pub struct Playing;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Playing = Playing)]
-    pub enum Player {
-        #[default]
-        Alive,
-        Dead,
-        Invincible,
-    }
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Playing = Playing)]
-    pub enum Enemies {
-        #[default]
-        Passive,
-        Aggressive,
-        Defensive,
-    }
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Playing = Playing)]
-    pub enum Weather {
-        #[default]
-        Nice,
-        Mist,
-        Rain,
-        Hot,
-        Cold,
-    }
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Player = Player::Alive)]
-    pub struct Alive;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Player = Player::Dead)]
-    pub struct Dead;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Player = Player::Invincible)]
-    pub struct Invincible;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Enemies = Enemies::Passive)]
-    pub struct Passive;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Enemies = Enemies::Aggressive)]
-    pub struct Aggressive;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Enemies = Enemies::Defensive)]
-    pub struct Defensive;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Weather = Weather::Nice)]
-    pub struct Nice;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Weather = Weather::Mist)]
-    pub struct Mist;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Weather = Weather::Rain)]
-    pub struct Rain;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Weather = Weather::Hot)]
-    pub struct Hot;
-
-    #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(Weather = Weather::Cold)]
-    pub struct Cold;
+#![allow(missing_docs)]
+use bevy::prelude::{AppExtStates, StateSet};
+#[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
+pub enum Game {
+    #[default]
+    Loading,
+    Ready,
+    Exiting,
 }
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Game = Game::Loading)]
+pub enum Loading {
+    #[default]
+    Configuration,
+    Assets,
+}
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Game = Game::Ready)]
+pub enum Ready {
+    #[default]
+    Paused,
+    Playing,
+}
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Game = Game::Exiting)]
+pub struct Exiting;
+
+// configuration, including which assets to load
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Loading = Loading::Configuration)]
+pub struct Configuration;
+
+// load actual assets; images, sounds, etc.
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Loading = Loading::Assets)]
+pub struct Assets;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Ready = Ready::Paused)]
+pub struct Paused;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Ready = Ready::Playing)]
+pub struct Playing;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Playing = Playing)]
+pub enum Player {
+    #[default]
+    Alive,
+    Dead,
+    Invincible,
+}
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Playing = Playing)]
+pub enum Enemies {
+    #[default]
+    Passive,
+    Aggressive,
+    Defensive,
+}
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Playing = Playing)]
+pub enum Weather {
+    #[default]
+    Nice,
+    Mist,
+    Rain,
+    Hot,
+    Cold,
+}
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Player = Player::Alive)]
+pub struct Alive;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Player = Player::Dead)]
+pub struct Dead;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Player = Player::Invincible)]
+pub struct Invincible;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Enemies = Enemies::Passive)]
+pub struct Passive;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Enemies = Enemies::Aggressive)]
+pub struct Aggressive;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Enemies = Enemies::Defensive)]
+pub struct Defensive;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Weather = Weather::Nice)]
+pub struct Nice;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Weather = Weather::Mist)]
+pub struct Mist;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Weather = Weather::Rain)]
+pub struct Rain;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Weather = Weather::Hot)]
+pub struct Hot;
+
+#[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
+#[source(Weather = Weather::Cold)]
+pub struct Cold;
+
 pub struct GeneratedStatesPlugin;
 impl bevy::app::Plugin for GeneratedStatesPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.init_state::<states::GameState>()
-            .add_sub_state::<states::Game>()
-            .add_sub_state::<states::Loading>()
-            .add_sub_state::<states::Ready>()
-            .add_sub_state::<states::Exiting>()
-            .add_sub_state::<states::Configuration>()
-            .add_sub_state::<states::Assets>()
-            .add_sub_state::<states::Paused>()
-            .add_sub_state::<states::Playing>()
-            .add_sub_state::<states::Player>()
-            .add_sub_state::<states::Enemies>()
-            .add_sub_state::<states::Weather>()
-            .add_sub_state::<states::Alive>()
-            .add_sub_state::<states::Dead>()
-            .add_sub_state::<states::Invincible>()
-            .add_sub_state::<states::Passive>()
-            .add_sub_state::<states::Aggressive>()
-            .add_sub_state::<states::Defensive>()
-            .add_sub_state::<states::Nice>()
-            .add_sub_state::<states::Mist>()
-            .add_sub_state::<states::Rain>()
-            .add_sub_state::<states::Hot>()
-            .add_sub_state::<states::Cold>();
+        app.init_state::<Game>()
+            .add_sub_state::<Loading>()
+            .add_sub_state::<Ready>()
+            .add_sub_state::<Exiting>()
+            .add_sub_state::<Configuration>()
+            .add_sub_state::<Assets>()
+            .add_sub_state::<Paused>()
+            .add_sub_state::<Playing>()
+            .add_sub_state::<Player>()
+            .add_sub_state::<Enemies>()
+            .add_sub_state::<Weather>()
+            .add_sub_state::<Alive>()
+            .add_sub_state::<Dead>()
+            .add_sub_state::<Invincible>()
+            .add_sub_state::<Passive>()
+            .add_sub_state::<Aggressive>()
+            .add_sub_state::<Defensive>()
+            .add_sub_state::<Nice>()
+            .add_sub_state::<Mist>()
+            .add_sub_state::<Rain>()
+            .add_sub_state::<Hot>()
+            .add_sub_state::<Cold>();
     }
 }

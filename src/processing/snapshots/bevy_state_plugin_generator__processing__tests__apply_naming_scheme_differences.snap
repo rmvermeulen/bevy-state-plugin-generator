@@ -1,0 +1,27 @@
+---
+source: src/processing/tests.rs
+expression: outputs
+---
+[
+    [
+        "RootState -> RootState",
+        "Menu -> RootStateMenu",
+        "Options -> MenuOptions",
+        "Audio -> OptionsAudio",
+        "Video -> OptionsVideo",
+    ],
+    [
+        "RootState -> RootState",
+        "Menu -> RootStateMenu",
+        "Options -> RootStateMenuOptions",
+        "Audio -> RootStateMenuOptionsAudio",
+        "Video -> RootStateMenuOptionsVideo",
+    ],
+    [
+        "RootState -> RootState",
+        "Menu -> Menu",
+        "Options -> Options",
+        "Audio -> Audio",
+        "Video -> Video",
+    ],
+]

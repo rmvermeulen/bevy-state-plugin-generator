@@ -50,7 +50,6 @@ fn test_generate_states_plugin() {
         ],
     );
     let source = convert_nodes_into_plugin_source(vec![root_state], Default::default()).unwrap();
-    assert_that!(source.matches(" mod ").collect_vec()).has_length(1);
     assert_snapshot!(source);
 }
 
@@ -120,7 +119,6 @@ fn test_naming_scheme(
     )
     .unwrap();
 
-    assert_that!(result.matches(" mod ").collect_vec()).has_length(1);
     assert_snapshot!(result);
 }
 
