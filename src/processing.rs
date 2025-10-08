@@ -149,7 +149,7 @@ impl From<NomError<&str>> for ProcessingError {
     }
 }
 
-fn build_plugin_source(
+pub(crate) fn build_plugin_source(
     nodes: Vec<NodeData>,
     config: PluginConfig,
 ) -> Result<String, ProcessingError> {
@@ -177,11 +177,19 @@ fn build_plugin_source(
             let derives = node
                 .parent
                 .map(|parent_id| {
-                    let source = nodes[parent_id].resolved_name.as_ref().unwrap();
-                    formatdoc! {"
-                        #[derive(bevy::prelude::SubStates, {derives})]
-                        #[source({source} = {source}::{variant})]
-                    ", variant = node.name
+                    let parent = &nodes[parent_id];
+                    let parent_name = parent.resolved_name.as_ref().unwrap();
+
+                    match parent.node_type {
+                        NodeType::Enum => formatdoc! {"
+                            #[derive(bevy::prelude::SubStates, {derives})]
+                            #[source({parent_name} = {parent_name}::{variant})]
+                            ", variant = node.name
+                        },
+                        _ => formatdoc! {"
+                            #[derive(bevy::prelude::SubStates, {derives})]
+                            #[source({parent_name} = {parent_name})]
+                        "},
                     }
                 })
                 .unwrap_or_else(|| formatdoc! {"#[derive(bevy::prelude::States, {derives})]"})

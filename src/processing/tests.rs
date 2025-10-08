@@ -1,9 +1,11 @@
 use bevy_utils::default;
 use itertools::Itertools;
+use lazy_regex::regex;
 
 use crate::config::NamingScheme;
 use crate::parsing::Node;
-use crate::processing::{NodeData, NodeType, apply_naming_scheme, flatten_root_parse_node};
+use crate::processing::{NodeData, NodeType, apply_naming_scheme, build_plugin_source,
+                        flatten_root_parse_node};
 use crate::testing::*;
 
 #[rstest]
@@ -74,4 +76,49 @@ fn test_apply_naming_scheme_differences(
         .collect_vec();
     assert_that!(outputs).has_length(3);
     assert_debug_snapshot!(outputs);
+}
+
+fn parent_with_child(node_type: NodeType) -> Vec<NodeData> {
+    vec![
+        NodeData {
+            name: "Parent".to_string(),
+            resolved_name: Some("Parent".to_string()),
+            variants: if node_type == NodeType::Singleton {
+                default()
+            } else {
+                vec!["Child".to_string()]
+            },
+            node_type,
+            ..default()
+        },
+        NodeData {
+            index: 1,
+            parent: Some(0),
+            node_type: NodeType::Singleton,
+            depth: 1,
+            name: "Child".to_string(),
+            resolved_name: Some("Child".to_string()),
+            variants: default(),
+        },
+    ]
+}
+
+#[rstest]
+#[case::singleton(parent_with_child(NodeType::Singleton), "Parent = Parent")]
+#[case::list(parent_with_child(NodeType::List), "Parent = Parent")]
+#[case::enumeration(parent_with_child(NodeType::Enum), "Parent = Parent::Child")]
+fn test_build_plugin_source(
+    #[context] context: Context,
+    #[case] nodes: Vec<NodeData>,
+    #[case] expected: &str,
+) {
+    let pattern = regex!(r#"source\((.*)\)"#);
+    let source = build_plugin_source(nodes, default()).unwrap();
+    let matched = pattern.captures(&source).unwrap().get(1).unwrap();
+    assert_that!(matched.as_str())
+        .named(&format!(
+            "SubState-relationship for {}",
+            context.description.unwrap()
+        ))
+        .is_equal_to(expected);
 }
