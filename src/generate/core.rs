@@ -28,26 +28,19 @@ pub(crate) fn generate_debug_info(src_path: &str, source: &str) -> String {
     "}
 }
 
-#[cfg(feature = "rustfmt")]
-fn try_format_source(source: &str) -> std::io::Result<String> {
+pub(crate) fn format_source<S: AsRef<str>>(source: S) -> Result<String, String> {
     duct::cmd!("rustfmt")
-        .stdin_bytes(source)
+        .stdin_bytes(source.as_ref())
         .stderr_to_stdout()
         .read()
-}
-
-pub(crate) fn format_source<S: AsRef<str>>(source: S) -> String {
-    let source = source.as_ref();
-    #[cfg(feature = "rustfmt")]
-    let source = try_format_source(source).unwrap_or_else(|_| source.to_owned());
-    #[cfg(not(feature = "rustfmt"))]
-    let source = source.to_owned();
-
-    if source.ends_with(|c: char| c.is_newline()) {
-        source
-    } else {
-        source + "\n"
-    }
+        .map_err(|e| format!("rustfmt: {e:?}"))
+        .map(|source| {
+            if source.ends_with(|c: char| c.is_newline()) {
+                source
+            } else {
+                source + "\n"
+            }
+        })
 }
 
 pub(crate) fn generate_state_plugin_source(
@@ -77,5 +70,5 @@ pub(crate) fn generate_state_plugin_source(
         [unparsed, &output].join("\n")
     };
 
-    Ok(format_source(output))
+    format_source(&output).map_err(ProcessingError::Formatting)
 }

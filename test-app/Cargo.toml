@@ -4,11 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-all = ["short", "full", "inline", "rustfmt"]
+all = ["short", "full", "inline"]
 short = []
 full = []
 inline = []
-rustfmt = ["bevy_state_plugin_generator/rustfmt"]
 
 [dependencies]
 bevy = { workspace = true, features = ["std", "bevy_state"] }

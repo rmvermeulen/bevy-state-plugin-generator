@@ -145,6 +145,8 @@ pub enum ProcessingError {
     Parsing(#[from] nom::Err<nom::error::Error<String>>),
     #[error("Invalid configuration: {0}")]
     InvalidConfig(String),
+    #[error("Failed to format!")]
+    Formatting(String),
 }
 
 impl<'a> From<NomErr<'a>> for ProcessingError {
