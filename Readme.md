@@ -36,9 +36,9 @@ use bevy_state_plugin_generator::prelude::*;
 fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
-    plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
-    root_state_name: Some("GameState".to_string()),
-    states_module_name: "states".to_string(),
+    plugin_name: PluginName::new_struct("GeneratedStatesPlugin"),
+    root_state_name: Some(Cow::from("GameState")),
+    states_module_name: Cow::from("states"),
     naming_scheme: NamingScheme::Full,
     additional_derives: vec![],
   };
@@ -65,9 +65,9 @@ use bevy_state_plugin_generator::prelude::*;
 fn main() {
   /// The [Default::default] configuration is:
   let config = PluginConfig {
-    plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
-    root_state_name: Some("GameState".to_string()),
-    states_module_name: "states".to_string(),
+    plugin_name: PluginName::new_struct("GeneratedStatesPlugin"),
+    root_state_name: Some(Cow::from("GameState")),
+    states_module_name: Cow::from("states"),
     naming_scheme: NamingScheme::Full,
     additional_derives: vec![],
   };

@@ -12,6 +12,8 @@ pub(crate) mod testing;
 
 /// The types and functions required to use this library
 pub mod prelude {
+    pub use std::borrow::Cow;
+
     pub use crate::config::{NamingScheme, PluginConfig, PluginName};
     pub use crate::generate::{generate_plugin, update_template};
 }

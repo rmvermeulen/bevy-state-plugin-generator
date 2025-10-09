@@ -1,10 +1,10 @@
-test *flags:
+test-features *flags:
     cargo-feature-combinations {{flags}} insta test
 
-test-all: test
+test: build test-features
+test-fast: (test-features "--fail-fast")
 
-test-fast: (test "--fail-fast")
-
+# TODO: revisit before 2.0.0 where feature `rustfmt` is removed
 # NOTE: this only works if `--all-features` implies "all test cases" and not "alternate test cases"
 # check-snapshots action="reject":
 #     cargo insta test --all-features --unreferenced {{action}}

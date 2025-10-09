@@ -1,5 +1,11 @@
+use std::borrow::Cow;
+
+#[cfg(test)]
+use bevy_reflect::Reflect;
+
 /// How state-names are determined
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[cfg_attr(test, derive(Reflect))]
 pub enum NamingScheme {
     /// Name includes the names of all ancestors
     Full,
@@ -58,53 +64,73 @@ impl std::fmt::Display for NamingScheme {
 }
 
 /// How the plugin is rendered.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(test, derive(Reflect))]
 pub enum PluginName<'s> {
     /// ```rust
     /// use bevy_state_plugin_generator::prelude::PluginName;
-    /// PluginName::Struct("MyPlugin");
+    /// PluginName::new_struct("MyPlugin");
     /// ```
-    Struct(&'s str),
+    Struct(Cow<'s, str>),
     /// ```rust
     /// use bevy_state_plugin_generator::prelude::PluginName;
-    /// PluginName::Function("my_plugin");
+    /// PluginName::new_function("my_plugin");
     /// ```
-    Function(&'s str),
+    Function(Cow<'s, str>),
+}
+
+impl<'s> PluginName<'s> {
+    /// Create the Struct variant
+    pub fn new_struct<S: Into<Cow<'s, str>>>(name: S) -> Self {
+        Self::Struct(name.into())
+    }
+    /// Create the Function variant
+    pub fn new_function<S: Into<Cow<'s, str>>>(name: S) -> Self {
+        Self::Function(name.into())
+    }
 }
 
 /// Configuration for the generated plugin
 #[derive(Clone, Debug)]
+#[cfg_attr(test, derive(Reflect))]
 pub struct PluginConfig {
-    /// name of the struct that implements [`bevy::plugin::Plugin`]
+    /// Name of the struct that implements [`bevy::plugin::Plugin`]
+    /// Defaults to `GeneratedStatesPlugin`
     pub plugin_name: PluginName<'static>,
-    /// name of the root enum/struct that represents the game state
-    pub root_state_name: Option<String>,
-    /// name of the module that contains sub-states
-    pub states_module_name: String,
-    /// naming scheme for the generated states
+    /// Name of the root enum/struct. `None` means NO root node.
+    pub root_state_name: Option<Cow<'static, str>>,
+    /// Name for the inner module containing the generated states
+    pub states_module_name: Cow<'static, str>,
+    /// How generated states are named
     pub naming_scheme: NamingScheme,
-    /// add additional traits to the derive list
-    pub additional_derives: Vec<String>,
+    /// These additional traits will be added to the derive list
+    pub additional_derives: Vec<Cow<'static, str>>,
+}
+
+impl PluginConfig {
+    const fn const_default() -> Self {
+        Self {
+            plugin_name: PluginName::Struct(Cow::Borrowed("GeneratedStatesPlugin")),
+            root_state_name: Some(Cow::Borrowed("GameState")),
+            states_module_name: Cow::Borrowed("states"),
+            naming_scheme: NamingScheme::Full,
+            additional_derives: vec![],
+        }
+    }
 }
 
 /// Default configuration for the generated plugin
 /// ```rust
 /// # use bevy_state_plugin_generator::prelude::*;
 /// let config = PluginConfig::default();
-/// assert_eq!(config.plugin_name, PluginName::Struct("GeneratedStatesPlugin"));
-/// assert_eq!(config.root_state_name, Some("GameState".to_string()));
-/// assert_eq!(config.states_module_name, "states".to_string());
+/// assert_eq!(config.plugin_name, PluginName::new_struct("GeneratedStatesPlugin"));
+/// assert_eq!(config.root_state_name, Some(Cow::from("GameState")));
+/// assert_eq!(config.states_module_name, Cow::from("states"));
 /// assert_eq!(config.naming_scheme, NamingScheme::Full);
 /// ```
 impl Default for PluginConfig {
     fn default() -> Self {
-        Self {
-            plugin_name: PluginName::Struct("GeneratedStatesPlugin"),
-            root_state_name: Some("GameState".to_string()),
-            states_module_name: "states".to_string(),
-            naming_scheme: Default::default(),
-            additional_derives: vec![],
-        }
+        Self::const_default()
     }
 }
 

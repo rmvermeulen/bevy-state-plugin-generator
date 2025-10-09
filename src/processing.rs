@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+use std::borrow::Cow;
 use std::collections::VecDeque;
 
 use bevy_platform::collections::HashSet;
@@ -162,9 +163,10 @@ pub(crate) fn build_plugin_source(
     let derives = concat([
         REQUIRED_DERIVES
             .iter()
-            .map(ToString::to_string)
+            .copied()
+            .map(Cow::Borrowed)
             .collect_vec(),
-        derives.into_iter().collect_vec(),
+        derives.into_iter().map(Cow::from).collect_vec(),
     ])
     .into_iter()
     .unique()
@@ -228,7 +230,7 @@ pub(crate) fn build_plugin_source(
         .join("\n");
 
     let plugin_builder = if let Some(root_state_name) = root_state_name.as_ref() {
-        let states_module_name = states_module_name.as_str();
+        let states_module_name: &str = states_module_name.as_ref();
         let init_state = format!(".init_state::<{states_module_name}::{root_state_name}>()");
         let sub_states = nodes
             .iter()
@@ -248,7 +250,7 @@ pub(crate) fn build_plugin_source(
             .join("\n            ");
         format!("app{init_state}{sub_states};")
     } else {
-        let states_module_name = states_module_name.as_str();
+        let states_module_name = states_module_name.as_ref();
         let states = nodes
             .iter()
             .map(|node| {
@@ -313,11 +315,11 @@ pub(crate) fn remove_root_node(nodes: &mut Vec<NodeData>) {
 pub(crate) fn process_nodes(
     nodes: Vec<Node<'_>>,
     naming_scheme: NamingScheme,
-    root_state_name: Option<String>,
+    root_state_name: Option<Cow<str>>,
 ) -> Result<Vec<NodeData>, ProcessingError> {
     // add the implicit root_node according to config
     let root_node = if let Some(root_state_name) = &root_state_name {
-        Node::Enum(root_state_name.as_str().into(), nodes)
+        Node::Enum(root_state_name.as_ref().into(), nodes)
     } else {
         // add a temporary root node
         Node::List("".into(), nodes)
