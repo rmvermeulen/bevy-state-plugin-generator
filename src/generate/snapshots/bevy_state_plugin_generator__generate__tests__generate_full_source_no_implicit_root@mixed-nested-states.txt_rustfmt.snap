@@ -41,15 +41,15 @@ pub mod states {
     pub struct DI;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(AB = AB::C)]
+    #[source(AB = AB)]
     pub struct ABC;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(DF = DF::G)]
+    #[source(DF = DF)]
     pub struct DFG;
 
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-    #[source(DF = DF::H)]
+    #[source(DF = DF)]
     pub struct DFH;
 }
 pub struct GeneratedStatesPlugin;

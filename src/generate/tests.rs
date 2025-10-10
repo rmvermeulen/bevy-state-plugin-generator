@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::time::Duration;
 
 use bevy_utils::default;
@@ -7,11 +8,13 @@ use rstest::{Context, rstest};
 use speculoos::assert_that;
 use speculoos::prelude::VecAssertions;
 
-use crate::generate::{format_source, generate_debug_info, generate_state_plugin_source};
+use crate::generate::core::{format_source, generate_debug_info};
+use crate::generate::{GeneratorError, generate_state_plugin_source};
 use crate::parsing::Node;
+use crate::prelude::{NamingScheme, PluginConfig};
 use crate::processing::{convert_nodes_into_plugin_source, process_nodes};
+use crate::set_snapshot_suffix;
 use crate::testing::node;
-use crate::{GeneratorError, NamingScheme, PluginConfig, set_snapshot_suffix};
 
 #[cfg(feature = "rustfmt")]
 const RUSTFMT: &str = "_rustfmt";
@@ -38,10 +41,7 @@ fn test_generate_states_plugin() {
                 [
                     Node::enumeration(
                         "Menu",
-                        [
-                            Node::singleton("Main"),
-                            Node::singleton("Options"),
-                        ],
+                        [Node::singleton("Main"), Node::singleton("Options")],
                     ),
                     Node::enumeration(
                         "Game",
@@ -55,8 +55,7 @@ fn test_generate_states_plugin() {
             ),
         ],
     );
-    let source =
-        convert_nodes_into_plugin_source(vec![root_state], Default::default()).unwrap();
+    let source = convert_nodes_into_plugin_source(vec![root_state], Default::default()).unwrap();
     assert_that!(source.matches(" mod ").collect_vec()).has_length(1);
     assert_snapshot!(source);
 }
@@ -86,7 +85,7 @@ fn test_generate_full_source(
     let root_state_name = config
         .root_state_name
         .clone()
-        .unwrap_or_else(|| "None".to_string());
+        .unwrap_or(Cow::Borrowed("None"));
     set_snapshot_suffix!("{src_path}_{root_state_name}_{RUSTFMT}");
     assert_snapshot!(generate_state_plugin_source(source, config, Some(src_path)).unwrap());
 }
@@ -136,10 +135,12 @@ fn generate_all_type_definitions(
     naming_scheme: NamingScheme,
     root_state_name: Option<String>,
 ) -> Result<Vec<String>, GeneratorError> {
-    Ok(process_nodes(node, naming_scheme, root_state_name)?
-        .into_iter()
-        .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
-        .collect_vec())
+    Ok(
+        process_nodes(node, naming_scheme, root_state_name.clone().map(Cow::from))?
+            .into_iter()
+            .map(|node| format!("{} -> {}", node.name, node.resolved_name.unwrap()))
+            .collect_vec(),
+    )
 }
 
 #[rstest]

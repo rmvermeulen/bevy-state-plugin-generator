@@ -1,4 +1,6 @@
 pub(crate) mod core;
+#[cfg(test)]
+mod tests;
 
 use std::path::Path;
 use std::{fs, io};

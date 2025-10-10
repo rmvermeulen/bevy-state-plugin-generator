@@ -50,15 +50,15 @@ pub struct GameStateDF;
 pub struct GameStateDI;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameStateAB = GameStateAB::C)]
+#[source(GameStateAB = GameStateAB)]
 pub struct GameStateABC;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameStateDF = GameStateDF::G)]
+#[source(GameStateDF = GameStateDF)]
 pub struct GameStateDFG;
 
 #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
-#[source(GameStateDF = GameStateDF::H)]
+#[source(GameStateDF = GameStateDF)]
 pub struct GameStateDFH;
 
 }
