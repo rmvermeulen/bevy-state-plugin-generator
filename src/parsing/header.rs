@@ -36,6 +36,59 @@ pub(crate) const SUPPORTED_VARIABLES: &[&str] = &[
     "additional_derives",
 ];
 
+pub(crate) fn apply_directive(
+    plugin_config: &mut PluginConfig,
+    name: &str,
+    value: &str,
+) -> Option<String> {
+    if !SUPPORTED_VARIABLES.contains(&name) {
+        return Some(format!("unknown setting: '{name}'"));
+    }
+    match name {
+        "root_state_name" => {
+            plugin_config.root_state_name = if value == "None" {
+                None
+            } else {
+                Some(Cow::Owned(value.unquoted().to_string()))
+            };
+        }
+        "naming_scheme" => {
+            if let Some(naming_scheme) = NamingScheme::try_parse(value) {
+                plugin_config.naming_scheme = naming_scheme;
+            } else {
+                return Some(format!(
+                    "invalid naming scheme '{value}' (expected [none, short, full])"
+                ));
+            }
+        }
+        "plugin_name" => {
+            if let Some(plugin_name) = PluginName::parse(value) {
+                let name = (*plugin_name).to_owned();
+                plugin_config.plugin_name = PluginName::parse(name).unwrap();
+            } else {
+                return Some(format!(
+                    "invalid plugin name '{value}' (expected [UpperCamelCase, lower_snake_case])"
+                ));
+            }
+        }
+        "states_module_name" => {
+            plugin_config.states_module_name = Cow::from(value.to_string());
+        }
+        "additional_derives" => {
+            let mut to_add = value
+                .split_terminator(",")
+                .map(ToString::to_string)
+                .map(Cow::Owned)
+                .collect_vec();
+            plugin_config.additional_derives.append(&mut to_add);
+        }
+        _ => {
+            unreachable!()
+        }
+    }
+    None
+}
+
 pub(crate) fn parse_template_header<'a>(
     source: &'a str,
     plugin_config: &mut PluginConfig,
@@ -73,51 +126,8 @@ pub(crate) fn parse_template_header<'a>(
                 regex!(r#"^\s*//\s*bspg:(\w+)\s+(\w+|"\w+\")\s*$"#).captures(line)
             {
                 let (_, [name, value]) = captures.extract();
-                emit_warning!("unknown setting: '{name}'");
-                if !SUPPORTED_VARIABLES.contains(&name) {
-                    emit_warning!("unknown setting: '{name}'");
-                } else {
-                    match name {
-                        "root_state_name" => {
-                            plugin_config.root_state_name = if value == "None" {
-                                None
-                            } else {
-                                Some(Cow::Owned(value.unquoted().to_string()))
-                            };
-                        }
-                        "naming_scheme" => {
-                            if let Some(naming_scheme) = NamingScheme::try_parse(value) {
-                                plugin_config.naming_scheme = naming_scheme;
-                            } else {
-                                emit_warning!(
-                                    "invalid naming scheme '{value}' (expected [none, short, full])"
-                                );
-                            }
-                        }
-                        "plugin_name" => {
-                            let value = value.to_string();
-                            plugin_config.plugin_name =
-                                if value.starts_with(|c: char| c.is_uppercase()) {
-                                    PluginName::new_struct(value)
-                                } else {
-                                    PluginName::new_function(value)
-                                }
-                        }
-                        "states_module_name" => {
-                            plugin_config.states_module_name = Cow::from(value.to_string());
-                        }
-                        "additional_derives" => {
-                            let mut to_add = value
-                                .split_terminator(",")
-                                .map(ToString::to_string)
-                                .map(Cow::Owned)
-                                .collect_vec();
-                            plugin_config.additional_derives.append(&mut to_add);
-                        }
-                        _ => {
-                            unreachable!()
-                        }
-                    }
+                if let Some(warning) = apply_directive(plugin_config, name, value) {
+                    emit_warning!("{warning}");
                 }
                 true
             } else if regex!(r#"^\s*//\s*bspg:\s*$"#).is_match(line) {

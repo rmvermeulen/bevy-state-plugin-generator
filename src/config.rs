@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::ops;
 
 #[cfg(test)]
 use bevy_reflect::Reflect;
@@ -81,6 +82,10 @@ pub enum PluginName<'s> {
 }
 
 impl<'s> PluginName<'s> {
+    /// Create a the appropriate variant
+    pub fn parse<S: Into<Cow<'s, str>>>(input: S) -> Option<Self> {
+        Self::try_from(input.into()).ok()
+    }
     /// Create the Struct variant
     pub fn new_struct<S: Into<Cow<'s, str>>>(name: S) -> Self {
         Self::Struct(name.into())
@@ -88,6 +93,61 @@ impl<'s> PluginName<'s> {
     /// Create the Function variant
     pub fn new_function<S: Into<Cow<'s, str>>>(name: S) -> Self {
         Self::Function(name.into())
+    }
+}
+
+impl<'a> ops::Deref for PluginName<'a> {
+    type Target = str;
+
+    fn deref(&self) -> &Self::Target {
+        match self {
+            Self::Struct(name) => name,
+            Self::Function(name) => name,
+        }
+    }
+}
+
+impl<'s> TryFrom<&'s str> for PluginName<'s> {
+    type Error = ();
+    fn try_from(value: &'s str) -> Result<Self, Self::Error> {
+        if let Some(c) = value.chars().next()
+            && c.is_alphabetic()
+        {
+            Ok(if c.is_uppercase() {
+                Self::new_struct(value)
+            } else {
+                Self::new_function(value)
+            })
+        } else {
+            Err(())
+        }
+    }
+}
+
+impl<'s> TryFrom<String> for PluginName<'s> {
+    type Error = ();
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if let Some(c) = value.chars().next()
+            && c.is_alphabetic()
+        {
+            Ok(if c.is_uppercase() {
+                Self::new_struct(value)
+            } else {
+                Self::new_function(value)
+            })
+        } else {
+            Err(())
+        }
+    }
+}
+
+impl<'s> TryFrom<Cow<'s, str>> for PluginName<'s> {
+    type Error = ();
+    fn try_from(value: Cow<'s, str>) -> Result<Self, Self::Error> {
+        match value {
+            Cow::Borrowed(s) => Self::try_from(s),
+            Cow::Owned(s) => Self::try_from(s),
+        }
     }
 }
 

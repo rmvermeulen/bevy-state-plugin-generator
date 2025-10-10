@@ -1,13 +1,16 @@
+use std::borrow::Cow;
+
 use bevy_reflect::Struct;
 use bevy_utils::default;
 use indoc::formatdoc;
+use insta::assert_snapshot;
 use itertools::Itertools;
 use rstest::rstest;
 use speculoos::assert_that;
-use speculoos::prelude::{ContainingIntoIterAssertions, VecAssertions};
+use speculoos::prelude::{ContainingIntoIterAssertions, OptionAssertions, VecAssertions};
 
-use crate::parsing::header::{SUPPORTED_VARIABLES, parse_template_header};
-use crate::prelude::{NamingScheme, PluginConfig};
+use crate::parsing::header::{SUPPORTED_VARIABLES, apply_directive, parse_template_header};
+use crate::prelude::{NamingScheme, PluginConfig, PluginName};
 
 #[rstest]
 #[case(String::new())]
@@ -67,4 +70,73 @@ fn test_plugin_config_all_fields_supported_as_variables() {
 }
 
 #[rstest]
-fn test_parse_template_header_all_variables_supported() {}
+fn test_parse_template_header_root_state_name() {
+    let mut plugin_config = PluginConfig::default();
+    let warning = apply_directive(&mut plugin_config, "root_state_name", "Bob");
+    assert_that!(warning).is_none();
+    assert_that!(
+        plugin_config
+            .root_state_name
+            .as_ref()
+            .map(ToString::to_string)
+            .unwrap_or_default()
+    )
+    .is_equal_to("Bob".to_string());
+}
+
+#[rstest]
+fn test_parse_template_header_states_module_name() {
+    let mut plugin_config = PluginConfig::default();
+    let warning = apply_directive(&mut plugin_config, "states_module_name", "Bob");
+    assert_that!(warning).is_none();
+    assert_that!(plugin_config.states_module_name.as_ref()).is_equal_to("Bob");
+}
+
+#[rstest]
+#[case("full", NamingScheme::Full, false)]
+#[case("Full", NamingScheme::Full, false)]
+#[case("short", NamingScheme::Short, false)]
+#[case("Short", NamingScheme::Short, false)]
+#[case("none", NamingScheme::None, false)]
+#[case("None", NamingScheme::None, false)]
+#[case("invalid input", NamingScheme::default(), true)]
+fn test_parse_template_header_naming_scheme(
+    #[case] input: &str,
+    #[case] expected: NamingScheme,
+    #[case] expected_warning: bool,
+) {
+    let mut plugin_config = PluginConfig::default();
+    let warning = apply_directive(&mut plugin_config, "naming_scheme", input);
+    if expected_warning {
+        assert_snapshot!(
+            warning.unwrap(),
+            @"invalid naming scheme 'invalid input' (expected [none, short, full])");
+    } else {
+        assert_that!(warning).is_none();
+    };
+    assert_that!(plugin_config.naming_scheme).is_equal_to(expected);
+}
+
+#[rstest]
+fn test_parse_template_header_additional_derives() {
+    let mut plugin_config = PluginConfig::default();
+    let warning = apply_directive(&mut plugin_config, "additional_derives", "Alice,Bob");
+    assert_that!(warning).is_none();
+    assert_that!(plugin_config.additional_derives).contains_all_of(&[
+        &Cow::from("Alice".to_string()),
+        &Cow::from("Bob".to_string()),
+    ]);
+}
+
+#[rstest]
+#[case("StructPlugin", PluginName::new_struct("StructPlugin"))]
+#[case("fn_plugin", PluginName::new_function("fn_plugin"))]
+fn test_parse_template_header_plugin_name(
+    #[case] plugin_name: &str,
+    #[case] expected_plugin_name: PluginName,
+) {
+    let mut plugin_config = PluginConfig::default();
+    let warning = apply_directive(&mut plugin_config, "plugin_name", plugin_name);
+    assert_that!(warning).is_none();
+    assert_that!(plugin_config.plugin_name).is_equal_to(expected_plugin_name);
+}
