@@ -2,6 +2,7 @@ use std::borrow::Cow;
 
 #[cfg(test)]
 use bevy_reflect::Reflect;
+use itertools::Itertools;
 
 /// How state-names are determined
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -116,6 +117,51 @@ impl PluginConfig {
             naming_scheme: NamingScheme::Full,
             additional_derives: vec![],
         }
+    }
+    /// Set the plugin name to a struct name (`UpperCamelCase`)
+    pub fn with_plugin_struct_name<S: ToString>(mut self, name: S) -> Self {
+        self.plugin_name = PluginName::Struct(Cow::Owned(name.to_string()));
+        self
+    }
+    /// Set the plugin name to a function name (`snake_case`)
+    pub fn with_plugin_fn_name<S: ToString>(mut self, name: S) -> Self {
+        self.plugin_name = PluginName::Function(Cow::Owned(name.to_string()));
+        self
+    }
+    /// Set the name of the inner module containing the generated states
+    pub fn with_states_module_name<S: ToString>(mut self, name: S) -> Self {
+        self.states_module_name = Cow::Owned(name.to_string());
+        self
+    }
+    /// Set the name of the root enum/struct. `None` means NO root node.
+    pub fn with_root_state_name<S: ToString>(mut self, name: S) -> Self {
+        self.root_state_name = Some(Cow::Owned(name.to_string()));
+        self
+    }
+    /// Configure how generated states are named
+    pub fn with_naming_scheme(mut self, scheme: NamingScheme) -> Self {
+        self.naming_scheme = scheme;
+        self
+    }
+    /// Set additional traits to derive on the generated states
+    pub fn with_additional_derives<S: ToString, D: IntoIterator<Item = S>>(
+        mut self,
+        derives: D,
+    ) -> Self {
+        self.additional_derives.extend_from_slice(
+            &derives
+                .into_iter()
+                .map(|t| t.to_string())
+                .map(Cow::Owned)
+                .collect_vec(),
+        );
+        self.additional_derives = self
+            .additional_derives
+            .iter()
+            .unique()
+            .cloned()
+            .collect_vec();
+        self
     }
 }
 

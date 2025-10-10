@@ -52,7 +52,7 @@ fn main() {
 Create a `states.txt` in `src/`:
 
 ```txt
-// the root is implicit
+// the root is no longer implicit
 Loading // comments go until the end of the line
 Ready { Menu Game }                     // enum state
 Exiting                                 // singleton
@@ -63,14 +63,12 @@ Set up your `build.rs` like this:
 ```rust no_run
 use bevy_state_plugin_generator::prelude::*;
 fn main() {
-  /// The [Default::default] configuration is:
-  let config = PluginConfig {
-    plugin_name: PluginName::new_struct("GeneratedStatesPlugin"),
-    root_state_name: Some(Cow::from("GameState")),
-    states_module_name: Cow::from("states"),
-    naming_scheme: NamingScheme::Full,
-    additional_derives: vec![],
-  };
+  let config = PluginConfig::default()
+        .with_plugin_struct_name("MyStatePlugin")
+        .with_root_state_name("RootState")
+        .with_states_module_name("inner_states")
+        .with_naming_scheme(NamingScheme::Short)
+        .with_additional_derives(["PartialOrd", "Ord"]);
   generate_plugin("src/states.txt", "src/generated_states.rs", config)
     .expect("Failed to generate plugin!");
 }
