@@ -15,5 +15,5 @@ pub mod prelude {
     pub use std::borrow::Cow;
 
     pub use crate::config::{NamingScheme, PluginConfig, PluginName};
-    pub use crate::generate::{generate_plugin, update_template};
+    pub use crate::generate::{GeneratorError, generate_plugin, update_template};
 }
