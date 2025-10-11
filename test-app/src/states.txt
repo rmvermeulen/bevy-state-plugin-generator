@@ -1,9 +1,17 @@
-Loading {
-    Configs
-    Assets
+Game {
+    Loading {
+        // configuration, including which assets to load
+        Configuration
+        // load actual assets; images, sounds, etc.
+        Assets
+    }
+    Ready {
+        Paused
+        Playing [
+            Player { Alive Dead Invincible }
+            Enemies { Passive Aggressive Defensive }
+            Weather { Nice Mist Rain Hot Cold }
+        ]
+    }
+    Exiting
 }
-Ready {
-    Playing
-    Paused
-}
-Exiting
