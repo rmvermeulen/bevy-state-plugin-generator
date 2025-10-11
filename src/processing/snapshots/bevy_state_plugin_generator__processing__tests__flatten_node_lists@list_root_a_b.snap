@@ -13,6 +13,7 @@ expression: flatten_root_node(node)
         variants: [
             "A",
         ],
+        comments: [],
     },
     NodeData {
         index: 1,
@@ -26,6 +27,7 @@ expression: flatten_root_node(node)
         variants: [
             "B",
         ],
+        comments: [],
     },
     NodeData {
         index: 2,
@@ -37,5 +39,6 @@ expression: flatten_root_node(node)
         name: "B",
         resolved_name: None,
         variants: [],
+        comments: [],
     },
 ]

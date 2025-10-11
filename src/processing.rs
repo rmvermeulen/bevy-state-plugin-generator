@@ -30,18 +30,21 @@ pub struct NodeData {
     pub name: String,
     pub resolved_name: Option<String>,
     pub variants: Vec<String>,
+    pub comments: Vec<String>,
 }
 
 pub fn flatten_root_node(root_node: Node<'_>) -> Vec<NodeData> {
     let node_count = root_node.get_tree_size();
     let mut nodes = Vec::with_capacity(node_count);
     let mut todo = VecDeque::from([(root_node, 0, None)]);
+    let mut comments = Vec::new();
     while let Some((node, depth, parent)) = todo.pop_front() {
         let node_type = match node {
             Node::Singleton(_) => NodeType::Singleton,
             Node::Enum(_, _) => NodeType::Enum,
             Node::List(_, _) => NodeType::List,
-            Node::Comment(_) => {
+            Node::Comment(comment) => {
+                comments.push(comment.to_string());
                 continue;
             }
         };
@@ -55,8 +58,10 @@ pub fn flatten_root_node(root_node: Node<'_>) -> Vec<NodeData> {
             parent,
             depth,
             name: name.to_string(),
+            comments,
             ..default()
         });
+        comments = default();
         for child in node.children() {
             todo.push_back((child, depth + 1, Some(index)));
         }
@@ -173,7 +178,7 @@ pub(crate) fn build_plugin_source(
     .join(", ");
     let definitions_source = nodes
         .iter()
-        .map(|node| {
+        .flat_map(|node| {
             let derives = node
                 .parent
                 .map(|parent_id| {
@@ -214,7 +219,13 @@ pub(crate) fn build_plugin_source(
                 }
             };
 
-            match node.node_type {
+            // return the generated output preceded by its comments
+            let mut comments = node
+                .comments
+                .iter()
+                .map(|comment| format!("// {comment}"))
+                .collect_vec();
+            comments.push(match node.node_type {
                 NodeType::Singleton => source_for_singleton(),
                 NodeType::Enum => {
                     if node.variants.is_empty() {
@@ -225,7 +236,8 @@ pub(crate) fn build_plugin_source(
                     }
                 }
                 NodeType::List => source_for_singleton(),
-            }
+            });
+            comments
         })
         .join("\n");
 

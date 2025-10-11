@@ -98,7 +98,7 @@ fn parent_with_child(node_type: NodeType) -> Vec<NodeData> {
             depth: 1,
             name: "Child".to_string(),
             resolved_name: Some("Child".to_string()),
-            variants: default(),
+            ..default()
         },
     ]
 }

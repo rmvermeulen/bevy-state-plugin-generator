@@ -10,6 +10,7 @@
 //     Configs
 //     Assets
 // }
+// // when the game-assets have loaded
 // Ready {
 //     Playing
 //     Paused
@@ -36,6 +37,7 @@ pub mod lmao {
         Assets,
     }
 
+    // when the game-assets have loaded
     #[derive(bevy::prelude::SubStates, Hash, Default, Debug, Clone, PartialEq, Eq)]
     #[source(RootState = RootState::Ready)]
     pub enum RootStateReady {
