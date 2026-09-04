@@ -1,0 +1,8 @@
+[package]
+name = "plugin_builder"
+version = "0.1.0"
+edition = "2024"
+
+[dev-dependencies]
+insta = "1.48.0"
+rstest = "0.26.1"

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["bspg", "bspg/test-app"]
+members = ["bspg", "bspg/test-app", "plugin_builder"]
 
 [workspace.dependencies]
 bevy = { version = "0.17.1", default-features = false }
