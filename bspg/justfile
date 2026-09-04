@@ -1,0 +1,5 @@
+
+
+build:
+    cargo-feature-combinations build
+    just -f test-app/justfile build

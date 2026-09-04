@@ -18,6 +18,7 @@ test-features *flags:
     cargo-feature-combinations {{ flags }} insta test
 
 test: build test-features
+
 test-fast: (test-features "--fail-fast")
 
 # TODO: revisit before 2.0.0 where feature `rustfmt` is removed
@@ -27,5 +28,4 @@ test-fast: (test-features "--fail-fast")
 # clean-snapshots: (check-snapshots "delete")
 
 build:
-    cargo-feature-combinations build
-    just -f test-app/justfile build
+    just -f bspg/justfile build
