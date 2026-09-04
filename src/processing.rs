@@ -304,7 +304,6 @@ pub(crate) fn build_plugin_source(
         use bevy::prelude::AppExtStates;
         #[allow(missing_docs)]
         pub mod {states_module_name} {{
-            use bevy::prelude::StateSet;
             {definitions_source}
         }}
         {plugin_def}

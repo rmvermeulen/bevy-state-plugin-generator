@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use bevy_reflect::Struct;
+use bevy_reflect::structs::Struct;
 use bevy_utils::default;
 use indoc::formatdoc;
 use insta::assert_snapshot;

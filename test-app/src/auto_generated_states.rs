@@ -20,7 +20,6 @@
 use bevy::prelude::AppExtStates;
 #[allow(missing_docs)]
 pub mod lmao {
-    use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum RootState {
         #[default]

@@ -21,7 +21,6 @@
 use bevy::prelude::AppExtStates;
 #[allow(missing_docs)]
 pub mod states {
-    use bevy::prelude::StateSet;
     #[derive(bevy::prelude::States, Hash, Default, Debug, Clone, PartialEq, Eq)]
     pub enum GameState {
         #[default]
