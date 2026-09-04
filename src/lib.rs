@@ -1,4 +1,3 @@
-#![feature(trim_prefix_suffix)]
 #![feature(coverage_attribute)]
 #![warn(missing_docs)]
 #![doc = include_str!("../Readme.md")]

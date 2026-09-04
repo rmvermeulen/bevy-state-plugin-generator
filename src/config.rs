@@ -6,10 +6,11 @@ use bevy_reflect::Reflect;
 use itertools::Itertools;
 
 /// How state-names are determined
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[cfg_attr(test, derive(Reflect))]
 pub enum NamingScheme {
     /// Name includes the names of all ancestors
+    #[default]
     Full,
     /// Name includes only the name of the immediate parent
     Short,
@@ -50,12 +51,6 @@ impl NamingScheme {
             "none" | "None" => Some(NamingScheme::None),
             _ => None,
         }
-    }
-}
-
-impl Default for NamingScheme {
-    fn default() -> Self {
-        Self::Full
     }
 }
 

@@ -171,7 +171,7 @@ pub(crate) fn build_plugin_source(
             .copied()
             .map(Cow::Borrowed)
             .collect_vec(),
-        derives.into_iter().map(Cow::from).collect_vec(),
+        derives.into_iter().collect_vec(),
     ])
     .into_iter()
     .unique()
