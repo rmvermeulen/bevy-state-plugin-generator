@@ -1,2 +1,17 @@
+# https://just.systems
+
+# use nushell
+set shell := ['nu', '-c']
+
+# allow `{{ arg && "some value" }}` style syntax
+set unstable
+set lists
+
+alias b := build
+
+[private]
+list:
+    just --list
+
 build:
     cargo-feature-combinations build -p test-app

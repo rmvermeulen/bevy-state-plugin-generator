@@ -1,5 +1,21 @@
+# https://just.systems
+
+# use nushell
+set shell := ['nu', '-c']
+
+# allow `{{ arg && "some value" }}` style syntax
+set unstable
+set lists
+
+alias b := build
+alias t := test
+
+[private]
+list:
+    just --list
+
 test-features *flags:
-    cargo-feature-combinations {{flags}} insta test
+    cargo-feature-combinations {{ flags }} insta test
 
 test: build test-features
 test-fast: (test-features "--fail-fast")
