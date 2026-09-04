@@ -12,7 +12,7 @@ rustfmt = ["bevy_state_plugin_generator/rustfmt"]
 
 [dependencies]
 bevy = { workspace = true, features = ["std", "bevy_state"] }
-cfg-if = "1.0.3"
+cfg-if = "1.0.4"
 
 [build-dependencies]
 bevy_state_plugin_generator = { path = "../" }
